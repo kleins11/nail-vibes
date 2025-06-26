@@ -77,8 +77,14 @@ export async function findBestVibeMatch(prompt: string): Promise<VibeMatchResult
     // Step 5: Return the best match
     const bestMatch = scoredVibes[0];
     
+    // Debug: Log all scored vibes before checking match score
+    console.log('🧪 All scored vibes:', scoredVibes.map(v => ({
+      id: v.vibe.id,
+      tags: v.vibe.tags,
+      score: v.matchScore
+    })));
     
-  if (bestMatch.matchScore === 0) {
+    if (bestMatch.matchScore === 0) {
       return {
         success: false,
         error: `No matching vibes found for tags: ${extractedTags.join(', ')}. Try different keywords or styles.`
