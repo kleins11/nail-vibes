@@ -93,6 +93,16 @@ const modifierKeywords: Record<string, string[]> = {
   "romantic": ["loving", "tender", "intimate", "dreamy"],
   "professional": ["polished", "appropriate", "clean", "refined"],
   "artistic": ["creative", "expressive", "unique", "imaginative"],
+
+  // Basic style keywords
+  "bridal": ["elegant", "white", "classic", "romantic"],
+  "wedding": ["elegant", "formal", "classic", "refined"],
+  "neutral": ["beige", "nude", "natural", "understated"],
+  "elegant": ["sophisticated", "refined", "classy", "graceful"],
+  "simple": ["minimal", "clean", "understated", "basic"],
+  "classic": ["timeless", "traditional", "refined", "elegant"],
+  "modern": ["contemporary", "sleek", "current", "fresh"],
+  "chic": ["stylish", "fashionable", "sophisticated", "trendy"],
 };
 
 /**
@@ -158,6 +168,7 @@ export function extractTagsFromPrompt(prompt: string): {
 
   const lowerPrompt = prompt.toLowerCase().trim();
   let primaryTags: string[] = [];
+  let modifierTags: string[] = [];
   let matchedConcept: string | null = null;
   let remainingPrompt = prompt;
 
@@ -176,13 +187,22 @@ export function extractTagsFromPrompt(prompt: string): {
       
       console.log(`🎯 Concept matched: "${concept}" → Primary tags:`, primaryTags);
       console.log(`📝 Remaining prompt: "${remainingPrompt}"`);
+      
+      // Extract modifier tags from remaining prompt
+      modifierTags = mapKeywordsToTags(remainingPrompt);
+      console.log(`🏷️ Modifier tags from "${remainingPrompt}":`, modifierTags);
+      
       break; // Only match the first concept found
     }
   }
 
-  // Step 2: Extract modifier tags from remaining prompt
-  const modifierTags = mapKeywordsToTags(remainingPrompt);
-  console.log(`🏷️ Modifier tags from "${remainingPrompt}":`, modifierTags);
+  // Step 2: If no concept was matched, treat all extracted tags as primary
+  if (!matchedConcept) {
+    console.log(`📝 No concept matched, treating all tags as primary for: "${prompt}"`);
+    primaryTags = mapKeywordsToTags(prompt);
+    modifierTags = []; // No modifiers when no concept is matched
+    console.log(`🏷️ Primary tags from generic prompt:`, primaryTags);
+  }
 
   // Step 3: Combine tags (primary first, then modifiers)
   const combinedTags = [...primaryTags];
@@ -194,7 +214,12 @@ export function extractTagsFromPrompt(prompt: string): {
     }
   });
 
-  console.log(`✅ Final combined tags:`, combinedTags);
+  console.log(`✅ Final result:`, {
+    matchedConcept,
+    primaryTags,
+    modifierTags,
+    combinedTags
+  });
 
   return {
     primaryTags,
@@ -247,6 +272,8 @@ if (typeof window === 'undefined') {
     "bridgerton romantic pastel",
     "minimalist clean",
     "gothic edgy black",
+    "bridal elegant",
+    "neutral simple nails",
     "just some random words"
   ];
   
