@@ -8,7 +8,7 @@
 // Custom mapping of concepts to primary vibe tags
 const customMap: Record<string, string[]> = {
   // ✨ Pop Culture & Aesthetic Cues
-  "harry potter": ["witchy", "dark", "mystical", "quirky"],
+  "harry potter": ["witchy", "dark", "mystical"],
   "barbie": ["pink", "glam", "girly", "playful"],
   "bridgerton": ["romantic", "floral", "pastel", "elegant"],
   "euphoria": ["sparkle", "neon", "experimental", "bold"],
