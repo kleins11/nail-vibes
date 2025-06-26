@@ -1,16 +1,16 @@
 import { supabase, VibeIdea, UserPrompt } from '../lib/supabase';
-import { extractTags } from './tagExtractor';
+import { extractTagsFromPrompt } from './extractTagsFromPrompt';
+import { findPrioritizedVibeMatch, PrioritizedVibeResult } from './prioritizedVibeSearch';
 
 /**
  * Vibe Service
  * 
- * Handles all backend logic for finding and matching nail vibe ideas
- * based on user prompts using Supabase RPC functions.
+ * Updated to use the new prioritized search logic with primary and modifier tags
  */
 
-// Extended interface to include match_count from the new RPC function
-export interface VibeMatchData extends VibeIdea {
-  match_count: number;
+// Extended interface to include match information from prioritized search
+export interface VibeMatchData extends PrioritizedVibeResult {
+  // Inherits all properties from PrioritizedVibeResult
 }
 
 export interface VibeMatchResult {
@@ -18,69 +18,78 @@ export interface VibeMatchResult {
   data?: {
     vibe: VibeMatchData;
     extractedTags: string[];
+    primaryTags: string[];
+    modifierTags: string[];
+    matchedConcept: string | null;
+    searchStrategy: string;
   };
   error?: string;
 }
 
 /**
- * Finds the best matching vibe idea for a user prompt using Supabase RPC
+ * Finds the best matching vibe idea using prioritized search
  * @param prompt - User's natural language prompt
- * @returns Promise with match result including match count
+ * @returns Promise with match result including detailed tag information
  */
 export async function findBestVibeMatch(prompt: string): Promise<VibeMatchResult> {
   try {
-    // Step 1: Extract tags from the user prompt
-    const extractedTags = await extractTags(prompt);
+    console.log('🚀 Starting enhanced vibe matching for prompt:', prompt);
+
+    // Step 1: Extract tags using the new concept-based extraction
+    const tagExtraction = extractTagsFromPrompt(prompt);
     
-    console.log('🏷️ Extracted tags:', extractedTags);
+    console.log('🏷️ Tag extraction results:');
+    console.log('  - Matched concept:', tagExtraction.matchedConcept);
+    console.log('  - Primary tags:', tagExtraction.primaryTags);
+    console.log('  - Modifier tags:', tagExtraction.modifierTags);
+    console.log('  - Combined tags:', tagExtraction.combinedTags);
     
-    if (extractedTags.length === 0) {
+    if (tagExtraction.combinedTags.length === 0) {
       return {
         success: false,
         error: 'Could not extract any tags from the prompt. Please try being more specific about the style, colors, or occasion.'
       };
     }
 
-    // Step 2: Call Supabase RPC function to get the best matching design
-    console.log('🎯 Calling get_best_matching_design with tags:', extractedTags);
+    // Step 2: Use prioritized search with primary and modifier tags
+    console.log('🎯 Starting prioritized search...');
     
-    const { data, error } = await supabase.rpc('get_best_matching_design', {
-      tags_input: extractedTags
-    });
+    const searchResult = await findPrioritizedVibeMatch(
+      tagExtraction.primaryTags,
+      tagExtraction.modifierTags
+    );
 
-    if (error) {
-      console.error('❌ Supabase RPC error:', error);
+    if (!searchResult.success || !searchResult.data) {
       return {
         success: false,
-        error: 'Failed to fetch matching designs from database'
+        error: searchResult.error || `No matching designs found. Try different keywords or styles.`
       };
     }
 
-    if (!data || data.length === 0) {
-      return {
-        success: false,
-        error: `No matching designs found for tags: ${extractedTags.join(', ')}. Try different keywords or styles.`
-      };
-    }
-
-    // Step 3: Get the first (and should be only) result
-    const matchedVibe = data[0] as VibeMatchData;
+    const matchedVibe = searchResult.data;
     
-    console.log('✅ Found best matching vibe via RPC:', {
-      id: matchedVibe.id,
-      title: matchedVibe.title,
-      tags: matchedVibe.tags,
-      match_count: matchedVibe.match_count
-    });
+    console.log('✅ Found best matching vibe via prioritized search:');
+    console.log('  - Design ID:', matchedVibe.id);
+    console.log('  - Title:', matchedVibe.title);
+    console.log('  - Tags:', matchedVibe.tags);
+    console.log('  - Match type:', matchedVibe.match_type);
+    console.log('  - Match score:', matchedVibe.match_score);
+    console.log('  - Primary matches:', matchedVibe.primary_matches);
+    console.log('  - Modifier matches:', matchedVibe.modifier_matches);
+    console.log('  - Search strategy:', searchResult.searchStrategy);
 
-    // Step 4: Save the user prompt to database for analytics
+    // Step 3: Save the user prompt to database for analytics
     await saveUserPrompt(prompt, matchedVibe.id);
 
     return {
       success: true,
       data: {
         vibe: matchedVibe,
-        extractedTags
+        extractedTags: tagExtraction.combinedTags,
+        primaryTags: tagExtraction.primaryTags,
+        modifierTags: tagExtraction.modifierTags,
+        matchedConcept: tagExtraction.matchedConcept,
+        searchStrategy: searchResult.searchStrategy
       }
     };
 
@@ -144,22 +153,22 @@ export async function getRandomVibes(limit: number = 5): Promise<VibeIdea[]> {
 }
 
 /**
- * Debug function to test the entire vibe matching pipeline
+ * Debug function to test the entire enhanced vibe matching pipeline
  * @param prompt - Test prompt
  * @returns Detailed debug information
  */
 export async function debugVibeMatching(prompt: string) {
-  console.log('🔍 Debug: Starting vibe matching for prompt:', prompt);
+  console.log('🔍 Debug: Starting enhanced vibe matching for prompt:', prompt);
   
-  const extractedTags = await extractTags(prompt);
-  console.log('🏷️ Debug: Extracted tags:', extractedTags);
+  const tagExtraction = extractTagsFromPrompt(prompt);
+  console.log('🏷️ Debug: Tag extraction:', tagExtraction);
   
   const result = await findBestVibeMatch(prompt);
-  console.log('🎯 Debug: Match result:', result);
+  console.log('🎯 Debug: Final match result:', result);
   
   return {
     prompt,
-    extractedTags,
+    tagExtraction,
     result
   };
 }

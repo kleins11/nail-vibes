@@ -22,6 +22,12 @@ function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [currentVibe, setCurrentVibe] = useState<VibeMatchData | null>(null);
+  const [matchInfo, setMatchInfo] = useState<{
+    primaryTags: string[];
+    modifierTags: string[];
+    matchedConcept: string | null;
+    searchStrategy: string;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleLogoClick = () => {
@@ -32,6 +38,7 @@ function App() {
     setIsChatOpen(false);
     setIsTyping(false);
     setCurrentVibe(null);
+    setMatchInfo(null);
     setError(null);
   };
 
@@ -44,20 +51,32 @@ function App() {
     try {
       console.log('🚀 Searching for best vibe match with prompt:', prompt);
       
-      // Call the backend service to find the best match
+      // Call the enhanced backend service
       const result: VibeMatchResult = await findBestVibeMatch(prompt);
       
       if (result.success && result.data) {
-        const { vibe, extractedTags } = result.data;
+        const { vibe, primaryTags, modifierTags, matchedConcept, searchStrategy } = result.data;
         
         console.log('✅ Found best matching vibe:', vibe);
-        console.log('🏷️ Extracted tags:', extractedTags);
-        console.log('🎯 Match count:', vibe.match_count);
+        console.log('🎯 Match details:', {
+          concept: matchedConcept,
+          primaryTags,
+          modifierTags,
+          strategy: searchStrategy,
+          matchType: vibe.match_type,
+          score: vibe.match_score
+        });
         
-        // Set the current vibe for display
+        // Set the current vibe and match info for display
         setCurrentVibe(vibe);
+        setMatchInfo({
+          primaryTags,
+          modifierTags,
+          matchedConcept,
+          searchStrategy
+        });
         
-        // Create chat messages with match information
+        // Create chat messages with enhanced match information
         const userMessage: ChatMessage = {
           id: Date.now().toString(),
           type: 'user',
@@ -65,14 +84,23 @@ function App() {
           timestamp: new Date()
         };
         
-        const matchInfo = vibe.match_count > 0 
-          ? `Found a great match with ${vibe.match_count} matching tag${vibe.match_count > 1 ? 's' : ''}! ✨` 
-          : "Here's a perfect nail design that matches your vibe! ✨";
+        // Create a more informative system message
+        let systemMessageContent = "Here's a perfect nail design that matches your vibe! ✨";
+        
+        if (matchedConcept) {
+          systemMessageContent = `Perfect! I found a ${matchedConcept} inspired design that matches your vibe! ✨`;
+        }
+        
+        if (vibe.match_type === 'all_primary') {
+          systemMessageContent += ` This design matches all your core style elements.`;
+        } else if (vibe.match_type === 'some_primary') {
+          systemMessageContent += ` This design captures the essence of your style.`;
+        }
         
         const systemMessage: ChatMessage = {
           id: (Date.now() + 1).toString(),
           type: 'system',
-          content: vibe.description || matchInfo,
+          content: vibe.description || systemMessageContent,
           timestamp: new Date()
         };
         
@@ -199,7 +227,7 @@ function App() {
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 onKeyDown={(e) => handleKeyPress(e)}
-                placeholder="Maximalist 3D design for Beatles-themed wedding in London on coffin shape"
+                placeholder="Harry Potter cutesy, Barbie glam metallic, dark academia matte"
                 className="w-full h-24 p-4 text-sm text-gray-600 placeholder-gray-400 border-0 resize-none focus:outline-none bg-gray-50 rounded-lg"
                 style={{ fontFamily: 'ui-monospace, monospace' }}
               />
@@ -251,7 +279,7 @@ function App() {
                 />
               </div>
               
-              {/* Vibe Info */}
+              {/* Enhanced Vibe Info */}
               {currentVibe && (
                 <div className="mb-4 text-center">
                   {currentVibe.title && (
@@ -260,18 +288,38 @@ function App() {
                     </h2>
                   )}
                   
-                  {/* Match Count Display */}
-                  {currentVibe.match_count > 0 && (
-                    <div className="mb-2">
-                      <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
-                        {currentVibe.match_count} matching tag{currentVibe.match_count > 1 ? 's' : ''}
-                      </span>
-                    </div>
-                  )}
+                  {/* Match Type and Score Display */}
+                  <div className="mb-3 space-y-2">
+                    {matchInfo?.matchedConcept && (
+                      <div className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
+                        ✨ {matchInfo.matchedConcept} inspired
+                      </div>
+                    )}
+                    
+                    {currentVibe.match_type === 'all_primary' && (
+                      <div className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full ml-2">
+                        🎯 Perfect match
+                      </div>
+                    )}
+                    
+                    {currentVibe.match_type === 'some_primary' && (
+                      <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full ml-2">
+                        ✅ Great match
+                      </div>
+                    )}
+                    
+                    {currentVibe.primary_matches > 0 && (
+                      <div className="text-xs text-gray-600 mt-1">
+                        {currentVibe.primary_matches} core match{currentVibe.primary_matches > 1 ? 'es' : ''}
+                        {currentVibe.modifier_matches > 0 && ` + ${currentVibe.modifier_matches} style match${currentVibe.modifier_matches > 1 ? 'es' : ''}`}
+                      </div>
+                    )}
+                  </div>
                   
+                  {/* Tags Display */}
                   {currentVibe.tags && currentVibe.tags.length > 0 && (
                     <div className="flex flex-wrap justify-center gap-2 mb-2">
-                      {currentVibe.tags.map((tag, index) => (
+                      {currentVibe.tags.slice(0, 6).map((tag, index) => (
                         <span 
                           key={index}
                           className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
@@ -279,6 +327,11 @@ function App() {
                           {tag}
                         </span>
                       ))}
+                      {currentVibe.tags.length > 6 && (
+                        <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                          +{currentVibe.tags.length - 6} more
+                        </span>
+                      )}
                     </div>
                   )}
                 </div>
