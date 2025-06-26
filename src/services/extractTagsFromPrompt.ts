@@ -304,7 +304,7 @@ export function extractTagsFromPrompt(prompt: string): {
     console.log(`📝 No concept matched, checking for general keywords in: "${prompt}"`);
     
     // First try modifier keywords
-    const modifierTags = mapKeywordsToTags(prompt);
+    modifierTags = mapKeywordsToTags(prompt);
     
     // Then try general keywords
     const generalTags = mapGeneralKeywordsToTags(prompt);
