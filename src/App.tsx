@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowUp, X, Minus } from 'lucide-react';
-import { findBestVibeMatch, VibeMatchResult } from './services/vibeService';
-import { VibeIdea } from './lib/supabase';
+import { findBestVibeMatch, VibeMatchResult, VibeMatchData } from './services/vibeService';
 
 // Sample nail image URL (fallback)
 const SAMPLE_NAIL_IMAGE = "https://images.pexels.com/photos/3997379/pexels-photo-3997379.jpeg?auto=compress&cs=tinysrgb&w=800";
@@ -22,7 +21,7 @@ function App() {
   const [chatInput, setChatInput] = useState('');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [currentVibe, setCurrentVibe] = useState<VibeIdea | null>(null);
+  const [currentVibe, setCurrentVibe] = useState<VibeMatchData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleLogoClick = () => {
@@ -43,7 +42,7 @@ function App() {
     setAppState('loading');
     
     try {
-      console.log('🚀 Searching for vibe match with prompt:', prompt);
+      console.log('🚀 Searching for best vibe match with prompt:', prompt);
       
       // Call the backend service to find the best match
       const result: VibeMatchResult = await findBestVibeMatch(prompt);
@@ -51,13 +50,14 @@ function App() {
       if (result.success && result.data) {
         const { vibe, extractedTags } = result.data;
         
-        console.log('✅ Found matching vibe:', vibe);
+        console.log('✅ Found best matching vibe:', vibe);
         console.log('🏷️ Extracted tags:', extractedTags);
+        console.log('🎯 Match count:', vibe.match_count);
         
         // Set the current vibe for display
         setCurrentVibe(vibe);
         
-        // Create chat messages
+        // Create chat messages with match information
         const userMessage: ChatMessage = {
           id: Date.now().toString(),
           type: 'user',
@@ -65,10 +65,14 @@ function App() {
           timestamp: new Date()
         };
         
+        const matchInfo = vibe.match_count > 0 
+          ? `Found a great match with ${vibe.match_count} matching tag${vibe.match_count > 1 ? 's' : ''}! ✨` 
+          : "Here's a perfect nail design that matches your vibe! ✨";
+        
         const systemMessage: ChatMessage = {
           id: (Date.now() + 1).toString(),
           type: 'system',
-          content: vibe.description || "Here's a perfect nail design that matches your vibe! ✨",
+          content: vibe.description || matchInfo,
           timestamp: new Date()
         };
         
@@ -76,7 +80,7 @@ function App() {
         setAppState('result');
       } else {
         // Handle error case
-        console.error('❌ Failed to find vibe match:', result.error);
+        console.error('❌ Failed to find best vibe match:', result.error);
         setError(result.error || 'Failed to find a matching vibe');
         setAppState('input');
       }
@@ -255,6 +259,16 @@ function App() {
                       {currentVibe.title}
                     </h2>
                   )}
+                  
+                  {/* Match Count Display */}
+                  {currentVibe.match_count > 0 && (
+                    <div className="mb-2">
+                      <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
+                        {currentVibe.match_count} matching tag{currentVibe.match_count > 1 ? 's' : ''}
+                      </span>
+                    </div>
+                  )}
+                  
                   {currentVibe.tags && currentVibe.tags.length > 0 && (
                     <div className="flex flex-wrap justify-center gap-2 mb-2">
                       {currentVibe.tags.map((tag, index) => (

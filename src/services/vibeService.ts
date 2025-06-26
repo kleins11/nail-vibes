@@ -8,19 +8,24 @@ import { extractTags } from './tagExtractor';
  * based on user prompts using Supabase RPC functions.
  */
 
+// Extended interface to include match_count from the new RPC function
+export interface VibeMatchData extends VibeIdea {
+  match_count: number;
+}
+
 export interface VibeMatchResult {
   success: boolean;
   data?: {
-    vibe: VibeIdea;
+    vibe: VibeMatchData;
     extractedTags: string[];
   };
   error?: string;
 }
 
 /**
- * Finds a random matching vibe idea for a user prompt using Supabase RPC
+ * Finds the best matching vibe idea for a user prompt using Supabase RPC
  * @param prompt - User's natural language prompt
- * @returns Promise with match result
+ * @returns Promise with match result including match count
  */
 export async function findBestVibeMatch(prompt: string): Promise<VibeMatchResult> {
   try {
@@ -36,10 +41,10 @@ export async function findBestVibeMatch(prompt: string): Promise<VibeMatchResult
       };
     }
 
-    // Step 2: Call Supabase RPC function to get a random design
-    console.log('🎲 Calling get_random_design with tags:', extractedTags);
+    // Step 2: Call Supabase RPC function to get the best matching design
+    console.log('🎯 Calling get_best_matching_design with tags:', extractedTags);
     
-    const { data, error } = await supabase.rpc('get_random_design', {
+    const { data, error } = await supabase.rpc('get_best_matching_design', {
       tags_input: extractedTags
     });
 
@@ -59,12 +64,13 @@ export async function findBestVibeMatch(prompt: string): Promise<VibeMatchResult
     }
 
     // Step 3: Get the first (and should be only) result
-    const matchedVibe = data[0] as VibeIdea;
+    const matchedVibe = data[0] as VibeMatchData;
     
-    console.log('✅ Found matching vibe via RPC:', {
+    console.log('✅ Found best matching vibe via RPC:', {
       id: matchedVibe.id,
       title: matchedVibe.title,
-      tags: matchedVibe.tags
+      tags: matchedVibe.tags,
+      match_count: matchedVibe.match_count
     });
 
     // Step 4: Save the user prompt to database for analytics
