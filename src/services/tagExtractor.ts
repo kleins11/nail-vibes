@@ -73,6 +73,143 @@ let cachedDatabaseTags: string[] | null = null;
 let tagsFetchPromise: Promise<string[]> | null = null;
 
 /**
+ * NEW: Main tag extraction function with custom mapping for pop culture and aesthetic cues
+ * @param prompt - The user's natural language prompt
+ * @returns Promise<string[]> - Array of extracted tags
+ */
+export async function extractTagsFromPrompt(prompt: string): Promise<string[]> {
+  const lower = prompt.toLowerCase();
+
+  const customMap: Record<string, string[]> = {
+    // ✨ Pop Culture & Aesthetic Cues
+    "harry potter": ["witchy", "dark", "quirky"],
+    "barbie": ["pink", "glam", "girly"],
+    "bridgerton": ["romantic", "floral", "pastel"],
+    "euphoria": ["sparkle", "neon", "experimental"],
+    "twilight": ["moody", "vampy", "mysterious"],
+    "coastal grandma": ["neutral", "clean", "soft"],
+    "dark academia": ["matte", "moody", "scholarly"],
+    "cottagecore": ["floral", "pastel", "nature"],
+    "clean girl": ["neutral", "minimal", "glossy"],
+    "hot girl walk": ["bold", "confident", "fun"],
+    "old money": ["classic", "neutral", "elegant"],
+    "mob wife": ["bold", "red", "luxury"],
+    "balletcore": ["pink", "sheer", "delicate"],
+    "mermaidcore": ["iridescent", "aqua", "shimmer"],
+    "quiet luxury": ["minimal", "neutral", "elegant"],
+
+    // 🌿 Seasonal & Occasion Vibes
+    "summer vacation": ["bright", "playful", "tropical"],
+    "europe trip": ["chic", "neutral", "effortless"],
+    "napa weekend": ["wine", "earthy", "warm"],
+    "fall vibes": ["burnt orange", "matte", "cozy"],
+    "holiday party": ["red", "sparkle", "glam"],
+    "wedding guest": ["elegant", "simple", "neutral"],
+
+    // 🎨 Color-Specific But Vibe-First
+    "match my olive dress": ["olive", "earthy", "neutral"],
+    "go with silver jewelry": ["silver", "cool tone", "clean"],
+    "complement red lipstick": ["bold", "classic", "elegant"],
+    "pair with white linen": ["minimal", "neutral", "clean"],
+    "accent my tan skin": ["bronze", "warm", "shimmer"],
+
+    // 🎀 Mood-Based Prompts
+    "feeling flirty": ["pink", "playful", "glossy"],
+    "want to feel powerful": ["bold", "sharp", "luxury"],
+    "need something low effort": ["neutral", "minimal", "clean"],
+    "trying something edgy": ["black", "matte", "punk"],
+    "feeling soft": ["sheer", "pastel", "delicate"],
+  };
+
+  // Check for custom mappings first
+  for (const keyword in customMap) {
+    if (lower.includes(keyword)) {
+      console.log('🎯 Custom mapping matched:', keyword, '→', customMap[keyword]);
+      return customMap[keyword];
+    }
+  }
+
+  // If nothing matches, fall back to regular keyword matcher
+  const basicTags = await mapKeywordsToTags(prompt);
+  if (basicTags.length) {
+    console.log('🏷️ Basic keyword mapping found:', basicTags);
+    return basicTags;
+  }
+
+  // Optional: fallback to LLM (not implemented yet)
+  console.log('⚠️ No tags extracted from prompt:', prompt);
+  return [];
+}
+
+/**
+ * Maps keywords to tags using the existing TAG_KEYWORDS logic
+ * @param prompt - The user's natural language prompt
+ * @returns Promise<string[]> - Array of extracted tags
+ */
+async function mapKeywordsToTags(prompt: string): Promise<string[]> {
+  if (!prompt || typeof prompt !== 'string') {
+    return [];
+  }
+
+  // Convert prompt to lowercase for case-insensitive matching
+  const lowerPrompt = prompt.toLowerCase().trim();
+  const extractedTags: string[] = [];
+
+  // Step 1: Check each tag category for keyword matches (existing logic)
+  Object.entries(TAG_KEYWORDS).forEach(([tag, keywords]) => {
+    const hasMatch = keywords.some(keyword => 
+      lowerPrompt.includes(keyword.toLowerCase())
+    );
+    
+    if (hasMatch) {
+      extractedTags.push(tag);
+    }
+  });
+
+  // Step 2: Direct tag matching - check if any word in the prompt exactly matches a known category tag
+  const promptWords = lowerPrompt.split(/\s+/).map(word => 
+    // Remove common punctuation from words
+    word.replace(/[.,!?;:"'()[\]{}]/g, '')
+  ).filter(word => word.length > 0);
+
+  promptWords.forEach(word => {
+    // Check if this word is exactly a known category tag
+    if (ALL_KNOWN_TAGS.includes(word) && !extractedTags.includes(word)) {
+      extractedTags.push(word);
+    }
+  });
+
+  // Step 3: Database tag fallback - fetch known tags from database and check for matches
+  try {
+    const databaseTags = await getKnownTags();
+    
+    promptWords.forEach(word => {
+      // Check if this word exists in the database tags
+      if (databaseTags.includes(word.toLowerCase()) && !extractedTags.includes(word.toLowerCase())) {
+        extractedTags.push(word.toLowerCase());
+      }
+    });
+
+    // Step 4: Single word prompt handling - special case for one-word prompts
+    if (promptWords.length === 1) {
+      const singleWord = promptWords[0].toLowerCase();
+      if (databaseTags.includes(singleWord) && !extractedTags.includes(singleWord)) {
+        extractedTags.push(singleWord);
+      }
+    }
+
+  } catch (error) {
+    console.error('⚠️ Failed to fetch database tags, skipping database tag matching:', error);
+    // Continue without database tag matching - the keyword matching will still work
+  }
+
+  // Remove duplicates and return
+  const uniqueTags = [...new Set(extractedTags)];
+  
+  return uniqueTags;
+}
+
+/**
  * Fetches all distinct tags from the vibe_ideas table in Supabase
  * Uses caching to avoid repeated database queries
  * @returns Promise<string[]> - Array of all unique tags from the database
@@ -150,77 +287,14 @@ async function fetchTagsFromDatabase(): Promise<string[]> {
 }
 
 /**
- * Extracts tags from a user prompt using keyword matching and database tag matching
+ * LEGACY: Extracts tags from a user prompt using keyword matching and database tag matching
  * @param prompt - The user's natural language prompt
  * @returns Promise<string[]> - Array of extracted tags
+ * @deprecated Use extractTagsFromPrompt instead
  */
 export async function extractTags(prompt: string): Promise<string[]> {
-  if (!prompt || typeof prompt !== 'string') {
-    return [];
-  }
-
-  // Convert prompt to lowercase for case-insensitive matching
-  const lowerPrompt = prompt.toLowerCase().trim();
-  const extractedTags: string[] = [];
-
-  // Step 1: Check each tag category for keyword matches (existing logic)
-  Object.entries(TAG_KEYWORDS).forEach(([tag, keywords]) => {
-    const hasMatch = keywords.some(keyword => 
-      lowerPrompt.includes(keyword.toLowerCase())
-    );
-    
-    if (hasMatch) {
-      extractedTags.push(tag);
-    }
-  });
-
-  // Step 2: Direct tag matching - check if any word in the prompt exactly matches a known category tag
-  const promptWords = lowerPrompt.split(/\s+/).map(word => 
-    // Remove common punctuation from words
-    word.replace(/[.,!?;:"'()[\]{}]/g, '')
-  ).filter(word => word.length > 0);
-
-  promptWords.forEach(word => {
-    // Check if this word is exactly a known category tag
-    if (ALL_KNOWN_TAGS.includes(word) && !extractedTags.includes(word)) {
-      extractedTags.push(word);
-    }
-  });
-
-  // Step 3: Database tag fallback - fetch known tags from database and check for matches
-  try {
-    const databaseTags = await getKnownTags();
-    
-    promptWords.forEach(word => {
-      // Check if this word exists in the database tags
-      if (databaseTags.includes(word.toLowerCase()) && !extractedTags.includes(word.toLowerCase())) {
-        extractedTags.push(word.toLowerCase());
-      }
-    });
-
-    // Step 4: Single word prompt handling - special case for one-word prompts
-    if (promptWords.length === 1) {
-      const singleWord = promptWords[0].toLowerCase();
-      if (databaseTags.includes(singleWord) && !extractedTags.includes(singleWord)) {
-        extractedTags.push(singleWord);
-      }
-    }
-
-  } catch (error) {
-    console.error('⚠️ Failed to fetch database tags, skipping database tag matching:', error);
-    // Continue without database tag matching - the keyword matching will still work
-  }
-
-  // Remove duplicates and return
-  const uniqueTags = [...new Set(extractedTags)];
-  
-  console.log('🏷️ Tag extraction results:', {
-    prompt: prompt,
-    extractedTags: uniqueTags,
-    totalTags: uniqueTags.length
-  });
-
-  return uniqueTags;
+  // Redirect to the new function for backward compatibility
+  return extractTagsFromPrompt(prompt);
 }
 
 /**
@@ -266,7 +340,7 @@ export function clearTagCache(): void {
  * @returns Promise with detailed debug information
  */
 export async function debugTagExtraction(prompt: string) {
-  const extractedTags = await extractTags(prompt);
+  const extractedTags = await extractTagsFromPrompt(prompt);
   const lowerPrompt = prompt.toLowerCase();
   
   const matchedKeywords: Record<string, string[]> = {};
