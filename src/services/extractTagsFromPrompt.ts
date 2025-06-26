@@ -109,6 +109,105 @@ const modifierKeywords: Record<string, string[]> = {
   "abstract": ["artistic", "creative", "unique", "expressive"],
 };
 
+// Comprehensive general keywords for fallback tag extraction
+const TAG_KEYWORDS: Record<string, string[]> = {
+  // Colors - Primary
+  "red": ["red", "crimson", "scarlet", "burgundy", "cherry"],
+  "pink": ["pink", "rose", "blush", "coral", "magenta"],
+  "orange": ["orange", "peach", "tangerine", "coral", "apricot"],
+  "yellow": ["yellow", "gold", "golden", "amber", "lemon"],
+  "green": ["green", "emerald", "mint", "sage", "olive"],
+  "blue": ["blue", "navy", "teal", "turquoise", "azure"],
+  "purple": ["purple", "violet", "lavender", "plum", "lilac"],
+  "brown": ["brown", "chocolate", "coffee", "mocha", "tan"],
+  "black": ["black", "charcoal", "ebony", "onyx", "jet"],
+  "white": ["white", "ivory", "cream", "pearl", "snow"],
+  "gray": ["gray", "grey", "silver", "slate", "ash"],
+  "nude": ["nude", "beige", "taupe", "sand", "champagne"],
+
+  // Finishes & Textures
+  "matte": ["matte", "flat", "velvet", "satin"],
+  "glossy": ["glossy", "shiny", "gloss", "wet", "lacquer"],
+  "metallic": ["metallic", "chrome", "foil", "mirror"],
+  "glitter": ["glitter", "sparkle", "shimmer", "glittery"],
+  "holographic": ["holographic", "holo", "iridescent", "rainbow"],
+  "pearl": ["pearl", "pearlescent", "mother-of-pearl", "nacre"],
+  "chrome": ["chrome", "mirror", "reflective", "liquid"],
+  "textured": ["textured", "bumpy", "rough", "dimensional"],
+
+  // Styles & Aesthetics
+  "minimal": ["minimal", "minimalist", "simple", "clean"],
+  "bold": ["bold", "dramatic", "striking", "statement"],
+  "elegant": ["elegant", "sophisticated", "classy", "refined"],
+  "cute": ["cute", "adorable", "sweet", "kawaii"],
+  "edgy": ["edgy", "punk", "grunge", "alternative"],
+  "romantic": ["romantic", "dreamy", "soft", "feminine"],
+  "vintage": ["vintage", "retro", "classic", "old-school"],
+  "modern": ["modern", "contemporary", "current", "trendy"],
+  "gothic": ["gothic", "goth", "dark", "mysterious"],
+  "boho": ["boho", "bohemian", "hippie", "free-spirit"],
+  "chic": ["chic", "stylish", "fashionable", "trendy"],
+  "glamorous": ["glamorous", "glam", "luxury", "fancy"],
+
+  // Occasions & Moods
+  "bridal": ["bridal", "wedding", "bride", "matrimony"],
+  "party": ["party", "celebration", "festive", "fun"],
+  "formal": ["formal", "professional", "business", "office"],
+  "casual": ["casual", "everyday", "relaxed", "comfortable"],
+  "date": ["date", "romantic", "dinner", "evening"],
+  "summer": ["summer", "beach", "vacation", "tropical"],
+  "winter": ["winter", "holiday", "festive", "cozy"],
+  "spring": ["spring", "fresh", "bloom", "renewal"],
+  "fall": ["fall", "autumn", "harvest", "warm"],
+
+  // Nail-specific terms
+  "nails": ["nails", "manicure", "polish", "lacquer"],
+  "french": ["french", "tip", "classic", "traditional"],
+  "ombre": ["ombre", "gradient", "fade", "blend"],
+  "marble": ["marble", "swirl", "stone", "veined"],
+  "floral": ["floral", "flower", "botanical", "bloom"],
+  "geometric": ["geometric", "lines", "shapes", "angular"],
+  "abstract": ["abstract", "art", "artistic", "creative"],
+
+  // Intensity & Mood
+  "bright": ["bright", "vibrant", "neon", "electric"],
+  "dark": ["dark", "deep", "moody", "intense"],
+  "light": ["light", "pale", "soft", "gentle"],
+  "warm": ["warm", "cozy", "rich", "golden"],
+  "cool": ["cool", "icy", "fresh", "crisp"],
+  "neutral": ["neutral", "natural", "earthy", "balanced"],
+  "pastel": ["pastel", "soft", "muted", "gentle"],
+  "neon": ["neon", "fluorescent", "electric", "glow"],
+};
+
+/**
+ * Maps general keywords to tags using the comprehensive TAG_KEYWORDS object
+ * @param prompt - The prompt text to analyze
+ * @returns Array of extracted tags
+ */
+function mapGeneralKeywordsToTags(prompt: string): string[] {
+  if (!prompt || typeof prompt !== 'string') {
+    return [];
+  }
+
+  const lowerPrompt = prompt.toLowerCase().trim();
+  const extractedTags: string[] = [];
+
+  // Check each tag category for keyword matches
+  Object.entries(TAG_KEYWORDS).forEach(([tag, keywords]) => {
+    const hasMatch = keywords.some(keyword => 
+      lowerPrompt.includes(keyword.toLowerCase())
+    ) || lowerPrompt.includes(tag.toLowerCase());
+    
+    if (hasMatch) {
+      extractedTags.push(tag);
+    }
+  });
+
+  // Remove duplicates and return
+  return [...new Set(extractedTags)];
+}
+
 /**
  * Maps remaining keywords to modifier tags
  * @param remainingPrompt - The prompt text after concept removal
@@ -200,16 +299,24 @@ export function extractTagsFromPrompt(prompt: string): {
     }
   }
 
-  // Step 2: If no concept was matched, try to extract tags from the full prompt
+  // Step 2: If no concept was matched, use general keyword extraction
   if (primaryTags.length === 0) {
-    console.log(`📝 No concept matched, checking for generic keywords in: "${prompt}"`);
-    const extractedTags = mapKeywordsToTags(prompt);
+    console.log(`📝 No concept matched, checking for general keywords in: "${prompt}"`);
     
-    if (extractedTags.length > 0) {
+    // First try modifier keywords
+    const modifierTags = mapKeywordsToTags(prompt);
+    
+    // Then try general keywords
+    const generalTags = mapGeneralKeywordsToTags(prompt);
+    
+    // Combine both sets of tags
+    const allExtractedTags = [...new Set([...modifierTags, ...generalTags])];
+    
+    if (allExtractedTags.length > 0) {
       // Treat all extracted tags as primary tags
-      primaryTags = extractedTags;
-      modifierTags = []; // No modifiers when no concept is matched
-      console.log(`🏷️ Primary tags from generic prompt:`, primaryTags);
+      primaryTags = allExtractedTags;
+      modifierTags = []; // No separate modifiers when no concept is matched
+      console.log(`🏷️ Primary tags from general prompt:`, primaryTags);
     } else {
       console.log(`⚠️ No tags extracted from prompt: "${prompt}"`);
     }
@@ -288,6 +395,9 @@ if (typeof window === 'undefined') {
     "fruit",
     "elegant",
     "romantic",
+    "red nails",
+    "matte finish",
+    "blue glitter",
     "just some random words"
   ];
   
