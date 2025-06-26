@@ -66,6 +66,42 @@ const TAG_KEYWORDS = {
 // Create a flat list of all known tags for direct matching
 const ALL_KNOWN_TAGS = Object.keys(TAG_KEYWORDS);
 
+// Hardcoded list of known database tags that might not be in TAG_KEYWORDS
+// These are tags that exist in the vibe_ideas.tags field in the database
+const DATABASE_TAGS = [
+  // Additional style tags
+  'goth', 'gothic', 'punk', 'grunge', 'boho', 'bohemian', 'vintage', 'retro',
+  'modern', 'contemporary', 'classic', 'traditional', 'trendy', 'chic',
+  
+  // Theme tags
+  'fruit', 'citrus', 'tropical', 'nature', 'animal', 'abstract', 'artistic',
+  'music', 'sports', 'travel', 'food', 'holiday', 'seasonal', 'winter', 'spring',
+  'summer', 'fall', 'autumn', 'christmas', 'halloween', 'valentine',
+  
+  // Texture/finish tags
+  'textured', 'smooth', 'rough', 'bumpy', 'raised', 'embossed', 'foil',
+  'velvet', 'satin', 'pearl', 'iridescent', 'neon', 'pastel',
+  
+  // Pattern tags
+  'stripes', 'dots', 'polka', 'chevron', 'zigzag', 'plaid', 'checkered',
+  'leopard', 'zebra', 'snake', 'tie-dye', 'galaxy', 'space', 'stars',
+  
+  // Cultural/themed tags
+  'japanese', 'korean', 'chinese', 'indian', 'mexican', 'african', 'tribal',
+  'mandala', 'henna', 'paisley', 'damask', 'baroque', 'art-deco',
+  
+  // Occasion-specific
+  'prom', 'graduation', 'anniversary', 'engagement', 'baby-shower',
+  'bachelorette', 'girls-night', 'spa-day', 'vacation', 'cruise',
+  
+  // Mood/vibe tags
+  'fierce', 'soft', 'dreamy', 'mysterious', 'bold', 'subtle', 'dramatic',
+  'romantic', 'edgy', 'sweet', 'sassy', 'classy', 'funky', 'wild'
+];
+
+// Combine all known tags (from categories and database) for comprehensive matching
+const ALL_POSSIBLE_TAGS = [...ALL_KNOWN_TAGS, ...DATABASE_TAGS.map(tag => tag.toLowerCase())];
+
 /**
  * Extracts tags from a user prompt using keyword matching
  * @param prompt - The user's natural language prompt
@@ -112,6 +148,23 @@ export function extractTags(prompt: string): string[] {
     }
   }
 
+  // Step 4: DATABASE TAG FALLBACK - Check for exact matches against known database tags
+  promptWords.forEach(word => {
+    // Normalize the word and check if it exists in our database tags list
+    const normalizedWord = word.toLowerCase();
+    if (DATABASE_TAGS.includes(normalizedWord) && !extractedTags.includes(normalizedWord)) {
+      extractedTags.push(normalizedWord);
+    }
+  });
+
+  // Step 5: Additional fallback for single-word prompts against database tags
+  if (promptWords.length === 1) {
+    const singleWord = promptWords[0].toLowerCase();
+    if (DATABASE_TAGS.includes(singleWord) && !extractedTags.includes(singleWord)) {
+      extractedTags.push(singleWord);
+    }
+  }
+
   // Remove duplicates and return
   return [...new Set(extractedTags)];
 }
@@ -127,14 +180,18 @@ export function calculateMatchScore(extractedTags: string[], vibeIdeaTags: strin
     return 0;
   }
 
+  // Normalize both arrays to lowercase for comparison
+  const normalizedExtracted = extractedTags.map(tag => tag.toLowerCase());
+  const normalizedVibeIdea = vibeIdeaTags.map(tag => tag.toLowerCase());
+
   // Count matching tags
-  const matchingTags = extractedTags.filter(tag => 
-    vibeIdeaTags.includes(tag)
+  const matchingTags = normalizedExtracted.filter(tag => 
+    normalizedVibeIdea.includes(tag)
   );
 
   // Calculate score based on percentage of extracted tags that match
   // and bonus for having more matches
-  const baseScore = matchingTags.length / extractedTags.length;
+  const baseScore = matchingTags.length / normalizedExtracted.length;
   const bonusScore = Math.min(matchingTags.length * 0.1, 0.3); // Up to 30% bonus
   
   return Math.min(baseScore + bonusScore, 1);
@@ -160,9 +217,20 @@ export function debugTagExtraction(prompt: string) {
     }
   });
 
+  // Also check for database tag matches
+  const promptWords = lowerPrompt.split(/\s+/).map(word => 
+    word.replace(/[.,!?;:"'()[\]{}]/g, '')
+  ).filter(word => word.length > 0);
+
+  const databaseTagMatches = promptWords.filter(word => 
+    DATABASE_TAGS.includes(word.toLowerCase())
+  );
+
   return {
     prompt,
     extractedTags,
     matchedKeywords,
+    databaseTagMatches,
+    allPossibleTags: ALL_POSSIBLE_TAGS.length
   };
 }
