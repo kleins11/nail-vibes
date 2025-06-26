@@ -107,57 +107,16 @@ export async function getKnownTags(): Promise<string[]> {
 }
 
 /**
- * Internal function to fetch tags from Supabase
- * Uses SELECT DISTINCT unnest(tags) to get all unique tags
+ * Fetches tags from Supabase by querying all vibe_ideas and extracting tags client-side
  */
 async function fetchTagsFromDatabase(): Promise<string[]> {
-  try {
-    // Query to get all distinct tags from the tags array column
-    const { data, error } = await supabase
-      .rpc('get_distinct_tags');
-
-    if (error) {
-      // If the RPC function doesn't exist, fall back to a regular query
-      console.log('🔄 RPC function not found, using fallback query...');
-      return await fetchTagsFallback();
-    }
-
-    if (!data) {
-      console.warn('⚠️ No tags returned from database');
-      return [];
-    }
-
-    // Normalize tags to lowercase and filter out empty strings
-    const normalizedTags = data
-      .map((item: any) => item.tag || item)
-      .filter((tag: string) => tag && typeof tag === 'string' && tag.trim().length > 0)
-      .map((tag: string) => tag.toLowerCase().trim());
-
-    // Remove duplicates
-    const uniqueTags = [...new Set(normalizedTags)];
-    
-    console.log('📊 Fetched', uniqueTags.length, 'unique tags from database');
-    return uniqueTags;
-
-  } catch (error) {
-    console.error('❌ Error fetching tags from database:', error);
-    console.log('🔄 Falling back to alternative query method...');
-    return await fetchTagsFallback();
-  }
-}
-
-/**
- * Fallback method to fetch tags when RPC function is not available
- * Fetches all vibe_ideas and extracts tags client-side
- */
-async function fetchTagsFallback(): Promise<string[]> {
   try {
     const { data: vibeIdeas, error } = await supabase
       .from('vibe_ideas')
       .select('tags');
 
     if (error) {
-      console.error('❌ Fallback query failed:', error);
+      console.error('❌ Query failed:', error);
       return [];
     }
 
@@ -185,7 +144,7 @@ async function fetchTagsFallback(): Promise<string[]> {
     return uniqueTags;
 
   } catch (error) {
-    console.error('❌ Fallback tag extraction failed:', error);
+    console.error('❌ Tag extraction failed:', error);
     return [];
   }
 }
