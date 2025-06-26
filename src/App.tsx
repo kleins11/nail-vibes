@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { ArrowUp, X, Minus } from 'lucide-react';
+import { findBestVibeMatch, VibeMatchResult } from './services/vibeService';
+import { VibeIdea } from './lib/supabase';
 
-// Sample nail image URL (placeholder)
+// Sample nail image URL (fallback)
 const SAMPLE_NAIL_IMAGE = "https://images.pexels.com/photos/3997379/pexels-photo-3997379.jpeg?auto=compress&cs=tinysrgb&w=800";
 
 interface ChatMessage {
@@ -11,7 +13,7 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-type AppState = 'input' | 'result' | 'chat';
+type AppState = 'input' | 'result' | 'chat' | 'loading';
 
 function App() {
   const [appState, setAppState] = useState<AppState>('input');
@@ -20,6 +22,8 @@ function App() {
   const [chatInput, setChatInput] = useState('');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [currentVibe, setCurrentVibe] = useState<VibeIdea | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogoClick = () => {
     setAppState('input');
@@ -28,27 +32,59 @@ function App() {
     setChatInput('');
     setIsChatOpen(false);
     setIsTyping(false);
+    setCurrentVibe(null);
+    setError(null);
   };
 
-  const handleInitialSubmit = () => {
+  const handleInitialSubmit = async () => {
     if (!prompt.trim()) return;
     
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
-      type: 'user',
-      content: prompt,
-      timestamp: new Date()
-    };
+    setError(null);
+    setAppState('loading');
     
-    const systemMessage: ChatMessage = {
-      id: (Date.now() + 1).toString(),
-      type: 'system',
-      content: "Gorg, here's a French Mani-esque nail design you can easily DIY for a Charli XCX beach party. Goth Pop-alicious ✨",
-      timestamp: new Date()
-    };
-    
-    setChatMessages([userMessage, systemMessage]);
-    setAppState('result');
+    try {
+      console.log('🚀 Searching for vibe match with prompt:', prompt);
+      
+      // Call the backend service to find the best match
+      const result: VibeMatchResult = await findBestVibeMatch(prompt);
+      
+      if (result.success && result.data) {
+        const { vibe, extractedTags } = result.data;
+        
+        console.log('✅ Found matching vibe:', vibe);
+        console.log('🏷️ Extracted tags:', extractedTags);
+        
+        // Set the current vibe for display
+        setCurrentVibe(vibe);
+        
+        // Create chat messages
+        const userMessage: ChatMessage = {
+          id: Date.now().toString(),
+          type: 'user',
+          content: prompt,
+          timestamp: new Date()
+        };
+        
+        const systemMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          type: 'system',
+          content: vibe.description || "Here's a perfect nail design that matches your vibe! ✨",
+          timestamp: new Date()
+        };
+        
+        setChatMessages([userMessage, systemMessage]);
+        setAppState('result');
+      } else {
+        // Handle error case
+        console.error('❌ Failed to find vibe match:', result.error);
+        setError(result.error || 'Failed to find a matching vibe');
+        setAppState('input');
+      }
+    } catch (error) {
+      console.error('❌ Error in handleInitialSubmit:', error);
+      setError('An unexpected error occurred. Please try again.');
+      setAppState('input');
+    }
   };
 
   const handleChatSubmit = () => {
@@ -64,7 +100,7 @@ function App() {
     const systemMessage: ChatMessage = {
       id: (Date.now() + 1).toString(),
       type: 'system',
-      content: "Perf, here's an option that has that empty space black tip on short natural nails",
+      content: "Great suggestion! Here's a refined version that incorporates your feedback.",
       timestamp: new Date()
     };
     
@@ -90,6 +126,31 @@ function App() {
     setTimeout(() => setIsTyping(false), 100);
   };
 
+  // Loading Screen
+  if (appState === 'loading') {
+    return (
+      <div className="min-h-screen bg-white flex flex-col">
+        {/* Header */}
+        <div className="flex justify-center pt-8 pb-4">
+          <button 
+            onClick={handleLogoClick}
+            className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors"
+          >
+            nv
+          </button>
+        </div>
+        
+        {/* Loading Content */}
+        <div className="flex-1 flex flex-col justify-center px-6">
+          <div className="max-w-sm mx-auto w-full text-center">
+            <div className="animate-spin w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-gray-600">Finding your perfect vibe...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Initial Input Screen
   if (appState === 'input') {
     return (
@@ -110,6 +171,13 @@ function App() {
             <h1 className="text-4xl font-bold text-blue-600 mb-8 leading-tight">
               What's your nail vibe?
             </h1>
+            
+            {/* Error Message */}
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
             
             <div className="relative">
               <textarea
@@ -136,6 +204,8 @@ function App() {
 
   // Result Screen with Image
   if (appState === 'result') {
+    const imageUrl = currentVibe?.image_url || SAMPLE_NAIL_IMAGE;
+    
     return (
       <>
         <div className="min-h-screen bg-white flex flex-col">
@@ -154,11 +224,39 @@ function App() {
             <div className="max-w-sm mx-auto w-full">
               <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6">
                 <img 
-                  src={SAMPLE_NAIL_IMAGE} 
+                  src={imageUrl} 
                   alt="Generated nail design" 
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    // Fallback to sample image if the URL fails to load
+                    const target = e.target as HTMLImageElement;
+                    target.src = SAMPLE_NAIL_IMAGE;
+                  }}
                 />
               </div>
+              
+              {/* Vibe Info */}
+              {currentVibe && (
+                <div className="mb-4 text-center">
+                  {currentVibe.title && (
+                    <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                      {currentVibe.title}
+                    </h2>
+                  )}
+                  {currentVibe.tags && currentVibe.tags.length > 0 && (
+                    <div className="flex flex-wrap justify-center gap-2 mb-2">
+                      {currentVibe.tags.map((tag, index) => (
+                        <span 
+                          key={index}
+                          className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
               
               {/* Chat Trigger */}
               <div className="text-center">
