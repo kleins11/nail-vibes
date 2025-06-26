@@ -63,6 +63,9 @@ const TAG_KEYWORDS = {
   holographic: ['holographic', 'holo', 'rainbow'],
 };
 
+// Create a flat list of all known tags for direct matching
+const ALL_KNOWN_TAGS = Object.keys(TAG_KEYWORDS);
+
 /**
  * Extracts tags from a user prompt using keyword matching
  * @param prompt - The user's natural language prompt
@@ -74,10 +77,10 @@ export function extractTags(prompt: string): string[] {
   }
 
   // Convert prompt to lowercase for case-insensitive matching
-  const lowerPrompt = prompt.toLowerCase();
+  const lowerPrompt = prompt.toLowerCase().trim();
   const extractedTags: string[] = [];
 
-  // Check each tag category for keyword matches
+  // Step 1: Check each tag category for keyword matches
   Object.entries(TAG_KEYWORDS).forEach(([tag, keywords]) => {
     const hasMatch = keywords.some(keyword => 
       lowerPrompt.includes(keyword.toLowerCase())
@@ -87,6 +90,27 @@ export function extractTags(prompt: string): string[] {
       extractedTags.push(tag);
     }
   });
+
+  // Step 2: Direct tag matching - check if any word in the prompt exactly matches a known tag
+  const promptWords = lowerPrompt.split(/\s+/).map(word => 
+    // Remove common punctuation from words
+    word.replace(/[.,!?;:"'()[\]{}]/g, '')
+  ).filter(word => word.length > 0);
+
+  promptWords.forEach(word => {
+    // Check if this word is exactly a known tag
+    if (ALL_KNOWN_TAGS.includes(word) && !extractedTags.includes(word)) {
+      extractedTags.push(word);
+    }
+  });
+
+  // Step 3: Single word prompt handling - if the entire prompt is one word and matches a tag
+  if (promptWords.length === 1) {
+    const singleWord = promptWords[0];
+    if (ALL_KNOWN_TAGS.includes(singleWord) && !extractedTags.includes(singleWord)) {
+      extractedTags.push(singleWord);
+    }
+  }
 
   // Remove duplicates and return
   return [...new Set(extractedTags)];
