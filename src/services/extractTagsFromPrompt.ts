@@ -21,7 +21,7 @@ const customMap: Record<string, string[]> = {
   "old money": ["classic", "neutral", "elegant", "timeless"],
   "mob wife": ["bold", "red", "luxury", "dramatic"],
   "balletcore": ["pink", "sheer", "delicate", "graceful"],
-  "mermaidcore": ["iridescent", "aqua", "shimmer", "oceanic"],
+  "mermaidcore": ["pool","pearl","iridescent", "aqua", "shimmer", "oceanic"],
   "quiet luxury": ["minimal", "neutral", "elegant", "sophisticated"],
 
   // 🌿 Seasonal & Occasion Vibes
