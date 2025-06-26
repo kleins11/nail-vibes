@@ -1,31 +1,30 @@
 import { supabase, VibeIdea, UserPrompt } from '../lib/supabase';
-import { extractTags, calculateMatchScore } from './tagExtractor';
+import { extractTags } from './tagExtractor';
 
 /**
  * Vibe Service
  * 
  * Handles all backend logic for finding and matching nail vibe ideas
- * based on user prompts and tag extraction.
+ * based on user prompts using Supabase RPC functions.
  */
 
 export interface VibeMatchResult {
   success: boolean;
   data?: {
     vibe: VibeIdea;
-    matchScore: number;
     extractedTags: string[];
   };
   error?: string;
 }
 
 /**
- * Finds the best matching vibe idea for a user prompt
+ * Finds a random matching vibe idea for a user prompt using Supabase RPC
  * @param prompt - User's natural language prompt
  * @returns Promise with match result
  */
 export async function findBestVibeMatch(prompt: string): Promise<VibeMatchResult> {
   try {
-    // Step 1: Extract tags from the user prompt (now async)
+    // Step 1: Extract tags from the user prompt
     const extractedTags = await extractTags(prompt);
     
     console.log('🏷️ Extracted tags:', extractedTags);
@@ -37,68 +36,44 @@ export async function findBestVibeMatch(prompt: string): Promise<VibeMatchResult
       };
     }
 
-    // Step 2: Query all vibe ideas from Supabase
-    const { data: vibeIdeas, error: queryError } = await supabase
-      .from('vibe_ideas')
-      .select('*');
-
-    if (queryError) {
-      console.error('❌ Supabase query error:', queryError);
-      return {
-        success: false,
-        error: 'Failed to fetch vibe ideas from database'
-      };
-    }
-
-    if (!vibeIdeas || vibeIdeas.length === 0) {
-      return {
-        success: false,
-        error: 'No vibe ideas found in database'
-      };
-    }
-
-    console.log(`📊 Found ${vibeIdeas.length} vibe ideas in database`);
-
-    // Step 3: Calculate match scores for each vibe idea
-    const scoredVibes = vibeIdeas.map(vibe => ({
-      vibe,
-      matchScore: calculateMatchScore(extractedTags, vibe.tags || [])
-    }));
-
-    // Step 4: Sort by match score (highest first)
-    scoredVibes.sort((a, b) => b.matchScore - a.matchScore);
-
-    console.log('🎯 Top 3 matches:', scoredVibes.slice(0, 3).map(sv => ({
-      id: sv.vibe.id,
-      tags: sv.vibe.tags,
-      score: sv.matchScore
-    })));
-
-    // Step 5: Return the best match
-    const bestMatch = scoredVibes[0];
+    // Step 2: Call Supabase RPC function to get a random design
+    console.log('🎲 Calling get_random_design with tags:', extractedTags);
     
-    // Debug: Log all scored vibes before checking match score
-    console.log('🧪 All scored vibes:', scoredVibes.map(v => ({
-      id: v.vibe.id,
-      tags: v.vibe.tags,
-      score: v.matchScore
-    })));
-    
-    if (bestMatch.matchScore === 0) {
+    const { data, error } = await supabase.rpc('get_random_design', {
+      tags_input: extractedTags
+    });
+
+    if (error) {
+      console.error('❌ Supabase RPC error:', error);
       return {
         success: false,
-        error: `No matching vibes found for tags: ${extractedTags.join(', ')}. Try different keywords or styles.`
+        error: 'Failed to fetch matching designs from database'
       };
     }
 
-    // Step 6: Save the user prompt to database for analytics
-    await saveUserPrompt(prompt, bestMatch.vibe.id);
+    if (!data || data.length === 0) {
+      return {
+        success: false,
+        error: `No matching designs found for tags: ${extractedTags.join(', ')}. Try different keywords or styles.`
+      };
+    }
+
+    // Step 3: Get the first (and should be only) result
+    const matchedVibe = data[0] as VibeIdea;
+    
+    console.log('✅ Found matching vibe via RPC:', {
+      id: matchedVibe.id,
+      title: matchedVibe.title,
+      tags: matchedVibe.tags
+    });
+
+    // Step 4: Save the user prompt to database for analytics
+    await saveUserPrompt(prompt, matchedVibe.id);
 
     return {
       success: true,
       data: {
-        vibe: bestMatch.vibe,
-        matchScore: bestMatch.matchScore,
+        vibe: matchedVibe,
         extractedTags
       }
     };
