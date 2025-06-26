@@ -378,18 +378,6 @@ function App() {
                 />
               </div>
               
-              {/* Refinement Input */}
-              <div className="mb-6">
-                <input
-                  type="text"
-                  value={refinePrompt}
-                  onChange={(e) => setRefinePrompt(e.target.value)}
-                  onKeyDown={(e) => handleKeyPress(e, false, true)}
-                  placeholder="make it chrome, add glitter, more pink..."
-                  className="w-full px-4 py-3 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
-                />
-              </div>
-              
               {/* Enhanced Vibe Info */}
               {currentVibe && (
                 <div className="mb-4 text-center">
@@ -515,7 +503,7 @@ function App() {
                     onKeyDown={(e) => handleKeyPress(e, true)}
                     onFocus={handleChatInputFocus}
                     onBlur={handleChatInputBlur}
-                    placeholder="Keep vibing"
+                    placeholder="make it chrome, add glitter, more pink..."
                     className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <button
