@@ -199,6 +199,22 @@ function App() {
     }
   };
 
+  const handleRefineSubmit = () => {
+    if (!refinePrompt.trim()) return;
+    
+    console.log('🎨 Refining design with prompt:', refinePrompt);
+    
+    // TODO: Implement actual refinement logic
+    // For now, just log the refinement request
+    console.log('Refinement requested:', {
+      originalVibe: currentVibe,
+      refinementPrompt: refinePrompt
+    });
+    
+    // Clear the refine prompt after submission
+    setRefinePrompt('');
+  };
+
   const handleChatSubmit = () => {
     if (!chatInput.trim()) return;
     
@@ -221,10 +237,12 @@ function App() {
     setIsTyping(false);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent, isChat: boolean = false) => {
+  const handleKeyPress = (e: React.KeyboardEvent, isChat: boolean = false, isRefine: boolean = false) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (isChat) {
+      if (isRefine) {
+        handleRefineSubmit();
+      } else if (isChat) {
         handleChatSubmit();
       } else {
         handleInitialSubmit();
@@ -329,6 +347,7 @@ function App() {
   // Result Screen with Image
   if (appState === 'result') {
     const imageUrl = currentVibe?.image_url || SAMPLE_NAIL_IMAGE;
+    const displayImageUrl = refinedImageUrl || imageUrl;
     
     return (
       <>
@@ -348,7 +367,7 @@ function App() {
             <div className="max-w-sm mx-auto w-full">
               <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6">
                 <img 
-                  src={imageUrl} 
+                  src={displayImageUrl} 
                   alt="Generated nail design" 
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -356,6 +375,18 @@ function App() {
                     const target = e.target as HTMLImageElement;
                     target.src = SAMPLE_NAIL_IMAGE;
                   }}
+                />
+              </div>
+              
+              {/* Refinement Input */}
+              <div className="mb-6">
+                <input
+                  type="text"
+                  value={refinePrompt}
+                  onChange={(e) => setRefinePrompt(e.target.value)}
+                  onKeyDown={(e) => handleKeyPress(e, false, true)}
+                  placeholder="make it chrome, add glitter, more pink..."
+                  className="w-full px-4 py-3 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
                 />
               </div>
               
