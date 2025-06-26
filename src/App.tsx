@@ -18,6 +18,8 @@ type AppState = 'input' | 'result' | 'chat' | 'loading';
 function App() {
   const [appState, setAppState] = useState<AppState>('input');
   const [prompt, setPrompt] = useState('');
+  const [refinePrompt, setRefinePrompt] = useState('');
+  const [refinedImageUrl, setRefinedImageUrl] = useState('');
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState('');
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -34,6 +36,8 @@ function App() {
   const handleLogoClick = () => {
     setAppState('input');
     setPrompt('');
+    setRefinePrompt('');
+    setRefinedImageUrl('');
     setChatMessages([]);
     setChatInput('');
     setIsChatOpen(false);
