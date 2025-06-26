@@ -103,6 +103,10 @@ const modifierKeywords: Record<string, string[]> = {
   "classic": ["timeless", "traditional", "refined", "elegant"],
   "modern": ["contemporary", "sleek", "current", "fresh"],
   "chic": ["stylish", "fashionable", "sophisticated", "trendy"],
+  "fruit": ["colorful", "bright", "playful", "fun"],
+  "floral": ["botanical", "nature", "delicate", "feminine"],
+  "geometric": ["structured", "modern", "clean", "angular"],
+  "abstract": ["artistic", "creative", "unique", "expressive"],
 };
 
 /**
@@ -196,12 +200,19 @@ export function extractTagsFromPrompt(prompt: string): {
     }
   }
 
-  // Step 2: If no concept was matched, treat all extracted tags as primary
-  if (!matchedConcept) {
-    console.log(`📝 No concept matched, treating all tags as primary for: "${prompt}"`);
-    primaryTags = mapKeywordsToTags(prompt);
-    modifierTags = []; // No modifiers when no concept is matched
-    console.log(`🏷️ Primary tags from generic prompt:`, primaryTags);
+  // Step 2: If no concept was matched, try to extract tags from the full prompt
+  if (primaryTags.length === 0) {
+    console.log(`📝 No concept matched, checking for generic keywords in: "${prompt}"`);
+    const extractedTags = mapKeywordsToTags(prompt);
+    
+    if (extractedTags.length > 0) {
+      // Treat all extracted tags as primary tags
+      primaryTags = extractedTags;
+      modifierTags = []; // No modifiers when no concept is matched
+      console.log(`🏷️ Primary tags from generic prompt:`, primaryTags);
+    } else {
+      console.log(`⚠️ No tags extracted from prompt: "${prompt}"`);
+    }
   }
 
   // Step 3: Combine tags (primary first, then modifiers)
@@ -274,6 +285,9 @@ if (typeof window === 'undefined') {
     "gothic edgy black",
     "bridal elegant",
     "neutral simple nails",
+    "fruit",
+    "elegant",
+    "romantic",
     "just some random words"
   ];
   
