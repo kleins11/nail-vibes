@@ -25,8 +25,8 @@ export interface VibeMatchResult {
  */
 export async function findBestVibeMatch(prompt: string): Promise<VibeMatchResult> {
   try {
-    // Step 1: Extract tags from the user prompt
-    const extractedTags = extractTags(prompt);
+    // Step 1: Extract tags from the user prompt (now async)
+    const extractedTags = await extractTags(prompt);
     
     console.log('🏷️ Extracted tags:', extractedTags);
     
@@ -170,7 +170,7 @@ export async function getRandomVibes(limit: number = 5): Promise<VibeIdea[]> {
 export async function debugVibeMatching(prompt: string) {
   console.log('🔍 Debug: Starting vibe matching for prompt:', prompt);
   
-  const extractedTags = extractTags(prompt);
+  const extractedTags = await extractTags(prompt);
   console.log('🏷️ Debug: Extracted tags:', extractedTags);
   
   const result = await findBestVibeMatch(prompt);

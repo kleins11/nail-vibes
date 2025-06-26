@@ -5,6 +5,8 @@
  * The logic can be customized later to use more sophisticated NLP or AI-based extraction.
  */
 
+import { supabase } from '../lib/supabase';
+
 // Predefined tag categories with associated keywords
 const TAG_KEYWORDS = {
   // Style categories
@@ -66,48 +68,134 @@ const TAG_KEYWORDS = {
 // Create a flat list of all known tags for direct matching
 const ALL_KNOWN_TAGS = Object.keys(TAG_KEYWORDS);
 
-// Hardcoded list of known database tags that might not be in TAG_KEYWORDS
-// These are tags that exist in the vibe_ideas.tags field in the database
-const DATABASE_TAGS = [
-  // Additional style tags
-  'goth', 'gothic', 'punk', 'grunge', 'boho', 'bohemian', 'vintage', 'retro',
-  'modern', 'contemporary', 'classic', 'traditional', 'trendy', 'chic',
-  
-  // Theme tags
-  'fruit', 'citrus', 'tropical', 'nature', 'animal', 'abstract', 'artistic',
-  'music', 'sports', 'travel', 'food', 'holiday', 'seasonal', 'winter', 'spring',
-  'summer', 'fall', 'autumn', 'christmas', 'halloween', 'valentine',
-  
-  // Texture/finish tags
-  'textured', 'smooth', 'rough', 'bumpy', 'raised', 'embossed', 'foil',
-  'velvet', 'satin', 'pearl', 'iridescent', 'neon', 'pastel',
-  
-  // Pattern tags
-  'stripes', 'dots', 'polka', 'chevron', 'zigzag', 'plaid', 'checkered',
-  'leopard', 'zebra', 'snake', 'tie-dye', 'galaxy', 'space', 'stars',
-  
-  // Cultural/themed tags
-  'japanese', 'korean', 'chinese', 'indian', 'mexican', 'african', 'tribal',
-  'mandala', 'henna', 'paisley', 'damask', 'baroque', 'art-deco',
-  
-  // Occasion-specific
-  'prom', 'graduation', 'anniversary', 'engagement', 'baby-shower',
-  'bachelorette', 'girls-night', 'spa-day', 'vacation', 'cruise',
-  
-  // Mood/vibe tags
-  'fierce', 'soft', 'dreamy', 'mysterious', 'bold', 'subtle', 'dramatic',
-  'romantic', 'edgy', 'sweet', 'sassy', 'classy', 'funky', 'wild'
-];
-
-// Combine all known tags (from categories and database) for comprehensive matching
-const ALL_POSSIBLE_TAGS = [...ALL_KNOWN_TAGS, ...DATABASE_TAGS.map(tag => tag.toLowerCase())];
+// Cache for database tags to avoid repeated queries
+let cachedDatabaseTags: string[] | null = null;
+let tagsFetchPromise: Promise<string[]> | null = null;
 
 /**
- * Extracts tags from a user prompt using keyword matching
- * @param prompt - The user's natural language prompt
- * @returns Array of extracted tags
+ * Fetches all distinct tags from the vibe_ideas table in Supabase
+ * Uses caching to avoid repeated database queries
+ * @returns Promise<string[]> - Array of all unique tags from the database
  */
-export function extractTags(prompt: string): string[] {
+export async function getKnownTags(): Promise<string[]> {
+  // Return cached tags if available
+  if (cachedDatabaseTags !== null) {
+    console.log('🏷️ Using cached database tags:', cachedDatabaseTags.length, 'tags');
+    return cachedDatabaseTags;
+  }
+
+  // If a fetch is already in progress, return that promise
+  if (tagsFetchPromise !== null) {
+    console.log('🏷️ Fetch already in progress, waiting...');
+    return tagsFetchPromise;
+  }
+
+  // Start a new fetch
+  console.log('🏷️ Fetching tags from Supabase...');
+  tagsFetchPromise = fetchTagsFromDatabase();
+  
+  try {
+    const tags = await tagsFetchPromise;
+    cachedDatabaseTags = tags;
+    tagsFetchPromise = null;
+    console.log('✅ Successfully cached', tags.length, 'database tags');
+    return tags;
+  } catch (error) {
+    tagsFetchPromise = null;
+    throw error;
+  }
+}
+
+/**
+ * Internal function to fetch tags from Supabase
+ * Uses SELECT DISTINCT unnest(tags) to get all unique tags
+ */
+async function fetchTagsFromDatabase(): Promise<string[]> {
+  try {
+    // Query to get all distinct tags from the tags array column
+    const { data, error } = await supabase
+      .rpc('get_distinct_tags');
+
+    if (error) {
+      // If the RPC function doesn't exist, fall back to a regular query
+      console.log('🔄 RPC function not found, using fallback query...');
+      return await fetchTagsFallback();
+    }
+
+    if (!data) {
+      console.warn('⚠️ No tags returned from database');
+      return [];
+    }
+
+    // Normalize tags to lowercase and filter out empty strings
+    const normalizedTags = data
+      .map((item: any) => item.tag || item)
+      .filter((tag: string) => tag && typeof tag === 'string' && tag.trim().length > 0)
+      .map((tag: string) => tag.toLowerCase().trim());
+
+    // Remove duplicates
+    const uniqueTags = [...new Set(normalizedTags)];
+    
+    console.log('📊 Fetched', uniqueTags.length, 'unique tags from database');
+    return uniqueTags;
+
+  } catch (error) {
+    console.error('❌ Error fetching tags from database:', error);
+    console.log('🔄 Falling back to alternative query method...');
+    return await fetchTagsFallback();
+  }
+}
+
+/**
+ * Fallback method to fetch tags when RPC function is not available
+ * Fetches all vibe_ideas and extracts tags client-side
+ */
+async function fetchTagsFallback(): Promise<string[]> {
+  try {
+    const { data: vibeIdeas, error } = await supabase
+      .from('vibe_ideas')
+      .select('tags');
+
+    if (error) {
+      console.error('❌ Fallback query failed:', error);
+      return [];
+    }
+
+    if (!vibeIdeas || vibeIdeas.length === 0) {
+      console.warn('⚠️ No vibe ideas found in database');
+      return [];
+    }
+
+    // Extract all tags from all records
+    const allTags: string[] = [];
+    vibeIdeas.forEach(vibe => {
+      if (vibe.tags && Array.isArray(vibe.tags)) {
+        vibe.tags.forEach(tag => {
+          if (tag && typeof tag === 'string' && tag.trim().length > 0) {
+            allTags.push(tag.toLowerCase().trim());
+          }
+        });
+      }
+    });
+
+    // Remove duplicates
+    const uniqueTags = [...new Set(allTags)];
+    
+    console.log('📊 Extracted', uniqueTags.length, 'unique tags from', vibeIdeas.length, 'vibe ideas');
+    return uniqueTags;
+
+  } catch (error) {
+    console.error('❌ Fallback tag extraction failed:', error);
+    return [];
+  }
+}
+
+/**
+ * Extracts tags from a user prompt using keyword matching and database tag matching
+ * @param prompt - The user's natural language prompt
+ * @returns Promise<string[]> - Array of extracted tags
+ */
+export async function extractTags(prompt: string): Promise<string[]> {
   if (!prompt || typeof prompt !== 'string') {
     return [];
   }
@@ -116,7 +204,7 @@ export function extractTags(prompt: string): string[] {
   const lowerPrompt = prompt.toLowerCase().trim();
   const extractedTags: string[] = [];
 
-  // Step 1: Check each tag category for keyword matches
+  // Step 1: Check each tag category for keyword matches (existing logic)
   Object.entries(TAG_KEYWORDS).forEach(([tag, keywords]) => {
     const hasMatch = keywords.some(keyword => 
       lowerPrompt.includes(keyword.toLowerCase())
@@ -127,46 +215,53 @@ export function extractTags(prompt: string): string[] {
     }
   });
 
-  // Step 2: Direct tag matching - check if any word in the prompt exactly matches a known tag
+  // Step 2: Direct tag matching - check if any word in the prompt exactly matches a known category tag
   const promptWords = lowerPrompt.split(/\s+/).map(word => 
     // Remove common punctuation from words
     word.replace(/[.,!?;:"'()[\]{}]/g, '')
   ).filter(word => word.length > 0);
 
   promptWords.forEach(word => {
-    // Check if this word is exactly a known tag
+    // Check if this word is exactly a known category tag
     if (ALL_KNOWN_TAGS.includes(word) && !extractedTags.includes(word)) {
       extractedTags.push(word);
     }
   });
 
-  // Step 3: Single word prompt handling - if the entire prompt is one word and matches a tag
-  if (promptWords.length === 1) {
-    const singleWord = promptWords[0];
-    if (ALL_KNOWN_TAGS.includes(singleWord) && !extractedTags.includes(singleWord)) {
-      extractedTags.push(singleWord);
-    }
-  }
+  // Step 3: Database tag fallback - fetch known tags from database and check for matches
+  try {
+    const databaseTags = await getKnownTags();
+    
+    promptWords.forEach(word => {
+      // Check if this word exists in the database tags
+      if (databaseTags.includes(word.toLowerCase()) && !extractedTags.includes(word.toLowerCase())) {
+        extractedTags.push(word.toLowerCase());
+      }
+    });
 
-  // Step 4: DATABASE TAG FALLBACK - Check for exact matches against known database tags
-  promptWords.forEach(word => {
-    // Normalize the word and check if it exists in our database tags list
-    const normalizedWord = word.toLowerCase();
-    if (DATABASE_TAGS.includes(normalizedWord) && !extractedTags.includes(normalizedWord)) {
-      extractedTags.push(normalizedWord);
+    // Step 4: Single word prompt handling - special case for one-word prompts
+    if (promptWords.length === 1) {
+      const singleWord = promptWords[0].toLowerCase();
+      if (databaseTags.includes(singleWord) && !extractedTags.includes(singleWord)) {
+        extractedTags.push(singleWord);
+      }
     }
-  });
 
-  // Step 5: Additional fallback for single-word prompts against database tags
-  if (promptWords.length === 1) {
-    const singleWord = promptWords[0].toLowerCase();
-    if (DATABASE_TAGS.includes(singleWord) && !extractedTags.includes(singleWord)) {
-      extractedTags.push(singleWord);
-    }
+  } catch (error) {
+    console.error('⚠️ Failed to fetch database tags, skipping database tag matching:', error);
+    // Continue without database tag matching - the keyword matching will still work
   }
 
   // Remove duplicates and return
-  return [...new Set(extractedTags)];
+  const uniqueTags = [...new Set(extractedTags)];
+  
+  console.log('🏷️ Tag extraction results:', {
+    prompt: prompt,
+    extractedTags: uniqueTags,
+    totalTags: uniqueTags.length
+  });
+
+  return uniqueTags;
 }
 
 /**
@@ -198,12 +293,21 @@ export function calculateMatchScore(extractedTags: string[], vibeIdeaTags: strin
 }
 
 /**
+ * Clears the cached database tags (useful for testing or when tags are updated)
+ */
+export function clearTagCache(): void {
+  cachedDatabaseTags = null;
+  tagsFetchPromise = null;
+  console.log('🗑️ Tag cache cleared');
+}
+
+/**
  * Debug function to show tag extraction results
  * @param prompt - The user prompt
- * @returns Object with prompt, extracted tags, and matched keywords
+ * @returns Promise with detailed debug information
  */
-export function debugTagExtraction(prompt: string) {
-  const extractedTags = extractTags(prompt);
+export async function debugTagExtraction(prompt: string) {
+  const extractedTags = await extractTags(prompt);
   const lowerPrompt = prompt.toLowerCase();
   
   const matchedKeywords: Record<string, string[]> = {};
@@ -217,20 +321,29 @@ export function debugTagExtraction(prompt: string) {
     }
   });
 
-  // Also check for database tag matches
-  const promptWords = lowerPrompt.split(/\s+/).map(word => 
-    word.replace(/[.,!?;:"'()[\]{}]/g, '')
-  ).filter(word => word.length > 0);
+  // Get database tags for debugging
+  let databaseTags: string[] = [];
+  let databaseTagMatches: string[] = [];
+  
+  try {
+    databaseTags = await getKnownTags();
+    const promptWords = lowerPrompt.split(/\s+/).map(word => 
+      word.replace(/[.,!?;:"'()[\]{}]/g, '')
+    ).filter(word => word.length > 0);
 
-  const databaseTagMatches = promptWords.filter(word => 
-    DATABASE_TAGS.includes(word.toLowerCase())
-  );
+    databaseTagMatches = promptWords.filter(word => 
+      databaseTags.includes(word.toLowerCase())
+    );
+  } catch (error) {
+    console.error('Debug: Failed to fetch database tags:', error);
+  }
 
   return {
     prompt,
     extractedTags,
     matchedKeywords,
     databaseTagMatches,
-    allPossibleTags: ALL_POSSIBLE_TAGS.length
+    totalDatabaseTags: databaseTags.length,
+    cachedTagsAvailable: cachedDatabaseTags !== null
   };
 }
