@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowUp, X, Minus } from 'lucide-react';
-import { findBestVibeMatch, VibeMatchResult, VibeMatchData } from './services/vibeService';
+import { findBestVibeMatch, VibeMatchResult, VibeMatchData, fetchBestMatchingDesign } from './services/vibeService';
+import { extractTagsFromPrompt } from './services/extractTagsFromPrompt';
 
 // Sample nail image URL (fallback)
 const SAMPLE_NAIL_IMAGE = "https://images.pexels.com/photos/3997379/pexels-photo-3997379.jpeg?auto=compress&cs=tinysrgb&w=800";
@@ -40,6 +41,81 @@ function App() {
     setCurrentVibe(null);
     setMatchInfo(null);
     setError(null);
+  };
+
+  // Example usage of fetchBestMatchingDesign function
+  const handleInitialSubmitWithRPC = async () => {
+    if (!prompt.trim()) return;
+    
+    setError(null);
+    setAppState('loading');
+    
+    try {
+      console.log('🚀 Using RPC function to search for best match with prompt:', prompt);
+      
+      // Extract tags from prompt
+      const tagExtraction = extractTagsFromPrompt(prompt);
+      console.log('🏷️ Extracted tags:', tagExtraction.combinedTags);
+      
+      // Call the new RPC function
+      const result = await fetchBestMatchingDesign(tagExtraction.combinedTags);
+      
+      if (result.message) {
+        // Handle error case
+        console.error('❌ RPC function returned error:', result.message);
+        setError(result.message);
+        setAppState('input');
+        return;
+      }
+      
+      if (result.data) {
+        console.log('✅ Found design via RPC:', result.data);
+        
+        // Create a mock vibe object that matches our interface
+        const mockVibe: VibeMatchData = {
+          id: result.data.id,
+          image_url: result.data.image_url,
+          title: result.data.title,
+          tags: result.data.tags || [],
+          description: result.data.description,
+          source_url: result.data.source_url,
+          match_score: result.data.match_score || 1,
+          primary_matches: result.data.primary_matches || 0,
+          modifier_matches: result.data.modifier_matches || 0,
+          match_type: 'all_primary' as const
+        };
+        
+        setCurrentVibe(mockVibe);
+        setMatchInfo({
+          primaryTags: tagExtraction.primaryTags,
+          modifierTags: tagExtraction.modifierTags,
+          matchedConcept: tagExtraction.matchedConcept,
+          searchStrategy: 'rpc_function'
+        });
+        
+        // Create chat messages
+        const userMessage: ChatMessage = {
+          id: Date.now().toString(),
+          type: 'user',
+          content: prompt,
+          timestamp: new Date()
+        };
+        
+        const systemMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          type: 'system',
+          content: result.data.description || "Here's a perfect nail design that matches your vibe! ✨",
+          timestamp: new Date()
+        };
+        
+        setChatMessages([userMessage, systemMessage]);
+        setAppState('result');
+      }
+    } catch (error) {
+      console.error('❌ Error in handleInitialSubmitWithRPC:', error);
+      setError('An unexpected error occurred. Please try again.');
+      setAppState('input');
+    }
   };
 
   const handleInitialSubmit = async () => {

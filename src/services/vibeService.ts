@@ -27,6 +27,61 @@ export interface VibeMatchResult {
 }
 
 /**
+ * Fetches the best matching design using Supabase RPC function
+ * @param tagsInput - Array of tags to search for
+ * @returns Object with data and message
+ */
+export async function fetchBestMatchingDesign(tagsInput: string[]): Promise<{
+  data: any | null;
+  message: string | null;
+}> {
+  // Check if tags array is empty
+  if (!tagsInput || tagsInput.length === 0) {
+    return {
+      data: null,
+      message: "No tags extracted from your prompt. Try being more specific!"
+    };
+  }
+
+  try {
+    console.log('🔍 Calling Supabase RPC with tags:', tagsInput);
+    
+    // Call the Supabase RPC function
+    const { data, error } = await supabase
+      .rpc('get_best_matching_design', { tags_input: tagsInput });
+
+    if (error) {
+      console.error('❌ Supabase RPC error:', error);
+      return {
+        data: null,
+        message: "There was a problem fetching your nail vibe. Please try again!"
+      };
+    }
+
+    if (!data || data.length === 0) {
+      console.log('⚠️ No data returned from RPC function');
+      return {
+        data: null,
+        message: "No designs found for your vibe. Try tweaking your description!"
+      };
+    }
+
+    console.log('✅ Successfully fetched design:', data[0]);
+    return {
+      data: data[0],
+      message: null
+    };
+
+  } catch (error) {
+    console.error('❌ Error in fetchBestMatchingDesign:', error);
+    return {
+      data: null,
+      message: "There was a problem fetching your nail vibe. Please try again!"
+    };
+  }
+}
+
+/**
  * Finds the best matching vibe idea using prioritized search
  * @param prompt - User's natural language prompt
  * @returns Promise with match result including detailed tag information
