@@ -109,6 +109,17 @@ function App() {
     setIsTyping(false);
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent, isChat: boolean = false) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (isChat) {
+        handleChatSubmit();
+      } else {
+        handleInitialSubmit();
+      }
+    }
+  };
+
   const openChat = () => {
     setIsChatOpen(true);
   };
@@ -183,6 +194,7 @@ function App() {
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
+                onKeyDown={(e) => handleKeyPress(e)}
                 placeholder="Maximalist 3D design for Beatles-themed wedding in London on coffin shape"
                 className="w-full h-24 p-4 text-sm text-gray-600 placeholder-gray-400 border-0 resize-none focus:outline-none bg-gray-50 rounded-lg"
                 style={{ fontFamily: 'ui-monospace, monospace' }}
@@ -322,6 +334,7 @@ function App() {
                     type="text"
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
+                    onKeyDown={(e) => handleKeyPress(e, true)}
                     onFocus={handleChatInputFocus}
                     onBlur={handleChatInputBlur}
                     placeholder="Keep vibing"
