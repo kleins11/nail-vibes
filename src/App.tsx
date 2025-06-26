@@ -24,6 +24,7 @@ function App() {
   const [chatInput, setChatInput] = useState('');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [isRefining, setIsRefining] = useState(false);
   const [currentVibe, setCurrentVibe] = useState<VibeMatchData | null>(null);
   const [matchInfo, setMatchInfo] = useState<{
     primaryTags: string[];
@@ -42,6 +43,7 @@ function App() {
     setChatInput('');
     setIsChatOpen(false);
     setIsTyping(false);
+    setIsRefining(false);
     setCurrentVibe(null);
     setMatchInfo(null);
     setError(null);
@@ -199,20 +201,86 @@ function App() {
     }
   };
 
-  const handleRefineSubmit = () => {
-    if (!refinePrompt.trim()) return;
+  const handleRefineSubmit = async () => {
+    if (!refinePrompt.trim() || !currentVibe?.image_url) {
+      console.log('⚠️ Missing refine prompt or base image URL');
+      return;
+    }
     
+    setIsRefining(true);
     console.log('🎨 Refining design with prompt:', refinePrompt);
     
-    // TODO: Implement actual refinement logic
-    // For now, just log the refinement request
-    console.log('Refinement requested:', {
-      originalVibe: currentVibe,
-      refinementPrompt: refinePrompt
-    });
-    
-    // Clear the refine prompt after submission
-    setRefinePrompt('');
+    try {
+      // Make POST request to the refine nail design endpoint
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/refine-nail-design`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          baseImageUrl: currentVibe.image_url,
+          refinementPrompt: refinePrompt
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      
+      if (result.error) {
+        console.error('❌ Refinement error:', result.error);
+        // Add error message to chat
+        const errorMessage: ChatMessage = {
+          id: Date.now().toString(),
+          type: 'system',
+          content: `Sorry, I couldn't refine the design: ${result.error}`,
+          timestamp: new Date()
+        };
+        setChatMessages(prev => [...prev, errorMessage]);
+      } else if (result.imageUrl) {
+        console.log('✅ Refinement successful:', result.imageUrl);
+        
+        // Set the refined image URL
+        setRefinedImageUrl(result.imageUrl);
+        
+        // Add success message to chat
+        const userMessage: ChatMessage = {
+          id: Date.now().toString(),
+          type: 'user',
+          content: refinePrompt,
+          timestamp: new Date()
+        };
+        
+        const systemMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          type: 'system',
+          content: "Perfect! I've refined your design with your requested changes. Check out the updated image above! ✨",
+          timestamp: new Date()
+        };
+        
+        setChatMessages(prev => [...prev, userMessage, systemMessage]);
+      }
+      
+      // Clear the refine prompt after submission
+      setRefinePrompt('');
+      
+    } catch (error) {
+      console.error('❌ Error in handleRefineSubmit:', error);
+      
+      // Add error message to chat
+      const errorMessage: ChatMessage = {
+        id: Date.now().toString(),
+        type: 'system',
+        content: "Sorry, there was an error refining your design. Please try again!",
+        timestamp: new Date()
+      };
+      setChatMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsRefining(false);
+    }
   };
 
   const handleChatSubmit = () => {
@@ -365,7 +433,7 @@ function App() {
           {/* Image Result */}
           <div className="flex-1 flex flex-col justify-center px-6">
             <div className="max-w-sm mx-auto w-full">
-              <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6">
+              <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6 relative">
                 <img 
                   src={displayImageUrl} 
                   alt="Generated nail design" 
@@ -376,6 +444,16 @@ function App() {
                     target.src = SAMPLE_NAIL_IMAGE;
                   }}
                 />
+                
+                {/* Refining indicator */}
+                {isRefining && (
+                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="text-center text-white">
+                      <div className="animate-spin w-8 h-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-2"></div>
+                      <p className="text-sm">Refining design...</p>
+                    </div>
+                  </div>
+                )}
               </div>
               
               {/* Enhanced Vibe Info */}
@@ -498,26 +576,31 @@ function App() {
                 <div className="flex space-x-2">
                   <input
                     type="text"
-                    value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
-                    onKeyDown={(e) => handleKeyPress(e, true)}
+                    value={refinePrompt}
+                    onChange={(e) => setRefinePrompt(e.target.value)}
+                    onKeyDown={(e) => handleKeyPress(e, false, true)}
                     onFocus={handleChatInputFocus}
                     onBlur={handleChatInputBlur}
                     placeholder="make it chrome, add glitter, more pink..."
                     className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    disabled={isRefining}
                   />
                   <button
-                    onClick={handleChatSubmit}
-                    disabled={!chatInput.trim()}
+                    onClick={handleRefineSubmit}
+                    disabled={!refinePrompt.trim() || isRefining}
                     className="w-12 h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 rounded-lg flex items-center justify-center transition-colors"
                   >
-                    <ArrowUp className="w-5 h-5 text-white" />
+                    {isRefining ? (
+                      <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+                    ) : (
+                      <ArrowUp className="w-5 h-5 text-white" />
+                    )}
                   </button>
                 </div>
               </div>
               
               {/* Typing Indicator */}
-              {isTyping && (
+              {isTyping && !isRefining && (
                 <div className="p-4 pt-0">
                   <div className="text-xs text-gray-500 italic">
                     Typing...
