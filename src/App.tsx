@@ -212,7 +212,7 @@ function App() {
     
     try {
       // Make POST request to the refine nail design endpoint
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/refine-nail-design`, {
+      const response = await fetch('/api/refineNailDesign', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
