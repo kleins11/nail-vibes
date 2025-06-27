@@ -15,7 +15,7 @@ interface RefineResponse {
  * @param request - POST request with baseImageUrl and refinementPrompt
  * @returns JSON response with refined image URL or error
  */
-export async function refineNailDesign(request: Request): Promise<Response> {
+export default async function refineNailDesign(request: Request): Promise<Response> {
   // Only allow POST requests
   if (request.method !== 'POST') {
     return new Response(
@@ -172,6 +172,3 @@ export async function refineNailDesign(request: Request): Promise<Response> {
     );
   }
 }
-
-// Default export for compatibility
-export default refineNailDesign;
