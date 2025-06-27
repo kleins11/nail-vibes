@@ -49,12 +49,12 @@ function App() {
     setError(null);
   };
 
-  // New function to call Supabase Edge Function
+  // Updated function to call the local Supabase Edge Function
   const handleCallSupabaseFunction = async () => {
     try {
       console.log('🚀 Calling Supabase Edge Function...');
       
-      const response = await fetch('https://ihmazbkomtatnvtweaun.supabase.co/functions/v1/hello-world', {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/hello-world`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
@@ -66,11 +66,11 @@ function App() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const responseText = await response.text();
-      console.log('✅ Supabase function response:', responseText);
+      const responseData = await response.json();
+      console.log('✅ Supabase function response:', responseData);
       
       // Show response in browser alert
-      alert(`Supabase Function Response: ${responseText}`);
+      alert(`Supabase Function Response: ${responseData.message}\nTimestamp: ${responseData.timestamp}`);
       
     } catch (error) {
       console.error('❌ Error calling Supabase function:', error);
