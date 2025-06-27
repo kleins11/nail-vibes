@@ -49,6 +49,35 @@ function App() {
     setError(null);
   };
 
+  // Updated function to call the local Supabase Edge Function
+  const handleCallSupabaseFunction = async () => {
+    try {
+      console.log('🚀 Calling Supabase Edge Function...');
+      
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/hello-world`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+      console.log('✅ Supabase function response:', responseData);
+      
+      // Show response in browser alert
+      alert(`Supabase Function Response: ${responseData.message}\nTimestamp: ${responseData.timestamp}`);
+      
+    } catch (error) {
+      console.error('❌ Error calling Supabase function:', error);
+      alert(`Error calling Supabase function: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
+
   // Example usage of fetchBestMatchingDesign function
   const handleInitialSubmitWithRPC = async () => {
     if (!prompt.trim()) return;
@@ -404,6 +433,16 @@ function App() {
                 className="absolute bottom-3 right-3 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
               >
                 <ArrowUp className="w-4 h-4 text-white" />
+              </button>
+            </div>
+
+            {/* Supabase Function Test Button */}
+            <div className="mt-6 text-center">
+              <button
+                onClick={handleCallSupabaseFunction}
+                className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium"
+              >
+                Call Supabase Function
               </button>
             </div>
           </div>
