@@ -28,8 +28,8 @@
     letter-spacing: -0.02em;
     /* Drop shadow matching Figma: X=0, Y=20px, Blur=20px, Spread=0px, Color=#9B9BA9 at 50% opacity */
     text-shadow: 0 20px 20px rgba(155, 155, 169, 0.5);
-    /* Much more generous spacing below heading - 120px for desktop */
-    margin-bottom: 120px;
+    /* Remove margin-bottom from here since we'll apply it to the textarea container */
+    margin-bottom: 0;
   }
   
   .font-calling-code {
@@ -173,6 +173,8 @@
   .textarea-long-container {
     position: relative;
     width: 100%;
+    /* Apply the generous spacing above the textarea container */
+    margin-top: 120px;
   }
   
   /* Textarea Long Component Styling with Drop Shadow - Fixed to match Figma */
@@ -284,8 +286,11 @@
   @media (max-width: 640px) {
     .text-display {
       font-size: 2.5rem;
-      /* More generous mobile spacing - 100px for mobile */
-      margin-bottom: 100px;
+    }
+    
+    /* Responsive spacing for mobile */
+    .textarea-long-container {
+      margin-top: 100px;
     }
   }
 }
