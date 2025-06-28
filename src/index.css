@@ -171,7 +171,7 @@
     width: 100%;
   }
   
-  /* Textarea Long Component Styling */
+  /* Textarea Long Component Styling with Drop Shadow */
   .textarea-long {
     width: 100%;
     height: 138px;
@@ -185,11 +185,15 @@
     color: #3F3F3F;
     resize: none;
     outline: none;
+    /* Drop shadow: x=0, y=20px, color=#9B9BA9 with 25% opacity */
+    box-shadow: 0 20px 0 0 rgba(155, 155, 169, 0.25);
   }
   
   .textarea-long:focus {
     outline: none;
     border-color: #E6E6E6;
+    /* Maintain shadow on focus */
+    box-shadow: 0 20px 0 0 rgba(155, 155, 169, 0.25);
   }
   
   /* Button positioning within textarea container */
@@ -232,5 +236,10 @@
     font-family: 'calling-code', 'Source Code Pro', monospace;
     font-style: italic;
     color: #808080;
+  }
+  
+  /* Custom background color for input page */
+  .bg-input-background {
+    background-color: #F5F1EC;
   }
 }

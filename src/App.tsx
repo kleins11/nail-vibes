@@ -448,7 +448,7 @@ function App() {
   // Initial Input Screen
   if (appState === 'input') {
     return (
-      <div className="min-h-screen bg-white flex flex-col">
+      <div className="min-h-screen bg-input-background flex flex-col">
         {/* Header */}
         <div className="m3-grid-container">
           <div className="m3-grid">
