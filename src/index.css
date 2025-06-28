@@ -19,6 +19,10 @@
     letter-spacing: -0.02em;
   }
   
+  .font-calling-code {
+    font-family: 'calling-code', 'Source Code Pro', monospace;
+  }
+  
   @media (max-width: 640px) {
     .text-display {
       font-size: 2.5rem;
@@ -38,5 +42,12 @@
     to {
       transform: translateY(0);
     }
+  }
+  
+  /* Custom placeholder styling for textarea */
+  .placeholder-calling-code::placeholder {
+    font-family: 'calling-code', 'Source Code Pro', monospace;
+    font-style: italic;
+    color: #808080;
   }
 }
