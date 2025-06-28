@@ -75,6 +75,7 @@ function App() {
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': *
         },
         body: JSON.stringify({
           prompt: generatePrompt
