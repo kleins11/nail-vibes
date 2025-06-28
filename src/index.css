@@ -210,13 +210,13 @@
     transition: background-color 0.2s;
   }
   
-  /* Gradient Shapes Auto-Scroll Component - Increased size by 10% */
+  /* Gradient Shapes Auto-Scroll Component - Seamless infinite scroll */
   .gradient-shapes-container {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 88px; /* Increased from 80px to 88px (10% bigger: 80px * 1.1 = 88px) */
+    height: 88px;
     background: transparent;
     overflow: hidden;
     z-index: 10;
@@ -227,14 +227,18 @@
     display: flex;
     align-items: center;
     height: 100%;
-    animation: scrollShapes 54s linear infinite; /* Keeping the faster speed from previous adjustment */
+    /* Seamless infinite scroll - no restart glitch */
+    animation: scrollShapesSeamless 54s linear infinite;
     will-change: transform;
+    /* Ensure smooth animation */
+    backface-visibility: hidden;
+    perspective: 1000px;
   }
   
   .gradient-shape {
     flex-shrink: 0;
-    margin-right: 26px; /* Increased from 24px to 26px (10% bigger: 24px * 1.1 = 26.4px ≈ 26px) */
-    height: 55px; /* Increased from 50px to 55px (10% bigger: 50px * 1.1 = 55px) */
+    margin-right: 26px;
+    height: 55px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -244,14 +248,15 @@
     height: 100%;
     width: auto;
     object-fit: contain;
-    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.08)); /* Keeping the adjusted shadow */
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.08));
   }
   
-  @keyframes scrollShapes {
-    0% {
+  /* Seamless infinite scroll animation - moves exactly half the width to create perfect loop */
+  @keyframes scrollShapesSeamless {
+    from {
       transform: translateX(0);
     }
-    100% {
+    to {
       transform: translateX(-50%);
     }
   }
@@ -259,16 +264,16 @@
   /* Responsive adjustments for gradient shapes */
   @media (max-width: 640px) {
     .gradient-shapes-container {
-      height: 66px; /* Increased from 60px to 66px (10% bigger: 60px * 1.1 = 66px) */
+      height: 66px;
     }
     
     .gradient-shape {
-      height: 42px; /* Increased from 38px to 42px (10% bigger: 38px * 1.1 = 41.8px ≈ 42px) */
-      margin-right: 20px; /* Increased from 18px to 20px (10% bigger: 18px * 1.1 = 19.8px ≈ 20px) */
+      height: 42px;
+      margin-right: 20px;
     }
     
     .gradient-shapes-scroll {
-      animation-duration: 40.5s; /* Keeping the faster speed from previous adjustment */
+      animation-duration: 40.5s;
     }
   }
   
