@@ -26,6 +26,8 @@
     font-size: 3.5rem;
     line-height: 1.1;
     letter-spacing: -0.02em;
+    /* Drop shadow matching Figma: X=0, Y=20px, Blur=20px, Spread=0px, Color=#9B9BA9 at 50% opacity */
+    text-shadow: 0 20px 20px rgba(155, 155, 169, 0.5);
   }
   
   .font-calling-code {
