@@ -34,17 +34,136 @@
     color: #3F3F3F;
   }
   
-  /* Textarea Long Component Container with Responsive Margins */
-  .textarea-long-container {
-    position: relative;
-    margin: 16px; /* Default for XS and S (mobile) */
+  /* Material Design 3 Grid System */
+  .m3-grid-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding-left: 16px;
+    padding-right: 16px;
   }
   
-  /* Medium screens and up (768px+) - M, L, XL form factors */
-  @media (min-width: 768px) {
-    .textarea-long-container {
-      margin: 24px;
+  /* Mobile (XS, S) - 4 columns, 16px margins, 16px gutters */
+  @media (max-width: 599px) {
+    .m3-grid-container {
+      padding-left: 16px;
+      padding-right: 16px;
     }
+    
+    .m3-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+  }
+  
+  /* Tablet (M) - 8 columns, 24px margins, 24px gutters */
+  @media (min-width: 600px) and (max-width: 839px) {
+    .m3-grid-container {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    
+    .m3-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 24px;
+    }
+  }
+  
+  /* Desktop (L, XL) - 12 columns, 24px margins, 24px gutters */
+  @media (min-width: 840px) {
+    .m3-grid-container {
+      padding-left: 24px;
+      padding-right: 24px;
+      max-width: 1200px;
+    }
+    
+    .m3-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 24px;
+    }
+  }
+  
+  /* Grid column span utilities for M3 */
+  .m3-col-1 { grid-column: span 1; }
+  .m3-col-2 { grid-column: span 2; }
+  .m3-col-3 { grid-column: span 3; }
+  .m3-col-4 { grid-column: span 4; }
+  .m3-col-5 { grid-column: span 5; }
+  .m3-col-6 { grid-column: span 6; }
+  .m3-col-7 { grid-column: span 7; }
+  .m3-col-8 { grid-column: span 8; }
+  .m3-col-9 { grid-column: span 9; }
+  .m3-col-10 { grid-column: span 10; }
+  .m3-col-11 { grid-column: span 11; }
+  .m3-col-12 { grid-column: span 12; }
+  
+  /* Responsive column spans */
+  @media (max-width: 599px) {
+    .m3-col-mobile-1 { grid-column: span 1; }
+    .m3-col-mobile-2 { grid-column: span 2; }
+    .m3-col-mobile-3 { grid-column: span 3; }
+    .m3-col-mobile-4 { grid-column: span 4; }
+  }
+  
+  @media (min-width: 600px) and (max-width: 839px) {
+    .m3-col-tablet-1 { grid-column: span 1; }
+    .m3-col-tablet-2 { grid-column: span 2; }
+    .m3-col-tablet-3 { grid-column: span 3; }
+    .m3-col-tablet-4 { grid-column: span 4; }
+    .m3-col-tablet-5 { grid-column: span 5; }
+    .m3-col-tablet-6 { grid-column: span 6; }
+    .m3-col-tablet-7 { grid-column: span 7; }
+    .m3-col-tablet-8 { grid-column: span 8; }
+  }
+  
+  @media (min-width: 840px) {
+    .m3-col-desktop-1 { grid-column: span 1; }
+    .m3-col-desktop-2 { grid-column: span 2; }
+    .m3-col-desktop-3 { grid-column: span 3; }
+    .m3-col-desktop-4 { grid-column: span 4; }
+    .m3-col-desktop-5 { grid-column: span 5; }
+    .m3-col-desktop-6 { grid-column: span 6; }
+    .m3-col-desktop-7 { grid-column: span 7; }
+    .m3-col-desktop-8 { grid-column: span 8; }
+    .m3-col-desktop-9 { grid-column: span 9; }
+    .m3-col-desktop-10 { grid-column: span 10; }
+    .m3-col-desktop-11 { grid-column: span 11; }
+    .m3-col-desktop-12 { grid-column: span 12; }
+  }
+  
+  /* Content area with M3 grid constraints */
+  .m3-content-area {
+    width: 100%;
+  }
+  
+  /* Mobile: Full width (4 columns) */
+  @media (max-width: 599px) {
+    .m3-content-area {
+      grid-column: span 4;
+    }
+  }
+  
+  /* Tablet: 6 of 8 columns, centered */
+  @media (min-width: 600px) and (max-width: 839px) {
+    .m3-content-area {
+      grid-column: 2 / span 6;
+    }
+  }
+  
+  /* Desktop: 8 of 12 columns, centered */
+  @media (min-width: 840px) {
+    .m3-content-area {
+      grid-column: 3 / span 8;
+    }
+  }
+  
+  /* Textarea Long Component - Updated to work with M3 grid */
+  .textarea-long-container {
+    position: relative;
+    width: 100%;
   }
   
   /* Textarea Long Component Styling */
