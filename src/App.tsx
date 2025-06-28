@@ -418,16 +418,14 @@ function App() {
     return (
       <div className="min-h-screen bg-white flex flex-col">
         {/* Header */}
-        <div className="m3-grid-container">
-          <div className="m3-grid">
-            <div className="m3-content-area flex justify-center md:justify-start pt-8 pb-4">
-              <button 
-                onClick={handleLogoClick}
-                className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
-              >
-                nv
-              </button>
-            </div>
+        <div className="w-full px-4 md:px-8 lg:px-12">
+          <div className="flex justify-center md:justify-start pt-8 pb-4">
+            <button 
+              onClick={handleLogoClick}
+              className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
+            >
+              nv
+            </button>
           </div>
         </div>
         
@@ -451,16 +449,14 @@ function App() {
     return (
       <div className="min-h-screen bg-input-background flex flex-col relative">
         {/* Header */}
-        <div className="m3-grid-container">
-          <div className="m3-grid">
-            <div className="m3-content-area flex justify-center md:justify-start pt-8 pb-4">
-              <button 
-                onClick={handleLogoClick}
-                className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
-              >
-                nailvibes
-              </button>
-            </div>
+        <div className="w-full px-4 md:px-8 lg:px-12">
+          <div className="flex justify-center md:justify-start pt-8 pb-4">
+            <button 
+              onClick={handleLogoClick}
+              className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
+            >
+              nailvibes
+            </button>
           </div>
         </div>
         
@@ -577,16 +573,14 @@ function App() {
       <>
         <div className="min-h-screen bg-white flex flex-col">
           {/* Header */}
-          <div className="m3-grid-container">
-            <div className="m3-grid">
-              <div className="m3-content-area flex justify-center md:justify-start pt-8 pb-4">
-                <button 
-                  onClick={handleLogoClick}
-                  className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
-                >
-                  nv
-                </button>
-              </div>
+          <div className="w-full px-4 md:px-8 lg:px-12">
+            <div className="flex justify-center md:justify-start pt-8 pb-4">
+              <button 
+                onClick={handleLogoClick}
+                className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
+              >
+                nv
+              </button>
             </div>
           </div>
           
