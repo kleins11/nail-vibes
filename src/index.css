@@ -34,12 +34,19 @@
     color: #3F3F3F;
   }
   
+  /* Textarea Long Component Container */
+  .textarea-long-container {
+    position: relative;
+    margin: 16px;
+  }
+  
   /* Textarea Long Component Styling */
   .textarea-long {
+    width: 100%;
     height: 138px;
     border-radius: 24px;
-    margin: 16px;
     padding: 16px;
+    padding-right: 56px; /* Extra padding for button */
     background-color: #FCFCFC;
     border: 1px solid #E6E6E6;
     font-family: 'calling-code', 'Source Code Pro', monospace;
@@ -52,6 +59,20 @@
   .textarea-long:focus {
     outline: none;
     border-color: #E6E6E6;
+  }
+  
+  /* Button positioning within textarea container */
+  .textarea-long-button {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
   }
   
   @media (max-width: 640px) {

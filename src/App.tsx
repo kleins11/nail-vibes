@@ -465,21 +465,21 @@ function App() {
               </div>
             )}
             
-            <div className="relative">
+            <div className="textarea-long-container">
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 onKeyDown={(e) => handleKeyPress(e)}
                 placeholder="Harry Potter cutesy, Barbie glam metallic, dark academia matte"
-                className="textarea-long placeholder-calling-code w-full"
+                className="textarea-long placeholder-calling-code"
               />
               
               <button
                 onClick={handleInitialSubmit}
                 disabled={!prompt.trim()}
-                className="absolute bottom-3 right-3 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
+                className="textarea-long-button bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white transition-colors"
               >
-                <ArrowUp className="w-4 h-4 text-white" />
+                <ArrowUp className="w-4 h-4" />
               </button>
             </div>
 
