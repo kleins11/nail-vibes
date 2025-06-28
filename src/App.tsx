@@ -81,10 +81,8 @@ function App() {
         })
       });
 
-      console.log('response => ', response);
-
       const result = await response.json();
-      
+
       if (!response.ok) {
         console.error('❌ Generation failed with status:', response.status);
         console.error('❌ Error response:', result);
