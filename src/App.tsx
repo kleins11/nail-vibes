@@ -74,10 +74,7 @@ function App() {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           prompt: generatePrompt
