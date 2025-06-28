@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowUp, X, Minus } from 'lucide-react';
 import { findBestVibeMatch, VibeMatchResult, VibeMatchData, fetchBestMatchingDesign } from './services/vibeService';
 import { extractTagsFromPrompt } from './services/extractTagsFromPrompt';
+import GradientShapesScroll from './components/GradientShapesScroll';
 
 // Sample nail image URL (fallback)
 const SAMPLE_NAIL_IMAGE = "https://images.pexels.com/photos/3997379/pexels-photo-3997379.jpeg?auto=compress&cs=tinysrgb&w=800";
@@ -448,7 +449,7 @@ function App() {
   // Initial Input Screen
   if (appState === 'input') {
     return (
-      <div className="min-h-screen bg-input-background flex flex-col">
+      <div className="min-h-screen bg-input-background flex flex-col relative">
         {/* Header */}
         <div className="m3-grid-container">
           <div className="m3-grid">
@@ -560,6 +561,9 @@ function App() {
             </div>
           </div>
         </div>
+        
+        {/* Gradient Shapes Auto-Scroll - Only on input page */}
+        <GradientShapesScroll />
       </div>
     );
   }
