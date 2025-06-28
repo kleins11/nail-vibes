@@ -34,6 +34,12 @@ function App() {
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // New state for image generation
+  const [generatePrompt, setGeneratePrompt] = useState('');
+  const [generatedImageUrl, setGeneratedImageUrl] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState<string | null>(null);
+
   const handleLogoClick = () => {
     setAppState('input');
     setPrompt('');
@@ -47,34 +53,74 @@ function App() {
     setCurrentVibe(null);
     setMatchInfo(null);
     setError(null);
+    setGeneratePrompt('');
+    setGeneratedImageUrl('');
+    setIsGenerating(false);
+    setGenerateError(null);
   };
 
-  // Updated function to call the local Supabase Edge Function
-  const handleCallSupabaseFunction = async () => {
+  // Image generation function with improved error handling
+  const handleGenerateImage = async () => {
+    if (!generatePrompt.trim()) return;
+    
+    setIsGenerating(true);
+    setGenerateError(null);
+    setGeneratedImageUrl('');
+    
     try {
-      console.log('🚀 Calling Supabase Edge Function...');
+      console.log('🎨 Generating image with prompt:', generatePrompt);
       
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/hello-world`, {
-        method: 'GET',
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/replicate-api/generate`, {
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
-        }
+        },
+        body: JSON.stringify({
+          prompt: generatePrompt
+        })
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      const result = await response.json();
 
-      const responseData = await response.json();
-      console.log('✅ Supabase function response:', responseData);
+      if (!response.ok) {
+        console.error('❌ Generation failed with status:', response.status);
+        console.error('❌ Error response:', result);
+        
+        // Handle different error types with user-friendly messages
+        if (response.status === 503) {
+          setGenerateError('Image generation service is not configured. Please contact support.');
+        } else if (response.status === 401) {
+          setGenerateError('Authentication error. Please contact support.');
+        } else if (response.status === 408) {
+          setGenerateError('Generation timed out. Please try a simpler prompt.');
+        } else if (response.status === 422) {
+          setGenerateError(result.error || 'Generation failed. Please try a different prompt.');
+        } else {
+          setGenerateError(result.error || `Server error (${response.status}). Please try again later.`);
+        }
+        return;
+      }
       
-      // Show response in browser alert
-      alert(`Supabase Function Response: ${responseData.message}\nTimestamp: ${responseData.timestamp}`);
+      if (result.error) {
+        console.error('❌ Generation error:', result.error);
+        setGenerateError(result.error);
+      } else if (result.image) {
+        console.log('✅ Image generated successfully:', result.image);
+        setGeneratedImageUrl(result.image);
+      } else {
+        setGenerateError('No image URL returned from the server');
+      }
       
     } catch (error) {
-      console.error('❌ Error calling Supabase function:', error);
-      alert(`Error calling Supabase function: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('❌ Error generating image:', error);
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        setGenerateError('Network error. Please check your connection and try again.');
+      } else {
+        setGenerateError(error instanceof Error ? error.message : 'Failed to generate image');
+      }
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -334,10 +380,12 @@ function App() {
     setIsTyping(false);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent, isChat: boolean = false, isRefine: boolean = false) => {
+  const handleKeyPress = (e: React.KeyboardEvent, isChat: boolean = false, isRefine: boolean = false, isGenerate: boolean = false) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (isRefine) {
+      if (isGenerate) {
+        handleGenerateImage();
+      } else if (isRefine) {
         handleRefineSubmit();
       } else if (isChat) {
         handleChatSubmit();
@@ -436,14 +484,64 @@ function App() {
               </button>
             </div>
 
-            {/* Supabase Function Test Button */}
-            <div className="mt-6 text-center">
+            {/* Divider */}
+            <div className="my-8 border-t border-gray-200"></div>
+
+            {/* Generate Image Section */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Generate Custom Design
+              </h2>
+              
+              {/* Generate Error Message */}
+              {generateError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-600">{generateError}</p>
+                </div>
+              )}
+              
+              <div className="relative">
+                <textarea
+                  value={generatePrompt}
+                  onChange={(e) => setGeneratePrompt(e.target.value)}
+                  onKeyDown={(e) => handleKeyPress(e, false, false, true)}
+                  placeholder="Describe the nail design you want to generate..."
+                  className="w-full h-20 p-4 text-sm text-gray-600 placeholder-gray-400 border border-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
+                  disabled={isGenerating}
+                />
+              </div>
+              
               <button
-                onClick={handleCallSupabaseFunction}
-                className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium"
+                onClick={handleGenerateImage}
+                disabled={!generatePrompt.trim() || isGenerating}
+                className="w-full py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white rounded-lg transition-colors font-medium flex items-center justify-center"
               >
-                Call Supabase Function
+                {isGenerating ? (
+                  <>
+                    <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                    Generating...
+                  </>
+                ) : (
+                  'Generate Image'
+                )}
               </button>
+              
+              {/* Generated Image Display */}
+              {generatedImageUrl && (
+                <div className="mt-4">
+                  <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                    <img 
+                      src={generatedImageUrl} 
+                      alt="Generated nail design" 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = SAMPLE_NAIL_IMAGE;
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
