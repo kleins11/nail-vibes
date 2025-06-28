@@ -454,7 +454,7 @@ function App() {
         {/* Main Content */}
         <div className="flex-1 flex flex-col justify-center px-6 pb-20">
           <div className="max-w-sm mx-auto w-full">
-            <h1 className="text-4xl font-bold text-blue-600 mb-8 leading-tight">
+            <h1 className="text-display font-stratos font-bold text-blue-600 mb-8 leading-tight">
               What's your nail vibe?
             </h1>
             
