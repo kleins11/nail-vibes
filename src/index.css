@@ -46,7 +46,7 @@
     height: 138px;
     border-radius: 24px;
     padding: 16px;
-    padding-right: 56px; /* Extra padding for button */
+    padding-right: 72px; /* 16px base + 32px button + 24px spacing = 72px */
     background-color: #FCFCFC;
     border: 1px solid #E6E6E6;
     font-family: 'calling-code', 'Source Code Pro', monospace;
