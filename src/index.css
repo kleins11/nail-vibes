@@ -210,13 +210,13 @@
     transition: background-color 0.2s;
   }
   
-  /* Gradient Shapes Auto-Scroll Component */
+  /* Gradient Shapes Auto-Scroll Component - Updated with smaller size and faster speed */
   .gradient-shapes-container {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 120px;
+    height: 80px; /* Reduced from 120px to accommodate smaller shapes */
     background: transparent;
     overflow: hidden;
     z-index: 10;
@@ -227,14 +227,14 @@
     display: flex;
     align-items: center;
     height: 100%;
-    animation: scrollShapes 60s linear infinite;
+    animation: scrollShapes 54s linear infinite; /* Increased speed by 10%: 60s * 0.9 = 54s */
     will-change: transform;
   }
   
   .gradient-shape {
     flex-shrink: 0;
-    margin-right: 32px;
-    height: 80px;
+    margin-right: 24px; /* Reduced from 32px to 24px */
+    height: 50px; /* Reduced from 80px to 50px (75% smaller: 80px * 0.625 = 50px) */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -244,7 +244,7 @@
     height: 100%;
     width: auto;
     object-fit: contain;
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.08)); /* Slightly reduced shadow to match smaller size */
   }
   
   @keyframes scrollShapes {
@@ -259,16 +259,16 @@
   /* Responsive adjustments for gradient shapes */
   @media (max-width: 640px) {
     .gradient-shapes-container {
-      height: 100px;
+      height: 60px; /* Reduced from 100px */
     }
     
     .gradient-shape {
-      height: 60px;
-      margin-right: 24px;
+      height: 38px; /* Reduced from 60px (75% smaller: 60px * 0.625 = 37.5px ≈ 38px) */
+      margin-right: 18px; /* Reduced from 24px */
     }
     
     .gradient-shapes-scroll {
-      animation-duration: 45s;
+      animation-duration: 40.5s; /* Increased speed by 10%: 45s * 0.9 = 40.5s */
     }
   }
   
