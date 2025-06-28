@@ -105,9 +105,9 @@ function App() {
       if (result.error) {
         console.error('❌ Generation error:', result.error);
         setGenerateError(result.error);
-      } else if (result.image?.url) {
-        console.log('✅ Image generated successfully:', result.image.url);
-        setGeneratedImageUrl(result.image.url);
+      } else if (result.image) {
+        console.log('✅ Image generated successfully:', result.image);
+        setGeneratedImageUrl(result.image);
       } else {
         setGenerateError('No image URL returned from the server');
       }
