@@ -468,7 +468,7 @@ function App() {
           <div className="m3-grid-container">
             <div className="m3-grid">
               <div className="m3-content-area">
-                <h1 className="text-display font-stratos font-bold text-blue-600 mb-8 leading-tight text-center">
+                <h1 className="text-display font-stratos font-extrabold text-blue-600 mb-8 leading-tight text-center">
                   What's your nail vibe?
                 </h1>
                 
