@@ -82,6 +82,8 @@ function App() {
         })
       });
 
+      console.log('response => ', response);
+
       const result = await response.json();
       
       if (!response.ok) {
