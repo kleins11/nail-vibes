@@ -53,19 +53,15 @@ function App() {
     setCurrentVibe(null);
     setMatchInfo(null);
     setError(null);
-    // Reset image generation state
     setGeneratePrompt('');
     setGeneratedImageUrl('');
     setIsGenerating(false);
     setGenerateError(null);
   };
 
-  // New function to handle image generation
+  // Image generation function
   const handleGenerateImage = async () => {
-    if (!generatePrompt.trim()) {
-      setGenerateError('Please enter a prompt for image generation');
-      return;
-    }
+    if (!generatePrompt.trim()) return;
     
     setIsGenerating(true);
     setGenerateError(null);
@@ -74,7 +70,7 @@ function App() {
     try {
       console.log('🎨 Generating image with prompt:', generatePrompt);
       
-      const response = await fetch('https://ihmazbkomtatnvtweaun.supabase.co/functions/v1/replicate-api/generate', {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
@@ -90,13 +86,15 @@ function App() {
       }
 
       const result = await response.json();
-      console.log('✅ Image generation response:', result);
       
-      if (result.image && result.image.url) {
+      if (result.error) {
+        console.error('❌ Generation error:', result.error);
+        setGenerateError(result.error);
+      } else if (result.image?.url) {
+        console.log('✅ Image generated successfully:', result.image.url);
         setGeneratedImageUrl(result.image.url);
-        console.log('🖼️ Generated image URL:', result.image.url);
       } else {
-        throw new Error('No image URL in response');
+        setGenerateError('No image URL returned from the server');
       }
       
     } catch (error) {
@@ -448,7 +446,7 @@ function App() {
               </div>
             )}
             
-            <div className="relative mb-8">
+            <div className="relative">
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
@@ -467,39 +465,43 @@ function App() {
               </button>
             </div>
 
-            {/* Image Generation Section */}
-            <div className="border-t pt-8">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                Generate Custom Image
+            {/* Divider */}
+            <div className="my-8 border-t border-gray-200"></div>
+
+            {/* Generate Image Section */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Generate Custom Design
               </h2>
               
               {/* Generate Error Message */}
               {generateError && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                   <p className="text-sm text-red-600">{generateError}</p>
                 </div>
               )}
               
-              <div className="relative mb-4">
+              <div className="relative">
                 <textarea
                   value={generatePrompt}
                   onChange={(e) => setGeneratePrompt(e.target.value)}
                   onKeyDown={(e) => handleKeyPress(e, false, false, true)}
                   placeholder="Describe the nail design you want to generate..."
                   className="w-full h-20 p-4 text-sm text-gray-600 placeholder-gray-400 border border-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
+                  disabled={isGenerating}
                 />
               </div>
               
               <button
                 onClick={handleGenerateImage}
                 disabled={!generatePrompt.trim() || isGenerating}
-                className="w-full py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 text-white rounded-lg transition-colors font-medium"
+                className="w-full py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white rounded-lg transition-colors font-medium flex items-center justify-center"
               >
                 {isGenerating ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                  <>
+                    <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></div>
                     Generating...
-                  </div>
+                  </>
                 ) : (
                   'Generate Image'
                 )}
@@ -507,8 +509,7 @@ function App() {
               
               {/* Generated Image Display */}
               {generatedImageUrl && (
-                <div className="mt-6">
-                  <h3 className="text-lg font-medium text-gray-800 mb-3">Generated Image:</h3>
+                <div className="mt-4">
                   <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
                     <img 
                       src={generatedImageUrl} 
@@ -516,7 +517,7 @@ function App() {
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        setGenerateError('Failed to load generated image');
+                        target.src = SAMPLE_NAIL_IMAGE;
                       }}
                     />
                   </div>
