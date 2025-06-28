@@ -471,7 +471,7 @@ function App() {
                 onChange={(e) => setPrompt(e.target.value)}
                 onKeyDown={(e) => handleKeyPress(e)}
                 placeholder="Harry Potter cutesy, Barbie glam metallic, dark academia matte"
-                className="w-full h-24 p-4 text-sm text-gray-600 placeholder-calling-code border-0 resize-none focus:outline-none bg-gray-50 rounded-lg"
+                className="w-full h-24 p-4 text-sm textarea-calling-code placeholder-calling-code border-0 resize-none focus:outline-none bg-gray-50 rounded-lg"
               />
               
               <button
@@ -505,7 +505,7 @@ function App() {
                   onChange={(e) => setGeneratePrompt(e.target.value)}
                   onKeyDown={(e) => handleKeyPress(e, false, false, true)}
                   placeholder="Describe the nail design you want to generate..."
-                  className="w-full h-20 p-4 text-sm text-gray-600 placeholder-calling-code border border-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
+                  className="w-full h-20 p-4 text-sm textarea-calling-code placeholder-calling-code border border-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
                   disabled={isGenerating}
                 />
               </div>
@@ -718,7 +718,7 @@ function App() {
                     onFocus={handleChatInputFocus}
                     onBlur={handleChatInputBlur}
                     placeholder="make it chrome, add glitter, more pink..."
-                    className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code"
+                    className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code"
                     disabled={isRefining}
                   />
                   <button
