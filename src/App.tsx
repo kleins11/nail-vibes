@@ -471,7 +471,7 @@ function App() {
                 onChange={(e) => setPrompt(e.target.value)}
                 onKeyDown={(e) => handleKeyPress(e)}
                 placeholder="Harry Potter cutesy, Barbie glam metallic, dark academia matte"
-                className="w-full h-24 p-4 text-sm textarea-calling-code placeholder-calling-code border-0 resize-none focus:outline-none bg-gray-50 rounded-lg"
+                className="textarea-long placeholder-calling-code w-full"
               />
               
               <button

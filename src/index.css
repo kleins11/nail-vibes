@@ -34,6 +34,26 @@
     color: #3F3F3F;
   }
   
+  /* Textarea Long Component Styling */
+  .textarea-long {
+    height: 138px;
+    border-radius: 24px;
+    margin: 16px;
+    padding: 16px;
+    background-color: #FCFCFC;
+    border: 1px solid #E6E6E6;
+    font-family: 'calling-code', 'Source Code Pro', monospace;
+    font-style: normal;
+    color: #3F3F3F;
+    resize: none;
+    outline: none;
+  }
+  
+  .textarea-long:focus {
+    outline: none;
+    border-color: #E6E6E6;
+  }
+  
   @media (max-width: 640px) {
     .text-display {
       font-size: 2.5rem;
