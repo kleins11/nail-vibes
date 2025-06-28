@@ -420,7 +420,7 @@ function App() {
         {/* Header */}
         <div className="m3-grid-container">
           <div className="m3-grid">
-            <div className="m3-content-area flex justify-center pt-8 pb-4">
+            <div className="m3-content-area flex justify-center md:justify-start pt-8 pb-4">
               <button 
                 onClick={handleLogoClick}
                 className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
@@ -453,7 +453,7 @@ function App() {
         {/* Header */}
         <div className="m3-grid-container">
           <div className="m3-grid">
-            <div className="m3-content-area flex justify-center pt-8 pb-4">
+            <div className="m3-content-area flex justify-center md:justify-start pt-8 pb-4">
               <button 
                 onClick={handleLogoClick}
                 className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
@@ -579,7 +579,7 @@ function App() {
           {/* Header */}
           <div className="m3-grid-container">
             <div className="m3-grid">
-              <div className="m3-content-area flex justify-center pt-8 pb-4">
+              <div className="m3-content-area flex justify-center md:justify-start pt-8 pb-4">
                 <button 
                   onClick={handleLogoClick}
                   className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
