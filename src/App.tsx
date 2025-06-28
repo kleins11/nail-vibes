@@ -420,7 +420,7 @@ function App() {
         <div className="flex justify-center pt-8 pb-4">
           <button 
             onClick={handleLogoClick}
-            className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors"
+            className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
           >
             nv
           </button>
@@ -445,9 +445,9 @@ function App() {
         <div className="flex justify-center pt-8 pb-4">
           <button 
             onClick={handleLogoClick}
-            className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors"
+            className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
           >
-            nv
+            nailvibes
           </button>
         </div>
         
@@ -560,7 +560,7 @@ function App() {
           <div className="flex justify-center pt-8 pb-4">
             <button 
               onClick={handleLogoClick}
-              className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors"
+              className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
             >
               nv
             </button>
