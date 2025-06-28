@@ -76,7 +76,7 @@ function App() {
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
         },
-        mode: 'no-cors',
+        mode: 'cors',
         body: JSON.stringify({
           prompt: generatePrompt
         })
