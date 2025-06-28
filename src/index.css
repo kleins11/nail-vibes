@@ -28,6 +28,8 @@
     letter-spacing: -0.02em;
     /* Drop shadow matching Figma: X=0, Y=20px, Blur=20px, Spread=0px, Color=#9B9BA9 at 50% opacity */
     text-shadow: 0 20px 20px rgba(155, 155, 169, 0.5);
+    /* Increased padding below heading to 100px */
+    margin-bottom: 100px;
   }
   
   .font-calling-code {
@@ -282,6 +284,8 @@
   @media (max-width: 640px) {
     .text-display {
       font-size: 2.5rem;
+      /* Responsive padding for mobile - slightly reduced but still generous */
+      margin-bottom: 80px;
     }
   }
 }
