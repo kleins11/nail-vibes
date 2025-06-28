@@ -34,10 +34,17 @@
     color: #3F3F3F;
   }
   
-  /* Textarea Long Component Container */
+  /* Textarea Long Component Container with Responsive Margins */
   .textarea-long-container {
     position: relative;
-    margin: 16px;
+    margin: 16px; /* Default for XS and S (mobile) */
+  }
+  
+  /* Medium screens and up (768px+) - M, L, XL form factors */
+  @media (min-width: 768px) {
+    .textarea-long-container {
+      margin: 24px;
+    }
   }
   
   /* Textarea Long Component Styling */
