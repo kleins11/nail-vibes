@@ -34,6 +34,12 @@ function App() {
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // New state for image generation
+  const [generatePrompt, setGeneratePrompt] = useState('');
+  const [generatedImageUrl, setGeneratedImageUrl] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState<string | null>(null);
+
   const handleLogoClick = () => {
     setAppState('input');
     setPrompt('');
@@ -47,6 +53,58 @@ function App() {
     setCurrentVibe(null);
     setMatchInfo(null);
     setError(null);
+    // Reset image generation state
+    setGeneratePrompt('');
+    setGeneratedImageUrl('');
+    setIsGenerating(false);
+    setGenerateError(null);
+  };
+
+  // New function to handle image generation
+  const handleGenerateImage = async () => {
+    if (!generatePrompt.trim()) {
+      setGenerateError('Please enter a prompt for image generation');
+      return;
+    }
+    
+    setIsGenerating(true);
+    setGenerateError(null);
+    setGeneratedImageUrl('');
+    
+    try {
+      console.log('🎨 Generating image with prompt:', generatePrompt);
+      
+      const response = await fetch('https://ihmazbkomtatnvtweaun.supabase.co/functions/v1/replicate-api/generate', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: generatePrompt
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('✅ Image generation response:', result);
+      
+      if (result.image && result.image.url) {
+        setGeneratedImageUrl(result.image.url);
+        console.log('🖼️ Generated image URL:', result.image.url);
+      } else {
+        throw new Error('No image URL in response');
+      }
+      
+    } catch (error) {
+      console.error('❌ Error generating image:', error);
+      setGenerateError(error instanceof Error ? error.message : 'Failed to generate image');
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   // Example usage of fetchBestMatchingDesign function
@@ -305,10 +363,12 @@ function App() {
     setIsTyping(false);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent, isChat: boolean = false, isRefine: boolean = false) => {
+  const handleKeyPress = (e: React.KeyboardEvent, isChat: boolean = false, isRefine: boolean = false, isGenerate: boolean = false) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (isRefine) {
+      if (isGenerate) {
+        handleGenerateImage();
+      } else if (isRefine) {
         handleRefineSubmit();
       } else if (isChat) {
         handleChatSubmit();
@@ -388,7 +448,7 @@ function App() {
               </div>
             )}
             
-            <div className="relative">
+            <div className="relative mb-8">
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
@@ -405,6 +465,63 @@ function App() {
               >
                 <ArrowUp className="w-4 h-4 text-white" />
               </button>
+            </div>
+
+            {/* Image Generation Section */}
+            <div className="border-t pt-8">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                Generate Custom Image
+              </h2>
+              
+              {/* Generate Error Message */}
+              {generateError && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-600">{generateError}</p>
+                </div>
+              )}
+              
+              <div className="relative mb-4">
+                <textarea
+                  value={generatePrompt}
+                  onChange={(e) => setGeneratePrompt(e.target.value)}
+                  onKeyDown={(e) => handleKeyPress(e, false, false, true)}
+                  placeholder="Describe the nail design you want to generate..."
+                  className="w-full h-20 p-4 text-sm text-gray-600 placeholder-gray-400 border border-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
+                />
+              </div>
+              
+              <button
+                onClick={handleGenerateImage}
+                disabled={!generatePrompt.trim() || isGenerating}
+                className="w-full py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 text-white rounded-lg transition-colors font-medium"
+              >
+                {isGenerating ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                    Generating...
+                  </div>
+                ) : (
+                  'Generate Image'
+                )}
+              </button>
+              
+              {/* Generated Image Display */}
+              {generatedImageUrl && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-medium text-gray-800 mb-3">Generated Image:</h3>
+                  <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                    <img 
+                      src={generatedImageUrl} 
+                      alt="Generated nail design" 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        setGenerateError('Failed to load generated image');
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
