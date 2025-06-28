@@ -59,7 +59,7 @@ function App() {
     setGenerateError(null);
   };
 
-  // Image generation function
+  // Image generation function with improved error handling
   const handleGenerateImage = async () => {
     if (!generatePrompt.trim()) return;
     
@@ -81,11 +81,26 @@ function App() {
         })
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
       const result = await response.json();
+      
+      if (!response.ok) {
+        console.error('❌ Generation failed with status:', response.status);
+        console.error('❌ Error response:', result);
+        
+        // Handle different error types with user-friendly messages
+        if (response.status === 503) {
+          setGenerateError('Image generation service is not configured. Please contact support.');
+        } else if (response.status === 401) {
+          setGenerateError('Authentication error. Please contact support.');
+        } else if (response.status === 408) {
+          setGenerateError('Generation timed out. Please try a simpler prompt.');
+        } else if (response.status === 422) {
+          setGenerateError(result.error || 'Generation failed. Please try a different prompt.');
+        } else {
+          setGenerateError(result.error || `Server error (${response.status}). Please try again later.`);
+        }
+        return;
+      }
       
       if (result.error) {
         console.error('❌ Generation error:', result.error);
@@ -99,7 +114,11 @@ function App() {
       
     } catch (error) {
       console.error('❌ Error generating image:', error);
-      setGenerateError(error instanceof Error ? error.message : 'Failed to generate image');
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        setGenerateError('Network error. Please check your connection and try again.');
+      } else {
+        setGenerateError(error instanceof Error ? error.message : 'Failed to generate image');
+      }
     } finally {
       setIsGenerating(false);
     }
