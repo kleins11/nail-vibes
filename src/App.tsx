@@ -75,8 +75,8 @@ function App() {
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
-          'Origin': 'https://ihmazbkomtatnvtweaun.supabase.co/functions/v1/'
         },
+        mode: 'no-cors',
         body: JSON.stringify({
           prompt: generatePrompt
         })
