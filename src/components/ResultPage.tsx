@@ -48,7 +48,7 @@ const CHAT_BUBBLE_STYLES = [
   },
   {
     backgroundColor: '#ECE0FE',
-    borderColor: '#ECE0FE'
+    borderColor: '#B796E8'
   }
 ];
 
