@@ -347,6 +347,8 @@ function App() {
       console.log('⚠️ Missing refine prompt or base image URL');
       return;
     }
+
+    console.log('currentVibe => ', currentVibe)
     
     setIsRefining(true);
     console.log('🎨 Refining design with prompt:', refinePrompt);
@@ -382,8 +384,8 @@ function App() {
           timestamp: new Date()
         };
         setChatMessages(prev => [...prev, errorMessage]);
-      } else if (result.imageUrl) {
-        console.log('✅ Refinement successful:', result.imageUrl);
+      } else if (result.image) {
+        console.log('✅ Refinement successful:', result.image);
         
         // Set the refined image URL
         setRefinedImageUrl(result.image);
