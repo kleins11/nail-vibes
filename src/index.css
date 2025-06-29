@@ -180,24 +180,22 @@
     z-index: 1;
   }
   
-  /* Add gradient background behind textarea container - FIXED VERSION */
+  /* Add gradient background behind textarea container - MUCH LARGER SIZE */
   .textarea-long-container::before {
     content: '';
     position: absolute;
-    top: -80px; /* Position it to just touch the heading text */
+    top: -120px; /* Position it higher to just touch the heading text */
     left: 50%;
     transform: translateX(-50%);
-    width: 600px; /* Fixed width instead of percentage */
-    height: 400px; /* Increased height */
+    width: 900px; /* Much larger width to match Figma */
+    height: 600px; /* Much larger height to match Figma */
     background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     z-index: 0; /* Behind the textarea but visible */
     pointer-events: none;
-    /* Add opacity to make it visible for debugging */
     opacity: 1;
-    /* Ensure it displays */
     display: block;
   }
   
@@ -320,20 +318,20 @@
       margin-top: 100px;
     }
     
-    /* Adjust gradient background for mobile */
+    /* Adjust gradient background for mobile - still large but proportional */
     .textarea-long-container::before {
-      top: -60px;
-      width: 400px;
-      height: 300px;
+      top: -80px;
+      width: 600px; /* Larger than before */
+      height: 400px; /* Larger than before */
     }
   }
   
   /* Tablet responsive adjustments */
   @media (min-width: 600px) and (max-width: 839px) {
     .textarea-long-container::before {
-      top: -70px;
-      width: 500px;
-      height: 350px;
+      top: -100px;
+      width: 750px; /* Larger for tablet */
+      height: 500px; /* Larger for tablet */
     }
   }
 }
