@@ -342,6 +342,7 @@ function App() {
     }
   };
 
+  // NIKO CREATED FUNCTION
   const handleRefineSubmit = async () => {
     if (!refinePrompt.trim() || !currentVibe?.image_url) {
       console.log('⚠️ Missing refine prompt or base image URL');
