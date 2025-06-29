@@ -198,12 +198,14 @@ function App() {
     }
   };
 
-  const handleRefineImage = async () => {
+  const handleGenerateImageWithImage = async () => {
     if (!generatePrompt.trim()) return;
     
     setIsGenerating(true);
     setGenerateError(null);
     setGeneratedImageUrl('');
+
+    const promptWithContext = `Adjust only the nails in the image and make the nails ${refinePrompt} keeping the background, hands, and fingers unchanged.`
     
     try {
       console.log('🎨 Generating image with prompt:', generatePrompt);
@@ -215,6 +217,7 @@ function App() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          image_prompt: refinedImageUrl,
           prompt: generatePrompt
         })
       });
