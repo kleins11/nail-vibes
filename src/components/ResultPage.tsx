@@ -96,7 +96,7 @@ export default function ResultPage({
                     <div 
                       className="bg-blue-100 text-blue-800 p-4 max-w-xs ml-auto border"
                       style={{ 
-                        borderRadius: '24px 24px 24px 0px',
+                        borderRadius: '24px 24px 0px 24px',
                         borderWidth: '1px',
                         borderColor: '#E5E7EB'
                       }}
@@ -343,7 +343,7 @@ export default function ResultPage({
                     <div 
                       className="bg-red-100 text-red-800 p-3 max-w-xs ml-auto border"
                       style={{ 
-                        borderRadius: '24px 24px 24px 0px',
+                        borderRadius: '24px 24px 0px 24px',
                         borderWidth: '1px',
                         borderColor: '#E5E7EB'
                       }}
