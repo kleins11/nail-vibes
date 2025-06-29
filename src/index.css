@@ -309,20 +309,21 @@
     }
   }
   
+  /* Mobile responsive adjustments - FIXED SPACING AND GRADIENT SIZE */
   @media (max-width: 640px) {
     .text-display {
       font-size: 2.5rem;
     }
     
-    /* Responsive spacing for mobile */
+    /* FIXED: Reduce spacing between title and textarea on mobile to match Figma */
     .textarea-long-container {
-      margin-top: 100px;
+      margin-top: 60px; /* Reduced from 100px to match Figma spacing */
     }
     
-    /* Adjust gradient background for mobile - still large but proportional and centered */
+    /* FIXED: Make gradient background much larger and more prominent on mobile */
     .textarea-long-container::before {
-      width: 600px; /* Larger than before */
-      height: 400px; /* Larger than before */
+      width: 800px; /* Much larger - increased from 600px */
+      height: 600px; /* Much larger - increased from 400px */
       /* Keep the centering transform */
     }
   }
