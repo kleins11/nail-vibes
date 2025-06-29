@@ -170,13 +170,11 @@ export default function ResultPage({
                         <p className="text-sm font-calling-code break-words">{message.content}</p>
                       </div>
                     ) : (
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
-                            <span className="text-white text-xs">🤖</span>
-                          </div>
+                      <div className="flex items-start space-x-2">
+                        <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                          <span className="text-white text-xs">🤖</span>
                         </div>
-                        <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words">{message.content}</p>
+                        <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words flex-1">{message.content}</p>
                       </div>
                     )}
                   </div>
@@ -185,13 +183,11 @@ export default function ResultPage({
               
               {/* Typing Indicator */}
               {isRefining && (
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs">🤖</span>
-                    </div>
+                <div className="flex items-start space-x-2">
+                  <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-white text-xs">🤖</span>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 flex-1">
                     <div className="animate-spin w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full"></div>
                     <span className="text-sm text-gray-500 italic">Refining your design...</span>
                   </div>
@@ -434,8 +430,11 @@ export default function ResultPage({
                         <p className="text-sm font-calling-code break-words">{message.content}</p>
                       </div>
                     ) : (
-                      <div className="space-y-2">
-                        <p className="font-calling-code text-sm text-[#3F3F3F] break-words">{message.content}</p>
+                      <div className="flex items-start space-x-2">
+                        <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                          <span className="text-white text-xs">🤖</span>
+                        </div>
+                        <p className="font-calling-code text-sm text-[#3F3F3F] break-words flex-1">{message.content}</p>
                       </div>
                     )}
                   </div>
