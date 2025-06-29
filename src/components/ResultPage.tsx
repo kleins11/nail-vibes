@@ -92,9 +92,9 @@ export default function ResultPage({
   const userMessages = chatMessages.filter(message => message.type === 'user');
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="h-screen bg-white flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="w-full px-4 md:px-8 lg:px-12">
+      <div className="w-full px-4 md:px-8 lg:px-12 flex-shrink-0">
         <div className="flex justify-start pt-8 pb-4">
           <button 
             onClick={onLogoClick}
@@ -106,13 +106,13 @@ export default function ResultPage({
       </div>
       
       {/* Main Content - Two Column Layout for Desktop */}
-      <div className="flex-1 flex">
+      <div className="flex-1 flex overflow-hidden">
         {/* Desktop Layout: Two Columns */}
-        <div className="hidden lg:flex w-full">
+        <div className="hidden lg:flex w-full h-full">
           {/* Left Column: Chat */}
-          <div className="w-1/2 flex flex-col border-r border-gray-200" style={{ backgroundColor: '#F5F1EC' }}>
+          <div className="w-1/2 flex flex-col border-r border-gray-200 h-full" style={{ backgroundColor: '#F5F1EC' }}>
             {/* Chat Header */}
-            <div className="p-6 border-b border-gray-200">
+            <div className="p-6 border-b border-gray-200 flex-shrink-0">
               <div className="flex items-center space-x-3">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <span className="text-sm font-medium text-gray-700">
@@ -121,7 +121,7 @@ export default function ResultPage({
               </div>
             </div>
             
-            {/* Chat Messages */}
+            {/* Chat Messages - Scrollable */}
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {chatMessages.map((message, index) => {
                 // Find the index of this user message among all user messages
@@ -179,8 +179,8 @@ export default function ResultPage({
               )}
             </div>
             
-            {/* Chat Input */}
-            <div className="p-6 border-t border-gray-200">
+            {/* Chat Input - Fixed at bottom */}
+            <div className="p-6 border-t border-gray-200 flex-shrink-0">
               <div className="flex items-center space-x-3">
                 <input
                   type="text"
@@ -202,10 +202,10 @@ export default function ResultPage({
             </div>
           </div>
           
-          {/* Right Column: Image */}
-          <div className="w-1/2 flex flex-col">
+          {/* Right Column: Image - Fixed */}
+          <div className="w-1/2 flex flex-col h-full">
             {/* Image Header */}
-            <div className="p-6 border-b border-gray-200">
+            <div className="p-6 border-b border-gray-200 flex-shrink-0">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
@@ -226,8 +226,8 @@ export default function ResultPage({
               </div>
             </div>
             
-            {/* Image Display */}
-            <div className="flex-1 p-6 flex items-center justify-center">
+            {/* Image Display - Fixed, no scroll */}
+            <div className="flex-1 p-6 flex items-center justify-center overflow-hidden">
               <div className="relative max-w-md w-full">
                 <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
                   <img 
