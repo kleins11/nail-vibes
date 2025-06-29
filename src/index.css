@@ -170,7 +170,7 @@
     }
   }
   
-  /* Textarea Long Component - Updated to work with M3 grid */
+  /* Textarea Long Component - Updated to work with M3 grid and center-aligned gradient */
   .textarea-long-container {
     position: relative;
     width: 100%;
@@ -180,15 +180,16 @@
     z-index: 1;
   }
   
-  /* Add gradient background behind textarea container - MUCH LARGER SIZE */
+  /* Add gradient background behind textarea container - CENTERED VERTICALLY with textarea */
   .textarea-long-container::before {
     content: '';
     position: absolute;
-    top: -120px; /* Position it higher to just touch the heading text */
+    /* Center vertically with the textarea (138px height / 2 = 69px) */
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    width: 900px; /* Much larger width to match Figma */
-    height: 600px; /* Much larger height to match Figma */
+    transform: translate(-50%, -50%);
+    width: 900px; /* Large width to match Figma */
+    height: 600px; /* Large height to match Figma */
     background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
     background-size: contain;
     background-repeat: no-repeat;
@@ -318,20 +319,20 @@
       margin-top: 100px;
     }
     
-    /* Adjust gradient background for mobile - still large but proportional */
+    /* Adjust gradient background for mobile - still large but proportional and centered */
     .textarea-long-container::before {
-      top: -80px;
       width: 600px; /* Larger than before */
       height: 400px; /* Larger than before */
+      /* Keep the centering transform */
     }
   }
   
   /* Tablet responsive adjustments */
   @media (min-width: 600px) and (max-width: 839px) {
     .textarea-long-container::before {
-      top: -100px;
       width: 750px; /* Larger for tablet */
       height: 500px; /* Larger for tablet */
+      /* Keep the centering transform */
     }
   }
 }
