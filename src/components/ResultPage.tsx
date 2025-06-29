@@ -102,9 +102,8 @@ export default function ResultPage({
                         <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
                           <span className="text-white text-xs">🤖</span>
                         </div>
-                        <span className="text-xs text-gray-500">AI Assistant</span>
                       </div>
-                      <p className="text-sm text-gray-700 leading-relaxed">{message.content}</p>
+                      <p className="font-calling-code text-xl lg:text-xl text-[#3F3F3F] leading-relaxed">{message.content}</p>
                     </div>
                   )}
                 </div>
@@ -117,7 +116,6 @@ export default function ResultPage({
                     <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
                       <span className="text-white text-xs">🤖</span>
                     </div>
-                    <span className="text-xs text-gray-500">AI Assistant</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="animate-spin w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full"></div>
@@ -340,7 +338,7 @@ export default function ResultPage({
                     </div>
                   ) : (
                     <div className="space-y-2">
-                      <p className="text-sm text-gray-700">{message.content}</p>
+                      <p className="font-calling-code text-base sm:text-xl text-[#3F3F3F]">{message.content}</p>
                     </div>
                   )}
                 </div>
