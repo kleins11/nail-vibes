@@ -135,16 +135,19 @@ export default function ResultPage({
                   <div key={message.id} className="space-y-2">
                     {message.type === 'user' ? (
                       <div 
-                        className={`p-4 ml-auto border max-w-xs ${getBubbleWidthClass(message.content)}`}
+                        className={`p-4 ml-auto border max-w-xs ${getBubbleWidthClass(message.content)} break-words overflow-wrap-anywhere`}
                         style={{ 
                           borderRadius: '24px 24px 0px 24px',
                           borderWidth: '1px',
                           backgroundColor: bubbleStyle?.backgroundColor,
                           borderColor: bubbleStyle?.borderColor,
-                          color: '#3F3F3F'
+                          color: '#3F3F3F',
+                          wordWrap: 'break-word',
+                          overflowWrap: 'break-word',
+                          hyphens: 'auto'
                         }}
                       >
-                        <p className="text-sm font-calling-code">{message.content}</p>
+                        <p className="text-sm font-calling-code break-words">{message.content}</p>
                       </div>
                     ) : (
                       <div className="space-y-2">
@@ -153,7 +156,7 @@ export default function ResultPage({
                             <span className="text-white text-xs">🤖</span>
                           </div>
                         </div>
-                        <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed">{message.content}</p>
+                        <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words">{message.content}</p>
                       </div>
                     )}
                   </div>
@@ -393,20 +396,23 @@ export default function ResultPage({
                   <div key={message.id} className="space-y-2">
                     {message.type === 'user' ? (
                       <div 
-                        className="p-3 max-w-xs ml-auto border"
+                        className="p-3 max-w-xs ml-auto border break-words overflow-wrap-anywhere"
                         style={{ 
                           borderRadius: '24px 24px 0px 24px',
                           borderWidth: '1px',
                           backgroundColor: bubbleStyle?.backgroundColor,
                           borderColor: bubbleStyle?.borderColor,
-                          color: '#3F3F3F'
+                          color: '#3F3F3F',
+                          wordWrap: 'break-word',
+                          overflowWrap: 'break-word',
+                          hyphens: 'auto'
                         }}
                       >
-                        <p className="text-sm font-calling-code">{message.content}</p>
+                        <p className="text-sm font-calling-code break-words">{message.content}</p>
                       </div>
                     ) : (
                       <div className="space-y-2">
-                        <p className="font-calling-code text-sm text-[#3F3F3F]">{message.content}</p>
+                        <p className="font-calling-code text-sm text-[#3F3F3F] break-words">{message.content}</p>
                       </div>
                     )}
                   </div>
