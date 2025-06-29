@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { X, Minus, ArrowUp, Maximize2, RotateCcw } from 'lucide-react';
 import { VibeMatchData } from '../services/vibeService';
 
@@ -36,6 +36,22 @@ interface ResultPageProps {
 
 const SAMPLE_NAIL_IMAGE = "https://images.pexels.com/photos/3997379/pexels-photo-3997379.jpeg?auto=compress&cs=tinysrgb&w=800";
 
+// Chat bubble color styles that rotate
+const CHAT_BUBBLE_STYLES = [
+  {
+    backgroundColor: '#F9D9D9',
+    borderColor: '#DC9090'
+  },
+  {
+    backgroundColor: '#E6EEFF',
+    borderColor: '#92B5FA'
+  },
+  {
+    backgroundColor: '#ECE0FE',
+    borderColor: '#B796E8'
+  }
+];
+
 export default function ResultPage({
   currentVibe,
   matchInfo,
@@ -58,10 +74,44 @@ export default function ResultPage({
   const imageUrl = currentVibe?.image_url || SAMPLE_NAIL_IMAGE;
   const displayImageUrl = refinedImageUrl || imageUrl;
 
+  // Refs for auto-scrolling
+  const desktopChatMessagesRef = useRef<HTMLDivElement>(null);
+  const mobileChatMessagesRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when new messages are added
+  useEffect(() => {
+    // Scroll desktop chat to bottom
+    if (desktopChatMessagesRef.current) {
+      desktopChatMessagesRef.current.scrollTop = desktopChatMessagesRef.current.scrollHeight;
+    }
+    
+    // Scroll mobile chat to bottom
+    if (mobileChatMessagesRef.current) {
+      mobileChatMessagesRef.current.scrollTop = mobileChatMessagesRef.current.scrollHeight;
+    }
+  }, [chatMessages, isRefining]); // Trigger on message changes and refining state
+
+  // Function to get chat bubble style based on user message index
+  const getChatBubbleStyle = (messageIndex: number) => {
+    return CHAT_BUBBLE_STYLES[messageIndex % CHAT_BUBBLE_STYLES.length];
+  };
+
+  // Function to determine bubble width class based on content length
+  const getBubbleWidthClass = (content: string) => {
+    const length = content.length;
+    if (length <= 30) return 'lg:max-w-[200px]'; // Short messages
+    if (length <= 60) return 'lg:max-w-[280px]'; // Medium messages  
+    if (length <= 100) return 'lg:max-w-[360px]'; // Long messages
+    return 'lg:max-w-[400px]'; // Very long messages
+  };
+
+  // Get only user messages to determine the correct index for styling
+  const userMessages = chatMessages.filter(message => message.type === 'user');
+
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      {/* Header */}
-      <div className="w-full px-4 md:px-8 lg:px-12">
+    <div className="h-screen flex flex-col overflow-hidden" style={{ backgroundColor: '#FFFAF4' }}>
+      {/* Header - Only for mobile/tablet */}
+      <div className="w-full px-4 md:px-8 lg:hidden flex-shrink-0">
         <div className="flex justify-start pt-8 pb-4">
           <button 
             onClick={onLogoClick}
@@ -73,53 +123,71 @@ export default function ResultPage({
       </div>
       
       {/* Main Content - Two Column Layout for Desktop */}
-      <div className="flex-1 flex">
+      <div className="flex-1 flex overflow-hidden">
         {/* Desktop Layout: Two Columns */}
-        <div className="hidden lg:flex w-full">
-          {/* Left Column: Chat */}
-          <div className="w-1/2 flex flex-col border-r border-gray-200">
-            {/* Chat Header */}
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center space-x-3">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span className="text-sm font-medium text-gray-700">
-                  {prompt}
-                </span>
-              </div>
+        <div className="hidden lg:flex w-full h-full">
+          {/* Left Column: Chat - 1/3 width */}
+          <div className="w-1/3 flex flex-col border-r border-gray-200 h-full" style={{ backgroundColor: '#F5F1EC' }}>
+            {/* Logo in Chat Section - Desktop Only with bottom border */}
+            <div className="p-6 flex-shrink-0" style={{ borderBottom: '1px solid #D9CFC3' }}>
+              <button 
+                onClick={onLogoClick}
+                className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
+              >
+                nv
+              </button>
             </div>
             
-            {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              {chatMessages.map((message) => (
-                <div key={message.id} className="space-y-2">
-                  {message.type === 'user' ? (
-                    <div className="bg-blue-100 text-blue-800 p-4 rounded-2xl max-w-xs ml-auto">
-                      <p className="text-sm font-calling-code">{message.content}</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
+            {/* Chat Messages - Scrollable */}
+            <div 
+              ref={desktopChatMessagesRef}
+              className="flex-1 overflow-y-auto p-6 space-y-4"
+            >
+              {chatMessages.map((message, index) => {
+                // Find the index of this user message among all user messages
+                const userMessageIndex = message.type === 'user' 
+                  ? userMessages.findIndex(userMsg => userMsg.id === message.id)
+                  : -1;
+                
+                const bubbleStyle = userMessageIndex >= 0 ? getChatBubbleStyle(userMessageIndex) : null;
+                
+                return (
+                  <div key={message.id} className="space-y-2">
+                    {message.type === 'user' ? (
+                      <div 
+                        className={`p-4 ml-auto border max-w-xs ${getBubbleWidthClass(message.content)} break-words overflow-wrap-anywhere`}
+                        style={{ 
+                          borderRadius: '24px 24px 0px 24px',
+                          borderWidth: '1px',
+                          backgroundColor: bubbleStyle?.backgroundColor,
+                          borderColor: bubbleStyle?.borderColor,
+                          color: '#3F3F3F',
+                          wordWrap: 'break-word',
+                          overflowWrap: 'break-word',
+                          hyphens: 'auto'
+                        }}
+                      >
+                        <p className="text-sm font-calling-code break-words">{message.content}</p>
+                      </div>
+                    ) : (
+                      <div className="flex items-start space-x-2">
+                        <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                           <span className="text-white text-xs">🤖</span>
                         </div>
-                        <span className="text-xs text-gray-500">AI Assistant</span>
+                        <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words flex-1">{message.content}</p>
                       </div>
-                      <p className="text-sm text-gray-700 leading-relaxed">{message.content}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                );
+              })}
               
               {/* Typing Indicator */}
               {isRefining && (
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs">🤖</span>
-                    </div>
-                    <span className="text-xs text-gray-500">AI Assistant</span>
+                <div className="flex items-start space-x-2">
+                  <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-white text-xs">🤖</span>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 flex-1">
                     <div className="animate-spin w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full"></div>
                     <span className="text-sm text-gray-500 italic">Refining your design...</span>
                   </div>
@@ -127,8 +195,8 @@ export default function ResultPage({
               )}
             </div>
             
-            {/* Chat Input */}
-            <div className="p-6 border-t border-gray-200">
+            {/* Chat Input - Fixed at bottom */}
+            <div className="p-6 border-t border-gray-200 flex-shrink-0">
               <div className="flex items-center space-x-3">
                 <input
                   type="text"
@@ -150,18 +218,18 @@ export default function ResultPage({
             </div>
           </div>
           
-          {/* Right Column: Image */}
-          <div className="w-1/2 flex flex-col">
+          {/* Right Column: Image - 2/3 width */}
+          <div className="w-2/3 flex flex-col h-full">
             {/* Image Header */}
-            <div className="p-6 border-b border-gray-200">
+            <div className="p-6 border-b border-gray-200 flex-shrink-0">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
                     <span className="text-white text-xs">💅</span>
                   </div>
-                  <h2 className="text-lg font-semibold text-gray-800">
+                  <h1 className="font-calling-code font-bold text-[#3F3F3F] text-lg">
                     {currentVibe?.title || "Black French tips on short natural nails"}
-                  </h2>
+                  </h1>
                 </div>
                 <div className="flex items-center space-x-2">
                   <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -174,8 +242,8 @@ export default function ResultPage({
               </div>
             </div>
             
-            {/* Image Display */}
-            <div className="flex-1 p-6 flex items-center justify-center">
+            {/* Image Display - Fixed, no scroll */}
+            <div className="flex-1 p-6 flex items-center justify-center overflow-hidden">
               <div className="relative max-w-md w-full">
                 <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
                   <img 
@@ -234,9 +302,9 @@ export default function ResultPage({
                 {currentVibe && (
                   <div className="mb-4 text-center">
                     {currentVibe.title && (
-                      <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                      <h1 className="font-calling-code font-bold text-[#3F3F3F] mb-2 text-lg">
                         {currentVibe.title}
-                      </h2>
+                      </h1>
                     )}
                     
                     {/* Match Type and Score Display */}
@@ -313,7 +381,7 @@ export default function ResultPage({
           />
           
           {/* Chat Panel */}
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[80vh] flex flex-col animate-slide-up">
+          <div className="absolute bottom-0 left-0 right-0 rounded-t-2xl max-h-[80vh] flex flex-col animate-slide-up" style={{ backgroundColor: '#F5F1EC' }}>
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b">
               <button
@@ -331,20 +399,47 @@ export default function ResultPage({
             </div>
             
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {chatMessages.map((message) => (
-                <div key={message.id} className="space-y-2">
-                  {message.type === 'user' ? (
-                    <div className="bg-red-100 text-red-800 p-3 rounded-lg max-w-xs ml-auto">
-                      <p className="text-sm">{message.content}</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      <p className="text-sm text-gray-700">{message.content}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
+            <div 
+              ref={mobileChatMessagesRef}
+              className="flex-1 overflow-y-auto p-4 space-y-4"
+            >
+              {chatMessages.map((message, index) => {
+                // Find the index of this user message among all user messages
+                const userMessageIndex = message.type === 'user' 
+                  ? userMessages.findIndex(userMsg => userMsg.id === message.id)
+                  : -1;
+                
+                const bubbleStyle = userMessageIndex >= 0 ? getChatBubbleStyle(userMessageIndex) : null;
+                
+                return (
+                  <div key={message.id} className="space-y-2">
+                    {message.type === 'user' ? (
+                      <div 
+                        className="p-3 max-w-xs ml-auto border break-words overflow-wrap-anywhere"
+                        style={{ 
+                          borderRadius: '24px 24px 0px 24px',
+                          borderWidth: '1px',
+                          backgroundColor: bubbleStyle?.backgroundColor,
+                          borderColor: bubbleStyle?.borderColor,
+                          color: '#3F3F3F',
+                          wordWrap: 'break-word',
+                          overflowWrap: 'break-word',
+                          hyphens: 'auto'
+                        }}
+                      >
+                        <p className="text-sm font-calling-code break-words">{message.content}</p>
+                      </div>
+                    ) : (
+                      <div className="flex items-start space-x-2">
+                        <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                          <span className="text-white text-xs">🤖</span>
+                        </div>
+                        <p className="font-calling-code text-sm text-[#3F3F3F] break-words flex-1">{message.content}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
             
             {/* Input Area */}
