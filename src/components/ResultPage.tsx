@@ -82,10 +82,10 @@ export default function ResultPage({
   // Function to determine bubble width class based on content length
   const getBubbleWidthClass = (content: string) => {
     const length = content.length;
-    if (length <= 30) return 'max-w-[200px]'; // Short messages
-    if (length <= 60) return 'max-w-[280px]'; // Medium messages  
-    if (length <= 100) return 'max-w-[360px]'; // Long messages
-    return 'max-w-[400px]'; // Very long messages
+    if (length <= 30) return 'lg:max-w-[200px]'; // Short messages
+    if (length <= 60) return 'lg:max-w-[280px]'; // Medium messages  
+    if (length <= 100) return 'lg:max-w-[360px]'; // Long messages
+    return 'lg:max-w-[400px]'; // Very long messages
   };
 
   // Get only user messages to determine the correct index for styling
@@ -135,7 +135,7 @@ export default function ResultPage({
                   <div key={message.id} className="space-y-2">
                     {message.type === 'user' ? (
                       <div 
-                        className={`p-4 ml-auto border ${getBubbleWidthClass(message.content)} md:max-w-xs lg:${getBubbleWidthClass(message.content)}`}
+                        className={`p-4 ml-auto border max-w-xs ${getBubbleWidthClass(message.content)}`}
                         style={{ 
                           borderRadius: '24px 24px 0px 24px',
                           borderWidth: '1px',
