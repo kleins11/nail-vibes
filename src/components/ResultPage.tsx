@@ -77,7 +77,7 @@ export default function ResultPage({
         {/* Desktop Layout: Two Columns */}
         <div className="hidden lg:flex w-full">
           {/* Left Column: Chat */}
-          <div className="w-1/2 flex flex-col border-r border-gray-200">
+          <div className="w-1/2 flex flex-col border-r border-gray-200" style={{ backgroundColor: '#F5F1EC' }}>
             {/* Chat Header */}
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center space-x-3">
@@ -313,7 +313,7 @@ export default function ResultPage({
           />
           
           {/* Chat Panel */}
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[80vh] flex flex-col animate-slide-up">
+          <div className="absolute bottom-0 left-0 right-0 rounded-t-2xl max-h-[80vh] flex flex-col animate-slide-up" style={{ backgroundColor: '#F5F1EC' }}>
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b">
               <button
