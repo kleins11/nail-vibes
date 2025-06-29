@@ -14,10 +14,10 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-type AppState = 'input' | 'result' | 'chat' | 'loading';
+type AppState = 'landing' | 'result' | 'chat' | 'loading';
 
 function App() {
-  const [appState, setAppState] = useState<AppState>('input');
+  const [appState, setAppState] = useState<AppState>('landing');
   const [prompt, setPrompt] = useState('');
   const [refinePrompt, setRefinePrompt] = useState('');
   const [refinedImageUrl, setRefinedImageUrl] = useState('');
@@ -42,7 +42,7 @@ function App() {
   const [generateError, setGenerateError] = useState<string | null>(null);
 
   const handleLogoClick = () => {
-    setAppState('input');
+    setAppState('landing');
     setPrompt('');
     setRefinePrompt('');
     setRefinedImageUrl('');
@@ -146,7 +146,7 @@ function App() {
         // Handle error case
         console.error('❌ RPC function returned error:', result.message);
         setError(result.message);
-        setAppState('input');
+        setAppState('landing');
         return;
       }
       
@@ -196,7 +196,7 @@ function App() {
     } catch (error) {
       console.error('❌ Error in handleInitialSubmitWithRPC:', error);
       setError('An unexpected error occurred. Please try again.');
-      setAppState('input');
+      setAppState('landing');
     }
   };
 
@@ -268,12 +268,12 @@ function App() {
         // Handle error case
         console.error('❌ Failed to find best vibe match:', result.error);
         setError(result.error || 'Failed to find a matching vibe');
-        setAppState('input');
+        setAppState('landing');
       }
     } catch (error) {
       console.error('❌ Error in handleInitialSubmit:', error);
       setError('An unexpected error occurred. Please try again.');
-      setAppState('input');
+      setAppState('landing');
     }
   };
 
@@ -444,8 +444,8 @@ function App() {
     );
   }
 
-  // Initial Input Screen
-  if (appState === 'input') {
+  // Initial landing Screen
+  if (appState === 'landing') {
     return (
       <div className="min-h-screen bg-input-background flex flex-col relative">
         {/* Header */}
@@ -558,7 +558,7 @@ function App() {
           </div>
         </div>
         
-        {/* Gradient Shapes Auto-Scroll - Only on input page */}
+        {/* Gradient Shapes Auto-Scroll - Only on landing page */}
         <GradientShapesScroll />
       </div>
     );
