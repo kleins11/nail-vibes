@@ -231,7 +231,7 @@ export default function ResultPage({
                   <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
                     <span className="text-white text-xs">💅</span>
                   </div>
-                  <h1 className="font-calling-code font-bold text-[#3F3F3F]" style={{ fontSize: '32px' }}>
+                  <h1 className="font-calling-code font-bold text-[#3F3F3F] text-lg">
                     {currentVibe?.title || "Black French tips on short natural nails"}
                   </h1>
                 </div>
@@ -306,7 +306,7 @@ export default function ResultPage({
                 {currentVibe && (
                   <div className="mb-4 text-center">
                     {currentVibe.title && (
-                      <h1 className="font-calling-code font-bold text-[#3F3F3F] mb-2" style={{ fontSize: '32px' }}>
+                      <h1 className="font-calling-code font-bold text-[#3F3F3F] mb-2 text-lg">
                         {currentVibe.title}
                       </h1>
                     )}
