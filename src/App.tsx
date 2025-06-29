@@ -198,6 +198,145 @@ function App() {
     }
   };
 
+  const handleRefineImage = async () => {
+    if (!generatePrompt.trim()) return;
+    
+    setIsGenerating(true);
+    setGenerateError(null);
+    setGeneratedImageUrl('');
+    
+    try {
+      console.log('🎨 Generating image with prompt:', generatePrompt);
+      
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/replicate-api/generate`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: generatePrompt
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error('❌ Generation failed with status:', response.status);
+        console.error('❌ Error response:', result);
+        
+        // Handle different error types with user-friendly messages
+        if (response.status === 503) {
+          setGenerateError('Image generation service is not configured. Please contact support.');
+        } else if (response.status === 401) {
+          setGenerateError('Authentication error. Please contact support.');
+        } else if (response.status === 408) {
+          setGenerateError('Generation timed out. Please try a simpler prompt.');
+        } else if (response.status === 422) {
+          setGenerateError(result.error || 'Generation failed. Please try a different prompt.');
+        } else {
+          setGenerateError(result.error || `Server error (${response.status}). Please try again later.`);
+        }
+        return;
+      }
+      
+      if (result.error) {
+        console.error('❌ Generation error:', result.error);
+        setGenerateError(result.error);
+      } else if (result.image) {
+        console.log('✅ Image generated successfully:', result.image);
+        setGeneratedImageUrl(result.image);
+      } else {
+        setGenerateError('No image URL returned from the server');
+      }
+      
+    } catch (error) {
+      console.error('❌ Error generating image:', error);
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        setGenerateError('Network error. Please check your connection and try again.');
+      } else {
+        setGenerateError(error instanceof Error ? error.message : 'Failed to generate image');
+      }
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  // Example usage of fetchBestMatchingDesign function
+  const handleInitialSubmitWithRPC = async () => {
+    if (!prompt.trim()) return;
+    
+    setError(null);
+    setAppState('loading');
+    
+    try {
+      console.log('🚀 Using RPC function to search for best match with prompt:', prompt);
+      
+      // Extract tags from prompt
+      const tagExtraction = extractTagsFromPrompt(prompt);
+      console.log('🏷️ Extracted tags:', tagExtraction.combinedTags);
+      
+      // Call the new RPC function
+      const result = await fetchBestMatchingDesign(tagExtraction.combinedTags);
+      
+      if (result.message) {
+        // Handle error case
+        console.error('❌ RPC function returned error:', result.message);
+        setError(result.message);
+        setAppState('landing');
+        return;
+      }
+      
+      if (result.data) {
+        console.log('✅ Found design via RPC:', result.data);
+        
+        // Create a mock vibe object that matches our interface
+        const mockVibe: VibeMatchData = {
+          id: result.data.id,
+          image_url: result.data.image_url,
+          title: result.data.title,
+          tags: result.data.tags || [],
+          description: result.data.description,
+          source_url: result.data.source_url,
+          match_score: result.data.match_score || 1,
+          primary_matches: result.data.primary_matches || 0,
+          modifier_matches: result.data.modifier_matches || 0,
+          match_type: 'all_primary' as const
+        };
+        
+        setCurrentVibe(mockVibe);
+        setMatchInfo({
+          primaryTags: tagExtraction.primaryTags,
+          modifierTags: tagExtraction.modifierTags,
+          matchedConcept: tagExtraction.matchedConcept,
+          searchStrategy: 'rpc_function'
+        });
+        
+        // Create chat messages
+        const userMessage: ChatMessage = {
+          id: Date.now().toString(),
+          type: 'user',
+          content: prompt,
+          timestamp: new Date()
+        };
+        
+        const systemMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          type: 'system',
+          content: result.data.description || "Here's a perfect nail design that matches your vibe! ✨",
+          timestamp: new Date()
+        };
+        
+        setChatMessages([userMessage, systemMessage]);
+        setAppState('result');
+      }
+    } catch (error) {
+      console.error('❌ Error in handleInitialSubmitWithRPC:', error);
+      setError('An unexpected error occurred. Please try again.');
+      setAppState('landing');
+    }
+  };
+
   const handleInitialSubmit = async () => {
     if (!prompt.trim()) return;
     
