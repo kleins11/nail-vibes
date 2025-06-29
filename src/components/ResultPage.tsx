@@ -36,6 +36,22 @@ interface ResultPageProps {
 
 const SAMPLE_NAIL_IMAGE = "https://images.pexels.com/photos/3997379/pexels-photo-3997379.jpeg?auto=compress&cs=tinysrgb&w=800";
 
+// Chat bubble color styles that rotate
+const CHAT_BUBBLE_STYLES = [
+  {
+    backgroundColor: '#F9D9D9',
+    borderColor: '#DC9090'
+  },
+  {
+    backgroundColor: '#E6EEFF',
+    borderColor: '#92B5FA'
+  },
+  {
+    backgroundColor: '#ECE0FE',
+    borderColor: '#ECE0FE'
+  }
+];
+
 export default function ResultPage({
   currentVibe,
   matchInfo,
@@ -57,6 +73,14 @@ export default function ResultPage({
 }: ResultPageProps) {
   const imageUrl = currentVibe?.image_url || SAMPLE_NAIL_IMAGE;
   const displayImageUrl = refinedImageUrl || imageUrl;
+
+  // Function to get chat bubble style based on user message index
+  const getChatBubbleStyle = (messageIndex: number) => {
+    return CHAT_BUBBLE_STYLES[messageIndex % CHAT_BUBBLE_STYLES.length];
+  };
+
+  // Get only user messages to determine the correct index for styling
+  const userMessages = chatMessages.filter(message => message.type === 'user');
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -90,31 +114,42 @@ export default function ResultPage({
             
             {/* Chat Messages */}
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              {chatMessages.map((message) => (
-                <div key={message.id} className="space-y-2">
-                  {message.type === 'user' ? (
-                    <div 
-                      className="bg-blue-100 text-blue-800 p-4 max-w-xs ml-auto border"
-                      style={{ 
-                        borderRadius: '24px 24px 0px 24px',
-                        borderWidth: '1px',
-                        borderColor: '#E5E7EB'
-                      }}
-                    >
-                      <p className="text-sm font-calling-code">{message.content}</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
-                          <span className="text-white text-xs">🤖</span>
-                        </div>
+              {chatMessages.map((message, index) => {
+                // Find the index of this user message among all user messages
+                const userMessageIndex = message.type === 'user' 
+                  ? userMessages.findIndex(userMsg => userMsg.id === message.id)
+                  : -1;
+                
+                const bubbleStyle = userMessageIndex >= 0 ? getChatBubbleStyle(userMessageIndex) : null;
+                
+                return (
+                  <div key={message.id} className="space-y-2">
+                    {message.type === 'user' ? (
+                      <div 
+                        className="p-4 max-w-xs ml-auto border"
+                        style={{ 
+                          borderRadius: '24px 24px 0px 24px',
+                          borderWidth: '1px',
+                          backgroundColor: bubbleStyle?.backgroundColor,
+                          borderColor: bubbleStyle?.borderColor,
+                          color: '#3F3F3F'
+                        }}
+                      >
+                        <p className="text-sm font-calling-code">{message.content}</p>
                       </div>
-                      <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed">{message.content}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    ) : (
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs">🤖</span>
+                          </div>
+                        </div>
+                        <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed">{message.content}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
               
               {/* Typing Indicator */}
               {isRefining && (
@@ -337,26 +372,37 @@ export default function ResultPage({
             
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {chatMessages.map((message) => (
-                <div key={message.id} className="space-y-2">
-                  {message.type === 'user' ? (
-                    <div 
-                      className="bg-red-100 text-red-800 p-3 max-w-xs ml-auto border"
-                      style={{ 
-                        borderRadius: '24px 24px 0px 24px',
-                        borderWidth: '1px',
-                        borderColor: '#E5E7EB'
-                      }}
-                    >
-                      <p className="text-sm">{message.content}</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      <p className="font-calling-code text-sm text-[#3F3F3F]">{message.content}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
+              {chatMessages.map((message, index) => {
+                // Find the index of this user message among all user messages
+                const userMessageIndex = message.type === 'user' 
+                  ? userMessages.findIndex(userMsg => userMsg.id === message.id)
+                  : -1;
+                
+                const bubbleStyle = userMessageIndex >= 0 ? getChatBubbleStyle(userMessageIndex) : null;
+                
+                return (
+                  <div key={message.id} className="space-y-2">
+                    {message.type === 'user' ? (
+                      <div 
+                        className="p-3 max-w-xs ml-auto border"
+                        style={{ 
+                          borderRadius: '24px 24px 0px 24px',
+                          borderWidth: '1px',
+                          backgroundColor: bubbleStyle?.backgroundColor,
+                          borderColor: bubbleStyle?.borderColor,
+                          color: '#3F3F3F'
+                        }}
+                      >
+                        <p className="text-sm font-calling-code">{message.content}</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <p className="font-calling-code text-sm text-[#3F3F3F]">{message.content}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
             
             {/* Input Area */}
