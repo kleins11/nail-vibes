@@ -17,6 +17,7 @@ export interface VibeIdea {
   tags: string[];
   description?: string;
   source_url?: string;
+  mask_url?: string;
 }
 
 export interface UserPrompt {
