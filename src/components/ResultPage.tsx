@@ -93,7 +93,14 @@ export default function ResultPage({
               {chatMessages.map((message) => (
                 <div key={message.id} className="space-y-2">
                   {message.type === 'user' ? (
-                    <div className="bg-blue-100 text-blue-800 p-4 rounded-2xl max-w-xs ml-auto">
+                    <div 
+                      className="bg-blue-100 text-blue-800 p-4 max-w-xs ml-auto border"
+                      style={{ 
+                        borderRadius: '24px 24px 24px 0px',
+                        borderWidth: '1px',
+                        borderColor: '#E5E7EB'
+                      }}
+                    >
                       <p className="text-sm font-calling-code">{message.content}</p>
                     </div>
                   ) : (
@@ -333,7 +340,14 @@ export default function ResultPage({
               {chatMessages.map((message) => (
                 <div key={message.id} className="space-y-2">
                   {message.type === 'user' ? (
-                    <div className="bg-red-100 text-red-800 p-3 rounded-lg max-w-xs ml-auto">
+                    <div 
+                      className="bg-red-100 text-red-800 p-3 max-w-xs ml-auto border"
+                      style={{ 
+                        borderRadius: '24px 24px 24px 0px',
+                        borderWidth: '1px',
+                        borderColor: '#E5E7EB'
+                      }}
+                    >
                       <p className="text-sm">{message.content}</p>
                     </div>
                   ) : (
