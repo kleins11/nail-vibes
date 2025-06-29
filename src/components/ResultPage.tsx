@@ -138,16 +138,6 @@ export default function ResultPage({
               </button>
             </div>
             
-            {/* Chat Header */}
-            <div className="px-6 pb-6 border-b border-gray-200 flex-shrink-0">
-              <div className="flex items-center space-x-3">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span className="text-sm font-medium text-gray-700">
-                  {prompt}
-                </span>
-              </div>
-            </div>
-            
             {/* Chat Messages - Scrollable */}
             <div 
               ref={desktopChatMessagesRef}
