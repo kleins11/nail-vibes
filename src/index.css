@@ -8,6 +8,355 @@
   }
 }
 
+@layer components {
+  .font-stratos {
+    font-family: 'stratos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  .font-stratos-extrabold {
+    font-family: 'stratos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 800;
+  }
+  
+  .font-pilar {
+    font-family: 'pilar', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  .text-display {
+    font-size: 3.5rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    /* Drop shadow matching Figma: X=0, Y=20px, Blur=20px, Spread=0px, Color=#9B9BA9 at 50% opacity */
+    text-shadow: 0 20px 20px rgba(155, 155, 169, 0.5);
+    /* Remove margin-bottom from here since we'll apply it to the textarea container */
+    margin-bottom: 0;
+  }
+  
+  .font-calling-code {
+    font-family: 'calling-code', 'Source Code Pro', monospace;
+  }
+  
+  /* Custom textarea styling with Calling Code font */
+  .textarea-calling-code {
+    font-family: 'calling-code', 'Source Code Pro', monospace;
+    font-style: normal;
+    color: #3F3F3F;
+  }
+  
+  /* Material Design 3 Grid System */
+  .m3-grid-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  
+  /* Mobile (XS, S) - 4 columns, 16px margins, 16px gutters */
+  @media (max-width: 599px) {
+    .m3-grid-container {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    
+    .m3-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+  }
+  
+  /* Tablet (M) - 8 columns, 24px margins, 24px gutters */
+  @media (min-width: 600px) and (max-width: 839px) {
+    .m3-grid-container {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    
+    .m3-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 24px;
+    }
+  }
+  
+  /* Desktop (L, XL) - 12 columns, 24px margins, 24px gutters */
+  @media (min-width: 840px) {
+    .m3-grid-container {
+      padding-left: 24px;
+      padding-right: 24px;
+      max-width: 1200px;
+    }
+    
+    .m3-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 24px;
+    }
+  }
+  
+  /* Grid column span utilities for M3 */
+  .m3-col-1 { grid-column: span 1; }
+  .m3-col-2 { grid-column: span 2; }
+  .m3-col-3 { grid-column: span 3; }
+  .m3-col-4 { grid-column: span 4; }
+  .m3-col-5 { grid-column: span 5; }
+  .m3-col-6 { grid-column: span 6; }
+  .m3-col-7 { grid-column: span 7; }
+  .m3-col-8 { grid-column: span 8; }
+  .m3-col-9 { grid-column: span 9; }
+  .m3-col-10 { grid-column: span 10; }
+  .m3-col-11 { grid-column: span 11; }
+  .m3-col-12 { grid-column: span 12; }
+  
+  /* Responsive column spans */
+  @media (max-width: 599px) {
+    .m3-col-mobile-1 { grid-column: span 1; }
+    .m3-col-mobile-2 { grid-column: span 2; }
+    .m3-col-mobile-3 { grid-column: span 3; }
+    .m3-col-mobile-4 { grid-column: span 4; }
+  }
+  
+  @media (min-width: 600px) and (max-width: 839px) {
+    .m3-col-tablet-1 { grid-column: span 1; }
+    .m3-col-tablet-2 { grid-column: span 2; }
+    .m3-col-tablet-3 { grid-column: span 3; }
+    .m3-col-tablet-4 { grid-column: span 4; }
+    .m3-col-tablet-5 { grid-column: span 5; }
+    .m3-col-tablet-6 { grid-column: span 6; }
+    .m3-col-tablet-7 { grid-column: span 7; }
+    .m3-col-tablet-8 { grid-column: span 8; }
+  }
+  
+  @media (min-width: 840px) {
+    .m3-col-desktop-1 { grid-column: span 1; }
+    .m3-col-desktop-2 { grid-column: span 2; }
+    .m3-col-desktop-3 { grid-column: span 3; }
+    .m3-col-desktop-4 { grid-column: span 4; }
+    .m3-col-desktop-5 { grid-column: span 5; }
+    .m3-col-desktop-6 { grid-column: span 6; }
+    .m3-col-desktop-7 { grid-column: span 7; }
+    .m3-col-desktop-8 { grid-column: span 8; }
+    .m3-col-desktop-9 { grid-column: span 9; }
+    .m3-col-desktop-10 { grid-column: span 10; }
+    .m3-col-desktop-11 { grid-column: span 11; }
+    .m3-col-desktop-12 { grid-column: span 12; }
+  }
+  
+  /* Content area with M3 grid constraints - UPDATED with gradient background */
+  .m3-content-area {
+    width: 100%;
+    position: relative;
+  }
+  
+  /* Add gradient background to the entire content area - positioned to cover title and textarea */
+  .m3-content-area::before {
+    content: '';
+    position: absolute;
+    /* Position to cover both title and textarea area */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px; /* Large width to match Figma */
+    height: 700px; /* Increased height to ensure it covers title area */
+    background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 0; /* Behind all content */
+    pointer-events: none;
+    opacity: 1;
+    display: block;
+  }
+  
+  /* Mobile: Full width (4 columns) */
+  @media (max-width: 599px) {
+    .m3-content-area {
+      grid-column: span 4;
+    }
+    
+    /* Larger gradient on mobile to ensure coverage */
+    .m3-content-area::before {
+      width: 800px;
+      height: 600px;
+    }
+  }
+  
+  /* Tablet: 6 of 8 columns, centered */
+  @media (min-width: 600px) and (max-width: 839px) {
+    .m3-content-area {
+      grid-column: 2 / span 6;
+    }
+    
+    /* Adjust gradient size for tablet */
+    .m3-content-area::before {
+      width: 750px;
+      height: 550px;
+    }
+  }
+  
+  /* Desktop: 8 of 12 columns, centered */
+  @media (min-width: 840px) {
+    .m3-content-area {
+      grid-column: 3 / span 8;
+    }
+  }
+  
+  /* Ensure title and textarea are above the gradient */
+  .text-display {
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Textarea Long Component - Updated to work with M3 grid */
+  .textarea-long-container {
+    position: relative;
+    width: 100%;
+    /* Apply the generous spacing above the textarea container */
+    margin-top: 120px;
+    /* Ensure this container can hold positioned elements */
+    z-index: 2; /* Above the gradient background */
+  }
+  
+  /* Remove the old gradient background from textarea container since it's now on m3-content-area */
+  
+  /* Textarea Long Component Styling with Drop Shadow - Fixed to match Figma */
+  .textarea-long {
+    width: 100%;
+    height: 138px;
+    border-radius: 24px;
+    padding: 16px;
+    padding-right: 72px; /* 16px base + 32px button + 24px spacing = 72px */
+    background-color: #FCFCFC;
+    border: 1px solid #E6E6E6;
+    font-family: 'calling-code', 'Source Code Pro', monospace;
+    font-style: normal;
+    color: #3F3F3F;
+    resize: none;
+    outline: none;
+    /* Drop shadow matching Figma: X=0, Y=20px, Blur=20px, Spread=0px, Color=#9B9BA9 at 25% opacity */
+    box-shadow: 0 20px 20px 0 rgba(155, 155, 169, 0.25);
+    position: relative;
+    z-index: 3; /* Above the gradient background */
+  }
+  
+  .textarea-long:focus {
+    outline: none;
+    border-color: #E6E6E6;
+    /* Maintain shadow on focus */
+    box-shadow: 0 20px 20px 0 rgba(155, 155, 169, 0.25);
+  }
+  
+  /* Button positioning within textarea container */
+  .textarea-long-button {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    z-index: 4; /* Above everything */
+  }
+  
+  /* Gradient Shapes Auto-Scroll Component - Seamless infinite scroll */
+  .gradient-shapes-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 88px;
+    background: transparent;
+    overflow: hidden;
+    z-index: 10;
+    pointer-events: none;
+  }
+  
+  .gradient-shapes-scroll {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    /* Seamless infinite scroll - no restart glitch */
+    animation: scrollShapesSeamless 54s linear infinite;
+    will-change: transform;
+    /* Ensure smooth animation */
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  .gradient-shape {
+    flex-shrink: 0;
+    margin-right: 26px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .gradient-shape-image {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.08));
+  }
+  
+  /* Seamless infinite scroll animation - moves exactly half the width to create perfect loop */
+  @keyframes scrollShapesSeamless {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  
+  /* Responsive adjustments for gradient shapes */
+  @media (max-width: 640px) {
+    .gradient-shapes-container {
+      height: 66px;
+    }
+    
+    .gradient-shape {
+      height: 42px;
+      margin-right: 20px;
+    }
+    
+    .gradient-shapes-scroll {
+      animation-duration: 40.5s;
+    }
+  }
+  
+  /* Mobile responsive adjustments - FIXED SPACING */
+  @media (max-width: 640px) {
+    .text-display {
+      font-size: 2.5rem;
+    }
+    
+    /* FIXED: Reduce spacing between title and textarea on mobile to match Figma */
+    .textarea-long-container {
+      margin-top: 60px; /* Reduced from 100px to match Figma spacing */
+    }
+  }
+  
+  /* Very small screens - ensure gradient still covers everything */
+  @media (max-width: 400px) {
+    .m3-content-area::before {
+      width: 700px; /* Still large enough */
+      height: 500px;
+    }
+  }
+  
+  /* Extra small height screens - adjust gradient positioning */
+  @media (max-height: 600px) {
+    .m3-content-area::before {
+      height: 450px; /* Slightly smaller height for very short screens */
+    }
+  }
+}
+
 @layer utilities {
   .animate-slide-up {
     animation: slideUp 0.3s ease-out;
@@ -20,5 +369,17 @@
     to {
       transform: translateY(0);
     }
+  }
+  
+  /* Custom placeholder styling for textarea */
+  .placeholder-calling-code::placeholder {
+    font-family: 'calling-code', 'Source Code Pro', monospace;
+    font-style: italic;
+    color: #808080;
+  }
+  
+  /* Custom background color for input page */
+  .bg-input-background {
+    background-color: #F5F1EC;
   }
 }
