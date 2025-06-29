@@ -146,6 +146,7 @@
   /* Content area with M3 grid constraints */
   .m3-content-area {
     width: 100%;
+    position: relative;
   }
   
   /* Mobile: Full width (4 columns) */
@@ -177,6 +178,23 @@
     margin-top: 120px;
   }
   
+  /* Add gradient background behind textarea container */
+  .textarea-long-container::before {
+    content: '';
+    position: absolute;
+    top: -60px; /* Position it to just touch the heading text */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120%;
+    height: 300px;
+    background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: -1;
+    pointer-events: none;
+  }
+  
   /* Textarea Long Component Styling with Drop Shadow - Fixed to match Figma */
   .textarea-long {
     width: 100%;
@@ -193,6 +211,8 @@
     outline: none;
     /* Drop shadow matching Figma: X=0, Y=20px, Blur=20px, Spread=0px, Color=#9B9BA9 at 25% opacity */
     box-shadow: 0 20px 20px 0 rgba(155, 155, 169, 0.25);
+    position: relative;
+    z-index: 1;
   }
   
   .textarea-long:focus {
@@ -214,6 +234,7 @@
     align-items: center;
     justify-content: center;
     transition: background-color 0.2s;
+    z-index: 2;
   }
   
   /* Gradient Shapes Auto-Scroll Component - Seamless infinite scroll */
@@ -291,6 +312,22 @@
     /* Responsive spacing for mobile */
     .textarea-long-container {
       margin-top: 100px;
+    }
+    
+    /* Adjust gradient background for mobile */
+    .textarea-long-container::before {
+      top: -40px;
+      width: 140%;
+      height: 250px;
+    }
+  }
+  
+  /* Tablet responsive adjustments */
+  @media (min-width: 600px) and (max-width: 839px) {
+    .textarea-long-container::before {
+      top: -50px;
+      width: 130%;
+      height: 280px;
     }
   }
 }
