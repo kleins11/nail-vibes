@@ -218,7 +218,7 @@ function App() {
         },
         body: JSON.stringify({
           image_prompt: refinedImageUrl,
-          prompt: generatePrompt
+          prompt: promptWithContext
         })
       });
 
@@ -428,15 +428,15 @@ function App() {
     
     try {
       // Make POST request to the refine nail design endpoint
-      const response = await fetch('/api/refineNailDesign', {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/replicate-api/generate`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          baseImageUrl: currentVibe.image_url,
-          refinementPrompt: refinePrompt
+          image_prompt: currentVibe.image_url,
+          prompt: promptWithContext
         })
       });
 
