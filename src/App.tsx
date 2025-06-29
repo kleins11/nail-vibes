@@ -425,6 +425,7 @@ function App() {
     
     setIsRefining(true);
     console.log('🎨 Refining design with prompt:', refinePrompt);
+    const promptWithContext = `Adjust only the nails in the image and make the nails ${refinePrompt} keeping the background, hands, and fingers unchanged.`
     
     try {
       // Make POST request to the refine nail design endpoint
