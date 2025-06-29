@@ -110,8 +110,8 @@ export default function ResultPage({
 
   return (
     <div className="h-screen bg-white flex flex-col overflow-hidden">
-      {/* Header */}
-      <div className="w-full px-4 md:px-8 lg:px-12 flex-shrink-0">
+      {/* Header - Only for mobile/tablet */}
+      <div className="w-full px-4 md:px-8 lg:hidden flex-shrink-0">
         <div className="flex justify-start pt-8 pb-4">
           <button 
             onClick={onLogoClick}
@@ -128,8 +128,18 @@ export default function ResultPage({
         <div className="hidden lg:flex w-full h-full">
           {/* Left Column: Chat */}
           <div className="w-1/2 flex flex-col border-r border-gray-200 h-full" style={{ backgroundColor: '#F5F1EC' }}>
+            {/* Logo in Chat Section - Desktop Only */}
+            <div className="p-6 flex-shrink-0">
+              <button 
+                onClick={onLogoClick}
+                className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
+              >
+                nv
+              </button>
+            </div>
+            
             {/* Chat Header */}
-            <div className="p-6 border-b border-gray-200 flex-shrink-0">
+            <div className="px-6 pb-6 border-b border-gray-200 flex-shrink-0">
               <div className="flex items-center space-x-3">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <span className="text-sm font-medium text-gray-700">
