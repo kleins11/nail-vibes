@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { X, Minus, ArrowUp, Maximize2, RotateCcw } from 'lucide-react';
 import { VibeMatchData } from '../services/vibeService';
 
@@ -74,6 +74,23 @@ export default function ResultPage({
   const imageUrl = currentVibe?.image_url || SAMPLE_NAIL_IMAGE;
   const displayImageUrl = refinedImageUrl || imageUrl;
 
+  // Refs for auto-scrolling
+  const desktopChatMessagesRef = useRef<HTMLDivElement>(null);
+  const mobileChatMessagesRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when new messages are added
+  useEffect(() => {
+    // Scroll desktop chat to bottom
+    if (desktopChatMessagesRef.current) {
+      desktopChatMessagesRef.current.scrollTop = desktopChatMessagesRef.current.scrollHeight;
+    }
+    
+    // Scroll mobile chat to bottom
+    if (mobileChatMessagesRef.current) {
+      mobileChatMessagesRef.current.scrollTop = mobileChatMessagesRef.current.scrollHeight;
+    }
+  }, [chatMessages, isRefining]); // Trigger on message changes and refining state
+
   // Function to get chat bubble style based on user message index
   const getChatBubbleStyle = (messageIndex: number) => {
     return CHAT_BUBBLE_STYLES[messageIndex % CHAT_BUBBLE_STYLES.length];
@@ -122,7 +139,10 @@ export default function ResultPage({
             </div>
             
             {/* Chat Messages - Scrollable */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            <div 
+              ref={desktopChatMessagesRef}
+              className="flex-1 overflow-y-auto p-6 space-y-4"
+            >
               {chatMessages.map((message, index) => {
                 // Find the index of this user message among all user messages
                 const userMessageIndex = message.type === 'user' 
@@ -383,7 +403,10 @@ export default function ResultPage({
             </div>
             
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div 
+              ref={mobileChatMessagesRef}
+              className="flex-1 overflow-y-auto p-4 space-y-4"
+            >
               {chatMessages.map((message, index) => {
                 // Find the index of this user message among all user messages
                 const userMessageIndex = message.type === 'user' 
