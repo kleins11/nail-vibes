@@ -176,23 +176,29 @@
     width: 100%;
     /* Apply the generous spacing above the textarea container */
     margin-top: 120px;
+    /* Ensure this container can hold positioned elements */
+    z-index: 1;
   }
   
-  /* Add gradient background behind textarea container */
+  /* Add gradient background behind textarea container - FIXED VERSION */
   .textarea-long-container::before {
     content: '';
     position: absolute;
-    top: -60px; /* Position it to just touch the heading text */
+    top: -80px; /* Position it to just touch the heading text */
     left: 50%;
     transform: translateX(-50%);
-    width: 120%;
-    height: 300px;
+    width: 600px; /* Fixed width instead of percentage */
+    height: 400px; /* Increased height */
     background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    z-index: -1;
+    z-index: 0; /* Behind the textarea but visible */
     pointer-events: none;
+    /* Add opacity to make it visible for debugging */
+    opacity: 1;
+    /* Ensure it displays */
+    display: block;
   }
   
   /* Textarea Long Component Styling with Drop Shadow - Fixed to match Figma */
@@ -212,7 +218,7 @@
     /* Drop shadow matching Figma: X=0, Y=20px, Blur=20px, Spread=0px, Color=#9B9BA9 at 25% opacity */
     box-shadow: 0 20px 20px 0 rgba(155, 155, 169, 0.25);
     position: relative;
-    z-index: 1;
+    z-index: 2; /* Above the gradient background */
   }
   
   .textarea-long:focus {
@@ -234,7 +240,7 @@
     align-items: center;
     justify-content: center;
     transition: background-color 0.2s;
-    z-index: 2;
+    z-index: 3; /* Above everything */
   }
   
   /* Gradient Shapes Auto-Scroll Component - Seamless infinite scroll */
@@ -316,18 +322,18 @@
     
     /* Adjust gradient background for mobile */
     .textarea-long-container::before {
-      top: -40px;
-      width: 140%;
-      height: 250px;
+      top: -60px;
+      width: 400px;
+      height: 300px;
     }
   }
   
   /* Tablet responsive adjustments */
   @media (min-width: 600px) and (max-width: 839px) {
     .textarea-long-container::before {
-      top: -50px;
-      width: 130%;
-      height: 280px;
+      top: -70px;
+      width: 500px;
+      height: 350px;
     }
   }
 }
