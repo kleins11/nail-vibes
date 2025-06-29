@@ -128,8 +128,8 @@ export default function ResultPage({
         <div className="hidden lg:flex w-full h-full">
           {/* Left Column: Chat */}
           <div className="w-1/2 flex flex-col border-r border-gray-200 h-full" style={{ backgroundColor: '#F5F1EC' }}>
-            {/* Logo in Chat Section - Desktop Only */}
-            <div className="p-6 flex-shrink-0">
+            {/* Logo in Chat Section - Desktop Only with bottom border */}
+            <div className="p-6 flex-shrink-0" style={{ borderBottom: '1px solid #D9CFC3' }}>
               <button 
                 onClick={onLogoClick}
                 className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
