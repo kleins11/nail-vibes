@@ -347,8 +347,6 @@ function App() {
       console.log('⚠️ Missing refine prompt or base image URL');
       return;
     }
-
-    console.log('currentVibe => ', currentVibe)
     
     setIsRefining(true);
     console.log('🎨 Refining design with prompt:', refinePrompt);
