@@ -109,7 +109,7 @@ export default function ResultPage({
   const userMessages = chatMessages.filter(message => message.type === 'user');
 
   return (
-    <div className="h-screen bg-white flex flex-col overflow-hidden">
+    <div className="h-screen flex flex-col overflow-hidden" style={{ backgroundColor: '#FFFAF4' }}>
       {/* Header - Only for mobile/tablet */}
       <div className="w-full px-4 md:px-8 lg:hidden flex-shrink-0">
         <div className="flex justify-start pt-8 pb-4">
@@ -231,9 +231,9 @@ export default function ResultPage({
                   <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
                     <span className="text-white text-xs">💅</span>
                   </div>
-                  <h2 className="text-lg font-semibold text-gray-800">
+                  <h1 className="font-calling-code font-bold text-[#3F3F3F]" style={{ fontSize: '32px' }}>
                     {currentVibe?.title || "Black French tips on short natural nails"}
-                  </h2>
+                  </h1>
                 </div>
                 <div className="flex items-center space-x-2">
                   <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -306,9 +306,9 @@ export default function ResultPage({
                 {currentVibe && (
                   <div className="mb-4 text-center">
                     {currentVibe.title && (
-                      <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                      <h1 className="font-calling-code font-bold text-[#3F3F3F] mb-2" style={{ fontSize: '32px' }}>
                         {currentVibe.title}
-                      </h2>
+                      </h1>
                     )}
                     
                     {/* Match Type and Score Display */}
