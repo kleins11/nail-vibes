@@ -386,7 +386,7 @@ function App() {
         console.log('✅ Refinement successful:', result.imageUrl);
         
         // Set the refined image URL
-        setRefinedImageUrl(result.imageUrl);
+        setRefinedImageUrl(result.image);
         
         // Add success message to chat
         const userMessage: ChatMessage = {
