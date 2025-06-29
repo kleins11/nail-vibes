@@ -143,10 +143,30 @@
     .m3-col-desktop-12 { grid-column: span 12; }
   }
   
-  /* Content area with M3 grid constraints */
+  /* Content area with M3 grid constraints - UPDATED with gradient background */
   .m3-content-area {
     width: 100%;
     position: relative;
+  }
+  
+  /* Add gradient background to the entire content area - positioned to cover title and textarea */
+  .m3-content-area::before {
+    content: '';
+    position: absolute;
+    /* Position to cover both title and textarea area */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px; /* Large width to match Figma */
+    height: 700px; /* Increased height to ensure it covers title area */
+    background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 0; /* Behind all content */
+    pointer-events: none;
+    opacity: 1;
+    display: block;
   }
   
   /* Mobile: Full width (4 columns) */
@@ -154,12 +174,24 @@
     .m3-content-area {
       grid-column: span 4;
     }
+    
+    /* Larger gradient on mobile to ensure coverage */
+    .m3-content-area::before {
+      width: 800px;
+      height: 600px;
+    }
   }
   
   /* Tablet: 6 of 8 columns, centered */
   @media (min-width: 600px) and (max-width: 839px) {
     .m3-content-area {
       grid-column: 2 / span 6;
+    }
+    
+    /* Adjust gradient size for tablet */
+    .m3-content-area::before {
+      width: 750px;
+      height: 550px;
     }
   }
   
@@ -170,35 +202,23 @@
     }
   }
   
-  /* Textarea Long Component - Updated to work with M3 grid and center-aligned gradient */
+  /* Ensure title and textarea are above the gradient */
+  .text-display {
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Textarea Long Component - Updated to work with M3 grid */
   .textarea-long-container {
     position: relative;
     width: 100%;
     /* Apply the generous spacing above the textarea container */
     margin-top: 120px;
     /* Ensure this container can hold positioned elements */
-    z-index: 1;
+    z-index: 2; /* Above the gradient background */
   }
   
-  /* Add gradient background behind textarea container - CENTERED VERTICALLY with textarea */
-  .textarea-long-container::before {
-    content: '';
-    position: absolute;
-    /* Center vertically with the textarea (138px height / 2 = 69px) */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 900px; /* Large width to match Figma */
-    height: 600px; /* Large height to match Figma */
-    background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    z-index: 0; /* Behind the textarea but visible */
-    pointer-events: none;
-    opacity: 1;
-    display: block;
-  }
+  /* Remove the old gradient background from textarea container since it's now on m3-content-area */
   
   /* Textarea Long Component Styling with Drop Shadow - Fixed to match Figma */
   .textarea-long {
@@ -217,7 +237,7 @@
     /* Drop shadow matching Figma: X=0, Y=20px, Blur=20px, Spread=0px, Color=#9B9BA9 at 25% opacity */
     box-shadow: 0 20px 20px 0 rgba(155, 155, 169, 0.25);
     position: relative;
-    z-index: 2; /* Above the gradient background */
+    z-index: 3; /* Above the gradient background */
   }
   
   .textarea-long:focus {
@@ -239,7 +259,7 @@
     align-items: center;
     justify-content: center;
     transition: background-color 0.2s;
-    z-index: 3; /* Above everything */
+    z-index: 4; /* Above everything */
   }
   
   /* Gradient Shapes Auto-Scroll Component - Seamless infinite scroll */
@@ -309,7 +329,7 @@
     }
   }
   
-  /* Mobile responsive adjustments - FIXED SPACING AND GRADIENT SIZE */
+  /* Mobile responsive adjustments - FIXED SPACING */
   @media (max-width: 640px) {
     .text-display {
       font-size: 2.5rem;
@@ -319,21 +339,20 @@
     .textarea-long-container {
       margin-top: 60px; /* Reduced from 100px to match Figma spacing */
     }
-    
-    /* FIXED: Make gradient background much larger and more prominent on mobile */
-    .textarea-long-container::before {
-      width: 800px; /* Much larger - increased from 600px */
-      height: 600px; /* Much larger - increased from 400px */
-      /* Keep the centering transform */
+  }
+  
+  /* Very small screens - ensure gradient still covers everything */
+  @media (max-width: 400px) {
+    .m3-content-area::before {
+      width: 700px; /* Still large enough */
+      height: 500px;
     }
   }
   
-  /* Tablet responsive adjustments */
-  @media (min-width: 600px) and (max-width: 839px) {
-    .textarea-long-container::before {
-      width: 750px; /* Larger for tablet */
-      height: 500px; /* Larger for tablet */
-      /* Keep the centering transform */
+  /* Extra small height screens - adjust gradient positioning */
+  @media (max-height: 600px) {
+    .m3-content-area::before {
+      height: 450px; /* Slightly smaller height for very short screens */
     }
   }
 }
