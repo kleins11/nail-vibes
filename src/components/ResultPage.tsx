@@ -103,7 +103,7 @@ export default function ResultPage({
                           <span className="text-white text-xs">🤖</span>
                         </div>
                       </div>
-                      <p className="font-calling-code text-xl lg:text-xl text-[#3F3F3F] leading-relaxed">{message.content}</p>
+                      <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed">{message.content}</p>
                     </div>
                   )}
                 </div>
@@ -338,7 +338,7 @@ export default function ResultPage({
                     </div>
                   ) : (
                     <div className="space-y-2">
-                      <p className="font-calling-code text-base sm:text-xl text-[#3F3F3F]">{message.content}</p>
+                      <p className="font-calling-code text-sm text-[#3F3F3F]">{message.content}</p>
                     </div>
                   )}
                 </div>
