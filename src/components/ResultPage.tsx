@@ -79,6 +79,15 @@ export default function ResultPage({
     return CHAT_BUBBLE_STYLES[messageIndex % CHAT_BUBBLE_STYLES.length];
   };
 
+  // Function to determine bubble width class based on content length
+  const getBubbleWidthClass = (content: string) => {
+    const length = content.length;
+    if (length <= 30) return 'max-w-[200px]'; // Short messages
+    if (length <= 60) return 'max-w-[280px]'; // Medium messages  
+    if (length <= 100) return 'max-w-[360px]'; // Long messages
+    return 'max-w-[400px]'; // Very long messages
+  };
+
   // Get only user messages to determine the correct index for styling
   const userMessages = chatMessages.filter(message => message.type === 'user');
 
@@ -126,7 +135,7 @@ export default function ResultPage({
                   <div key={message.id} className="space-y-2">
                     {message.type === 'user' ? (
                       <div 
-                        className="p-4 max-w-xs ml-auto border"
+                        className={`p-4 ml-auto border ${getBubbleWidthClass(message.content)} md:max-w-xs lg:${getBubbleWidthClass(message.content)}`}
                         style={{ 
                           borderRadius: '24px 24px 0px 24px',
                           borderWidth: '1px',
