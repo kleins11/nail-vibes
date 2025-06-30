@@ -126,8 +126,8 @@ export default function ResultPage({
       <div className="flex-1 flex overflow-hidden">
         {/* Desktop Layout: Two Columns */}
         <div className="hidden lg:flex w-full h-full">
-          {/* Left Column: Chat - 1/3 width */}
-          <div className="w-1/3 flex flex-col border-r border-gray-200 h-full" style={{ backgroundColor: '#F5F1EC' }}>
+          {/* Left Column: Chat - Narrower width to match Figma */}
+          <div className="w-1/4 flex flex-col border-r border-gray-200 h-full" style={{ backgroundColor: '#F5F1EC' }}>
             {/* Logo in Chat Section - Desktop Only with bottom border */}
             <div className="p-6 flex-shrink-0" style={{ borderBottom: '1px solid #D9CFC3' }}>
               <button 
@@ -218,8 +218,8 @@ export default function ResultPage({
             </div>
           </div>
           
-          {/* Right Column: Image - 2/3 width */}
-          <div className="w-2/3 flex flex-col h-full">
+          {/* Right Column: Image - 3/4 width to match the narrower chat */}
+          <div className="w-3/4 flex flex-col h-full">
             {/* Image Header */}
             <div className="p-6 border-b border-gray-200 flex-shrink-0">
               <div className="flex items-center justify-between">
