@@ -4,7 +4,6 @@ import { extractTagsFromPrompt } from './services/extractTagsFromPrompt';
 import { generateTitle } from './services/titleGenerator';
 import LandingPage from './components/LandingPage';
 import ResultPage from './components/ResultPage';
-import LoadingPage from './components/LoadingPage';
 import TransitionPage from './components/TransitionPage';
 import ReverseTransitionPage from './components/ReverseTransitionPage';
 
@@ -15,7 +14,7 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-type AppState = 'landing' | 'result' | 'loading' | 'transitioning' | 'reverse-transitioning';
+type AppState = 'landing' | 'result' | 'transitioning' | 'reverse-transitioning';
 
 function App() {
   const [appState, setAppState] = useState<AppState>('landing');
@@ -153,8 +152,6 @@ function App() {
     
     // Wait for reverse transition to complete before starting search
     setTimeout(async () => {
-      setAppState('loading');
-      
       try {
         console.log('🚀 Using RPC function to search for best match with prompt:', prompt);
         
@@ -305,8 +302,6 @@ function App() {
     
     // Wait for reverse transition to complete before starting search
     setTimeout(async () => {
-      setAppState('loading');
-      
       try {
         console.log('🚀 Searching for best vibe match with prompt:', prompt);
         
@@ -550,11 +545,6 @@ function App() {
   // Transition Screen - ULTRA SMOOTH
   if (appState === 'transitioning') {
     return <TransitionPage currentVibe={currentVibe} />;
-  }
-
-  // Loading Screen
-  if (appState === 'loading') {
-    return <LoadingPage onLogoClick={handleLogoClick} />;
   }
 
   // Landing Screen
