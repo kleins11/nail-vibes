@@ -280,13 +280,18 @@ export default function ResultPage({
                       </div>
                     ) : (
                       <div className="flex space-x-2">
-                        {/* FIXED: Gradient shape alignment - using flexbox alignment with text baseline */}
-                        <div className="flex-shrink-0 flex items-start" style={{ width: '44px', paddingTop: '1px' }}>
+                        {/* FIXED: Perfect gradient shape alignment with text baseline */}
+                        <div className="flex-shrink-0" style={{ width: '44px' }}>
                           <img 
                             src={getGradientShapeForMessage(message)}
                             alt="Gradient shape"
                             className="object-contain"
-                            style={{ width: '44px', height: '44px' }}
+                            style={{ 
+                              width: '44px', 
+                              height: '44px',
+                              // CRITICAL: Align the shape with the text baseline, not center
+                              marginTop: '-2px' // Fine-tune to match text baseline perfectly
+                            }}
                           />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -485,12 +490,17 @@ export default function ResultPage({
                   {/* Last System Message Preview */}
                   {lastSystemMessage && (
                     <div className="flex space-x-2 mb-6 flex-shrink-0">
-                      <div className="flex-shrink-0 flex items-start" style={{ width: '32px', paddingTop: '1px' }}>
+                      <div className="flex-shrink-0" style={{ width: '32px' }}>
                         <img 
                           src={getGradientShapeForMessage(lastSystemMessage)}
                           alt="Gradient shape"
                           className="object-contain"
-                          style={{ width: '32px', height: '32px' }}
+                          style={{ 
+                            width: '32px', 
+                            height: '32px',
+                            // CRITICAL: Align with text baseline for mobile too
+                            marginTop: '-1px' // Slightly less offset for smaller mobile text
+                          }}
                         />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -603,13 +613,18 @@ export default function ResultPage({
                       </div>
                     ) : (
                       <div className="flex space-x-2">
-                        {/* FIXED: Gradient shape alignment for mobile - using flexbox alignment with text baseline */}
-                        <div className="flex-shrink-0 flex items-start" style={{ width: '44px', paddingTop: '1px' }}>
+                        {/* FIXED: Perfect gradient shape alignment for mobile expanded chat */}
+                        <div className="flex-shrink-0" style={{ width: '44px' }}>
                           <img 
                             src={getGradientShapeForMessage(message)}
                             alt="Gradient shape"
                             className="object-contain"
-                            style={{ width: '44px', height: '44px' }}
+                            style={{ 
+                              width: '44px', 
+                              height: '44px',
+                              // CRITICAL: Align with text baseline for mobile expanded chat
+                              marginTop: '-2px' // Same as desktop for consistency
+                            }}
                           />
                         </div>
                         <div className="flex-1 min-w-0">
