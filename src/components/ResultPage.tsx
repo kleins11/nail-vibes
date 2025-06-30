@@ -219,22 +219,23 @@ export default function ResultPage({
           </div>
           
           {/* Right Column: Image - 3/4 width to match the narrower chat */}
-          <div className="w-3/4 flex flex-col h-full">
-            {/* Title positioned at the very top - matching Figma */}
-            <div className="pt-8 pb-4 px-8 flex-shrink-0">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm">💅</span>
+          <div className="w-3/4 flex flex-col h-full relative">
+            {/* Image Display - Takes up most of the space with title positioned around the image */}
+            <div className="flex-1 p-8 flex flex-col justify-center overflow-hidden">
+              <div className="relative w-full max-w-2xl mx-auto">
+                {/* Title positioned to align with left edge of image - matching Figma */}
+                <div className="mb-6">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm">💅</span>
+                    </div>
+                    <h1 className="font-calling-code font-bold text-[#3F3F3F] text-xl">
+                      {currentVibe?.title || "Black French tips on short natural nails"}
+                    </h1>
+                  </div>
                 </div>
-                <h1 className="font-calling-code font-bold text-[#3F3F3F] text-xl">
-                  {currentVibe?.title || "Black French tips on short natural nails"}
-                </h1>
-              </div>
-            </div>
-            
-            {/* Image Display - Takes up most of the remaining space */}
-            <div className="flex-1 px-8 pb-8 flex items-center justify-center overflow-hidden">
-              <div className="relative w-full max-w-2xl">
+                
+                {/* Image */}
                 <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
                   <img 
                     src={displayImageUrl} 
