@@ -170,53 +170,54 @@
     }
   }
   
-  /* 🎯 CRITICAL FIX: Gradient background - ALWAYS behind content with negative z-index */
-  .landing-page .m3-content-area::before {
-    content: '';
-    position: absolute;
-    /* Position gradient to match Figma - centered but lower to accommodate title above */
-    top: 60%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 1200px; /* Much larger width to match Figma's spread */
-    height: 600px; /* Taller height to match Figma proportions */
-    background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    /* 🚨 CRITICAL: Negative z-index ensures gradient is ALWAYS behind content */
-    z-index: -10; /* NEGATIVE z-index puts it behind everything */
-    pointer-events: none;
-    opacity: 1;
-    display: block;
-  }
-  
-  /* Mobile: Adjust gradient for mobile to match Figma proportions */
-  @media (max-width: 599px) {
-    .landing-page .m3-content-area::before {
-      width: 900px;
-      height: 450px;
-      top: 55%;
-      /* Keep negative z-index on mobile too */
-      z-index: -10;
-    }
-  }
-  
-  /* Tablet: Adjust gradient for tablet to match Figma proportions */
-  @media (min-width: 600px) and (max-width: 839px) {
-    .landing-page .m3-content-area::before {
-      width: 1000px;
-      height: 500px;
-      top: 58%;
-      /* Keep negative z-index on tablet too */
-      z-index: -10;
-    }
-  }
-  
-  /* 🎯 CRITICAL: Ensure title is ALWAYS above the gradient with high positive z-index */
-  .text-display {
+  /* 🎨 HERO SWIRL BACKGROUND - Large gradient wash across the entire landing page */
+  .landing-page {
     position: relative;
-    z-index: 100; /* Very high positive z-index ensures it's always above gradient */
+    overflow: hidden;
+  }
+  
+  .landing-page::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes/hero-swirl.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    opacity: 0.4; /* 40% transparency as requested */
+    z-index: -1; /* Behind all content */
+    pointer-events: none;
+  }
+  
+  /* Responsive adjustments for hero swirl */
+  @media (max-width: 599px) {
+    .landing-page::before {
+      background-size: cover;
+      background-position: center center;
+    }
+  }
+  
+  @media (min-width: 600px) and (max-width: 839px) {
+    .landing-page::before {
+      background-size: cover;
+      background-position: center center;
+    }
+  }
+  
+  @media (min-width: 840px) {
+    .landing-page::before {
+      background-size: cover;
+      background-position: center center;
+    }
+  }
+  
+  /* Ensure all content is above the background */
+  .landing-page > * {
+    position: relative;
+    z-index: 1;
   }
   
   /* Textarea Long Component - Updated to work with M3 grid and match Figma spacing */
@@ -225,8 +226,8 @@
     width: 100%;
     /* Set exact 40px spacing as requested to match Figma */
     margin-top: 40px;
-    /* 🎯 CRITICAL: High z-index to ensure container is ALWAYS above gradient */
-    z-index: 100; /* Very high positive z-index ensures it's always above gradient */
+    /* High z-index to ensure container is above background */
+    z-index: 10;
   }
   
   /* Textarea Long Component Styling with Drop Shadow and Enhanced Focus States */
@@ -246,8 +247,8 @@
     /* Drop shadow matching Figma: X=0, Y=20px, Blur=20px, Spread=0px, Color=#9B9BA9 at 25% opacity */
     box-shadow: 0 20px 20px 0 rgba(155, 155, 169, 0.25);
     position: relative;
-    /* 🎯 CRITICAL: Very high z-index to ensure textarea is ALWAYS above gradient */
-    z-index: 110; /* Even higher z-index for the actual input */
+    /* High z-index to ensure textarea is above background */
+    z-index: 20;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     /* ULTRA SMOOTH hardware acceleration */
     will-change: transform, opacity, filter, box-shadow;
@@ -290,8 +291,8 @@
     align-items: center;
     justify-content: center;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    /* 🎯 CRITICAL: Highest z-index for the button to be ALWAYS above everything */
-    z-index: 120; /* Highest z-index for the button */
+    /* Highest z-index for the button */
+    z-index: 30;
     /* ULTRA SMOOTH hardware acceleration */
     will-change: transform, box-shadow;
     backface-visibility: hidden;
@@ -453,27 +454,6 @@
     /* Keep 40px spacing on mobile as well for consistency with Figma */
     .textarea-long-container {
       margin-top: 40px;
-    }
-  }
-  
-  /* Very small screens - ensure gradient still covers everything but stays behind */
-  @media (max-width: 400px) {
-    .landing-page .m3-content-area::before {
-      width: 800px; /* Smaller for very small screens */
-      height: 400px;
-      top: 52%;
-      /* Keep negative z-index */
-      z-index: -10;
-    }
-  }
-  
-  /* Extra small height screens - adjust gradient positioning but keep behind */
-  @media (max-height: 600px) {
-    .landing-page .m3-content-area::before {
-      height: 400px; /* Slightly smaller height for very short screens */
-      top: 55%;
-      /* Keep negative z-index */
-      z-index: -10;
     }
   }
 }
