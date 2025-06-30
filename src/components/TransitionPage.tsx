@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { VibeMatchData } from '../services/vibeService';
 import GradientShapesScroll from './GradientShapesScroll';
+import MagicalSparkles from './MagicalSparkles';
 import Footer from './Footer';
 
 interface TransitionPageProps {
@@ -90,16 +91,20 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
         </div>
       )}
 
-      {/* Phase 3 & 4: Gentle landing on homepage - ULTRA SMOOTH */}
+      {/* Phase 3 & 4: Gentle landing on homepage - SEAMLESS SPARKLE CONTINUATION */}
       {(phase === 'gentleLanding' || phase === 'fullyLanded') && (
         <div className="absolute inset-0 flex flex-col landing-page">
+          {/* CRITICAL: Seamless sparkle continuation - NO RESTART */}
+          <div className="absolute inset-0" style={{ zIndex: 0 }}>
+            <MagicalSparkles />
+          </div>
+
           {/* Header that gracefully appears - PRELOADED AND SMOOTH */}
           <div 
             className="w-full px-4 md:px-8 lg:px-12 animate-ultra-smooth-appear" 
             style={{ 
               animationDelay: '0ms',
               animationFillMode: 'both',
-              /* 🎯 CRITICAL: Very high z-index to ensure header is ALWAYS above gradient */
               zIndex: 200
             }}
           >
@@ -121,7 +126,6 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
                     style={{ 
                       animationDelay: '100ms',
                       animationFillMode: 'both',
-                      /* 🎯 CRITICAL: Very high z-index to ensure title is ALWAYS above gradient */
                       zIndex: 250
                     }}
                   >
@@ -136,7 +140,6 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
                     style={{ 
                       animationDelay: '200ms',
                       animationFillMode: 'both',
-                      /* 🎯 CRITICAL: Very high z-index to ensure textarea container is ALWAYS above gradient */
                       zIndex: 250
                     }}
                   >
@@ -170,7 +173,6 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
             style={{ 
               animationDelay: '300ms',
               animationFillMode: 'both',
-              /* 🎯 CRITICAL: High z-index to ensure gradient shapes are above background gradient but below content */
               zIndex: 50
             }}
           >
@@ -187,25 +189,6 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
             }}
           >
             <Footer />
-          </div>
-
-          {/* Subtle floating sparkles that continue after landing - SMOOTH CONTINUATION */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 5 }}>
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="absolute rounded-full animate-gentle-sparkle-continuous"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  width: '1.5px',
-                  height: '1.5px',
-                  background: `rgba(${Math.random() > 0.5 ? '147, 51, 234' : '59, 130, 246'}, 0.3)`,
-                  animationDelay: `${Math.random() * 4}s`,
-                  animationDuration: `${5 + Math.random() * 3}s`
-                }}
-              />
-            ))}
           </div>
         </div>
       )}
@@ -256,21 +239,6 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
           }
         }
 
-        @keyframes gentle-sparkle-continuous {
-          0%, 100% {
-            opacity: 0;
-            transform: translateY(0) scale(0.8);
-          }
-          20% {
-            opacity: 0.4;
-            transform: translateY(-3px) scale(1.1);
-          }
-          80% {
-            opacity: 0.2;
-            transform: translateY(3px) scale(0.9);
-          }
-        }
-
         .animate-fade-out-smooth {
           animation: fadeOutUltraSmooth 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
@@ -288,10 +256,6 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
           opacity: 0;
         }
 
-        .animate-gentle-sparkle-continuous {
-          animation: gentle-sparkle-continuous 6s ease-in-out infinite;
-        }
-
         @keyframes fadeOutUltraSmooth {
           0% {
             opacity: 1;
@@ -307,8 +271,7 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
         .animate-fade-out-smooth,
         .animate-sparkle-float-smooth,
         .animate-gentle-pulse-smooth,
-        .animate-ultra-smooth-appear,
-        .animate-gentle-sparkle-continuous {
+        .animate-ultra-smooth-appear {
           will-change: transform, opacity, filter;
           backface-visibility: hidden;
           perspective: 1000px;

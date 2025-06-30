@@ -37,8 +37,10 @@ export default function LandingPage({
 }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-input-background flex flex-col relative landing-page">
-      {/* Magical Sparkly Background Effect - Behind all content */}
-      <MagicalSparkles />
+      {/* SEAMLESS SPARKLE CONTINUATION: Magical Sparkly Background Effect - Behind all content */}
+      <div className="absolute inset-0" style={{ zIndex: 0 }}>
+        <MagicalSparkles />
+      </div>
 
       {/* Header - Updated to use Material Design Grid for alignment */}
       <div className="w-full" style={{ zIndex: 10 }}>
