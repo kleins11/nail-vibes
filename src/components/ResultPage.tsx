@@ -343,13 +343,15 @@ export default function ResultPage({
           <div className="w-3/4 flex flex-col h-full relative">
             {/* Desktop Header with Logo and New Vibe Button */}
             <div className="absolute top-6 left-6 right-6 z-10 flex justify-between items-center">
-              {/* Logo - Left aligned */}
-              <button 
-                onClick={onLogoClick}
-                className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors focus-ring"
-              >
-                nv
-              </button>
+              {/* Logo - MOVED RIGHT to align with footer image */}
+              <div className="pl-4">
+                <button 
+                  onClick={onLogoClick}
+                  className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors focus-ring"
+                >
+                  nv
+                </button>
+              </div>
               
               {/* Desktop New Vibe Button - Right aligned */}
               <button
