@@ -173,51 +173,53 @@
   /* 🎨 HERO SWIRL BACKGROUND - Large gradient wash across the entire landing page */
   .landing-page {
     position: relative;
-    overflow: hidden;
-  }
-  
-  .landing-page::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes/hero-swirl.png');
+    min-height: 100vh;
+    background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-    opacity: 0.4; /* 40% transparency as requested */
-    z-index: -1; /* Behind all content */
+    background-attachment: fixed;
+  }
+  
+  /* Add overlay for 40% transparency effect */
+  .landing-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(245, 241, 236, 0.6); /* Overlay to reduce opacity */
     pointer-events: none;
-  }
-  
-  /* Responsive adjustments for hero swirl */
-  @media (max-width: 599px) {
-    .landing-page::before {
-      background-size: cover;
-      background-position: center center;
-    }
-  }
-  
-  @media (min-width: 600px) and (max-width: 839px) {
-    .landing-page::before {
-      background-size: cover;
-      background-position: center center;
-    }
-  }
-  
-  @media (min-width: 840px) {
-    .landing-page::before {
-      background-size: cover;
-      background-position: center center;
-    }
+    z-index: 0;
   }
   
   /* Ensure all content is above the background */
   .landing-page > * {
     position: relative;
     z-index: 1;
+  }
+  
+  /* Responsive adjustments for hero swirl */
+  @media (max-width: 599px) {
+    .landing-page {
+      background-size: cover;
+      background-position: center center;
+    }
+  }
+  
+  @media (min-width: 600px) and (max-width: 839px) {
+    .landing-page {
+      background-size: cover;
+      background-position: center center;
+    }
+  }
+  
+  @media (min-width: 840px) {
+    .landing-page {
+      background-size: cover;
+      background-position: center center;
+    }
   }
   
   /* Textarea Long Component - Updated to work with M3 grid and match Figma spacing */
