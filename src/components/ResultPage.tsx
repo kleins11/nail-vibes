@@ -344,9 +344,6 @@ export default function ResultPage({
                 </button>
               </div>
             </div>
-
-            {/* Footer in Chat Column */}
-            <Footer />
           </div>
           
           {/* Right Column: Image - 3/4 width */}
@@ -411,6 +408,11 @@ export default function ResultPage({
                   />
                 </div>
               </div>
+            </div>
+
+            {/* Footer in Image Section - Desktop Only */}
+            <div className="flex-shrink-0">
+              <Footer />
             </div>
           </div>
         </div>
