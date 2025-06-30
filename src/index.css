@@ -242,10 +242,15 @@
     box-shadow: 0 20px 20px 0 rgba(155, 155, 169, 0.25);
     position: relative;
     z-index: 4; /* Above everything */
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* ULTRA SMOOTH hardware acceleration */
+    will-change: transform, opacity, filter, box-shadow;
+    backface-visibility: hidden;
+    perspective: 1000px;
+    transform-style: preserve-3d;
   }
   
-  /* Enhanced Focus State for Long Textarea */
+  /* Enhanced Focus State for Long Textarea - ULTRA SMOOTH */
   .textarea-long:focus {
     outline: none;
     border-color: #3B82F6; /* Blue-500 */
@@ -255,16 +260,16 @@
       0 20px 20px 0 rgba(155, 155, 169, 0.25),
       0 0 0 3px rgba(59, 130, 246, 0.1),
       0 4px 12px 0 rgba(59, 130, 246, 0.15);
-    transform: translateY(-1px) scale(1.02);
+    transform: translateY(-1px) scale(1.01);
   }
   
-  /* Hover state for long textarea - MATCHES NEW VIBE BUTTON MOTION */
+  /* Hover state for long textarea - ULTRA SMOOTH */
   .textarea-long:hover:not(:focus) {
     border-color: #D1D5DB; /* Gray-300 */
     box-shadow: 
       0 20px 20px 0 rgba(155, 155, 169, 0.3),
       0 2px 8px 0 rgba(155, 155, 169, 0.1);
-    transform: scale(1.02);
+    transform: scale(1.01);
   }
   
   /* Button positioning within textarea container */
@@ -278,11 +283,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     z-index: 5; /* Above everything */
+    /* ULTRA SMOOTH hardware acceleration */
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+    perspective: 1000px;
   }
   
-  /* Enhanced button states */
+  /* Enhanced button states - ULTRA SMOOTH */
   .textarea-long-button:hover:not(:disabled) {
     transform: scale(1.05);
     box-shadow: 0 4px 12px 0 rgba(59, 130, 246, 0.3);
@@ -294,12 +303,17 @@
   
   /* Short Form Input Styling - For chat and refine inputs */
   .input-short {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     border: 1px solid #E5E7EB; /* Gray-200 */
     background-color: #F9FAFB; /* Gray-50 */
+    /* ULTRA SMOOTH hardware acceleration */
+    will-change: transform, opacity, filter, box-shadow;
+    backface-visibility: hidden;
+    perspective: 1000px;
+    transform-style: preserve-3d;
   }
   
-  /* Enhanced Focus State for Short Inputs */
+  /* Enhanced Focus State for Short Inputs - ULTRA SMOOTH */
   .input-short:focus {
     outline: none;
     border-color: #3B82F6; /* Blue-500 */
@@ -309,17 +323,17 @@
       0 4px 8px 0 rgba(155, 155, 169, 0.25),
       0 0 0 3px rgba(59, 130, 246, 0.1),
       0 2px 6px 0 rgba(59, 130, 246, 0.15);
-    transform: translateY(-1px) scale(1.02);
+    transform: translateY(-1px) scale(1.01);
   }
   
-  /* Hover state for short inputs - MATCHES NEW VIBE BUTTON MOTION */
+  /* Hover state for short inputs - ULTRA SMOOTH */
   .input-short:hover:not(:focus):not(:disabled) {
     border-color: #D1D5DB; /* Gray-300 */
     background-color: #FFFFFF;
     box-shadow: 
       0 4px 8px 0 rgba(155, 155, 169, 0.25),
       0 1px 3px 0 rgba(155, 155, 169, 0.1);
-    transform: scale(1.02);
+    transform: scale(1.01);
   }
   
   /* Disabled state for inputs */
@@ -331,9 +345,13 @@
     transform: none; /* No hover effects when disabled */
   }
   
-  /* Input button styling for consistency */
+  /* Input button styling for consistency - ULTRA SMOOTH */
   .input-button {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* ULTRA SMOOTH hardware acceleration */
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+    perspective: 1000px;
   }
   
   .input-button:hover:not(:disabled) {
@@ -484,16 +502,24 @@
     @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset;
   }
 
-  /* Transition utilities for smooth state changes */
+  /* ULTRA SMOOTH transition utilities */
   .transition-elegant {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   .transition-smooth {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   .transition-bounce {
-    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  /* Hardware acceleration for all smooth elements */
+  .smooth-element {
+    will-change: transform, opacity, filter;
+    backface-visibility: hidden;
+    perspective: 1000px;
+    transform-style: preserve-3d;
   }
 }

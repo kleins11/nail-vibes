@@ -41,12 +41,19 @@ function App() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
 
+  // ULTRA SMOOTH transition state management
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
   const handleLogoClick = () => {
-    // Start the elegant transition
+    // Prevent multiple clicks during transition
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
     setAppState('transitioning');
     
-    // After transition completes, reset everything and go to landing
+    // SMOOTH reset after transition completes - NO HARD REFRESH
     setTimeout(() => {
+      // Reset all state smoothly
       setPrompt('');
       setRefinePrompt('');
       setRefinedImageUrl('');
@@ -63,8 +70,10 @@ function App() {
       setIsGenerating(false);
       setGenerateError(null);
       
+      // Smoothly transition to landing
       setAppState('landing');
-    }, 1200); // Match the transition duration
+      setIsTransitioning(false);
+    }, 1200); // Match the transition duration exactly
   };
 
   // Image generation function with improved error handling
@@ -518,7 +527,7 @@ function App() {
     setTimeout(() => setIsTyping(false), 100);
   };
 
-  // Transition Screen
+  // Transition Screen - ULTRA SMOOTH
   if (appState === 'transitioning') {
     return <TransitionPage currentVibe={currentVibe} />;
   }
