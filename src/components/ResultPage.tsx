@@ -289,18 +289,18 @@ export default function ResultPage({
             {/* Image Display - Takes up most of the space with title positioned around the image */}
             <div className="flex-1 p-8 flex flex-col justify-center overflow-hidden">
               <div className="relative w-full max-w-2xl mx-auto">
-                {/* Title positioned to align with left edge of image - matching Figma */}
-                <div className="mb-6">
-                  <div className="flex items-center space-x-3">
-                    <div className="flex items-center justify-center" style={{ width: '44px', height: '44px' }}>
+                {/* Title positioned to align with left edge of image - BIGGER for stronger hierarchy */}
+                <div className="mb-8">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center justify-center" style={{ width: '64px', height: '64px' }}>
                       <img 
                         src={lastUsedGradientShape}
                         alt="Gradient shape"
                         className="object-contain"
-                        style={{ width: '44px', height: '44px' }}
+                        style={{ width: '64px', height: '64px' }}
                       />
                     </div>
-                    <h1 className="font-calling-code font-bold text-[#3F3F3F] text-xl">
+                    <h1 className="font-calling-code font-bold text-[#3F3F3F] text-2xl leading-tight">
                       {currentVibe?.title || "Black French tips on short natural nails"}
                     </h1>
                   </div>
