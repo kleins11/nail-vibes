@@ -220,8 +220,8 @@ export default function ResultPage({
           
           {/* Right Column: Image - 3/4 width to match the narrower chat */}
           <div className="w-3/4 flex flex-col h-full">
-            {/* Image Header */}
-            <div className="p-6 border-b border-gray-200 flex-shrink-0">
+            {/* Image Header - Reduced padding */}
+            <div className="p-4 border-b border-gray-200 flex-shrink-0">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
@@ -242,9 +242,9 @@ export default function ResultPage({
               </div>
             </div>
             
-            {/* Image Display - Fixed, no scroll */}
-            <div className="flex-1 p-6 flex items-center justify-center overflow-hidden">
-              <div className="relative max-w-md w-full">
+            {/* Image Display - Much larger, reduced padding */}
+            <div className="flex-1 p-4 flex items-center justify-center overflow-hidden">
+              <div className="relative w-full max-w-2xl">
                 <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
                   <img 
                     src={displayImageUrl} 
