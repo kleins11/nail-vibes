@@ -56,10 +56,10 @@ export default function LandingPage({
                 What's your nail vibe?
               </h1>
               
-              {/* Error Message */}
+              {/* Error Message - Fixed z-index and spacing */}
               {error && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                  <p className="text-sm text-red-600">{error}</p>
+                <div className="relative z-10 mb-6 p-4 bg-red-50 border border-red-200 rounded-lg shadow-sm">
+                  <p className="text-sm text-red-600 font-calling-code">{error}</p>
                 </div>
               )}
               

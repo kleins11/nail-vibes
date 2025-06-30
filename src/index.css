@@ -163,7 +163,7 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    z-index: 0; /* Behind all content */
+    z-index: 1; /* Behind content but above page background */
     pointer-events: none;
     opacity: 1;
     display: block;
@@ -205,20 +205,18 @@
   /* Ensure title and textarea are above the gradient */
   .text-display {
     position: relative;
-    z-index: 2;
+    z-index: 3; /* Above gradient background */
   }
   
   /* Textarea Long Component - Updated to work with M3 grid */
   .textarea-long-container {
     position: relative;
     width: 100%;
-    /* Apply the generous spacing above the textarea container */
-    margin-top: 120px;
+    /* Reduced spacing to fix the gap issue */
+    margin-top: 80px;
     /* Ensure this container can hold positioned elements */
-    z-index: 2; /* Above the gradient background */
+    z-index: 3; /* Above the gradient background */
   }
-  
-  /* Remove the old gradient background from textarea container since it's now on m3-content-area */
   
   /* Textarea Long Component Styling with Drop Shadow - Fixed to match Figma */
   .textarea-long {
@@ -237,7 +235,7 @@
     /* Drop shadow matching Figma: X=0, Y=20px, Blur=20px, Spread=0px, Color=#9B9BA9 at 25% opacity */
     box-shadow: 0 20px 20px 0 rgba(155, 155, 169, 0.25);
     position: relative;
-    z-index: 3; /* Above the gradient background */
+    z-index: 4; /* Above everything */
   }
   
   .textarea-long:focus {
@@ -259,7 +257,7 @@
     align-items: center;
     justify-content: center;
     transition: background-color 0.2s;
-    z-index: 4; /* Above everything */
+    z-index: 5; /* Above everything */
   }
   
   /* Gradient Shapes Auto-Scroll Component - Seamless infinite scroll */
@@ -337,7 +335,7 @@
     
     /* FIXED: Reduce spacing between title and textarea on mobile to match Figma */
     .textarea-long-container {
-      margin-top: 60px; /* Reduced from 100px to match Figma spacing */
+      margin-top: 40px; /* Further reduced for mobile */
     }
   }
   
