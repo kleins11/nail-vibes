@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { X, Minus, ArrowUp, RefreshCw } from 'lucide-react';
 import { VibeMatchData } from '../services/vibeService';
 import MagicalLoadingOverlay from './MagicalLoadingOverlay';
+import Footer from './Footer';
 
 interface ChatMessage {
   id: string;
@@ -343,6 +344,9 @@ export default function ResultPage({
                 </button>
               </div>
             </div>
+
+            {/* Footer in Chat Column */}
+            <Footer />
           </div>
           
           {/* Right Column: Image - 3/4 width */}
@@ -412,98 +416,103 @@ export default function ResultPage({
         </div>
         
         {/* Mobile/Tablet Layout: Single Column with Modal Chat */}
-        <div className="lg:hidden w-full flex flex-col justify-center px-6">
-          <div className="max-w-md mx-auto w-full">
-            {/* Image - Smaller to prevent scrolling */}
-            <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6 max-h-[50vh]">
-              <img 
-                src={displayImageUrl} 
-                alt="Generated nail design" 
-                className="w-full h-full object-cover transition-all duration-300"
-                onLoad={() => handleImageLoad(displayImageUrl)}
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = SAMPLE_NAIL_IMAGE;
-                  handleImageLoad(SAMPLE_NAIL_IMAGE);
-                }}
-              />
+        <div className="lg:hidden w-full flex flex-col">
+          <div className="flex-1 flex flex-col justify-center px-6">
+            <div className="max-w-md mx-auto w-full">
+              {/* Image - Smaller to prevent scrolling */}
+              <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6 max-h-[50vh]">
+                <img 
+                  src={displayImageUrl} 
+                  alt="Generated nail design" 
+                  className="w-full h-full object-cover transition-all duration-300"
+                  onLoad={() => handleImageLoad(displayImageUrl)}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = SAMPLE_NAIL_IMAGE;
+                    handleImageLoad(SAMPLE_NAIL_IMAGE);
+                  }}
+                />
+                
+                {/* Magical Loading Overlay for mobile */}
+                <MagicalLoadingOverlay 
+                  isVisible={isRefining} 
+                  message="Refining your design"
+                />
+              </div>
               
-              {/* Magical Loading Overlay for mobile */}
-              <MagicalLoadingOverlay 
-                isVisible={isRefining} 
-                message="Refining your design"
-              />
-            </div>
-            
-            {/* Title positioned below image - LEFT ALIGNED */}
-            <div className="mb-6">
-              {currentVibe?.title && (
-                <h1 className="font-calling-code font-bold text-[#3F3F3F] mb-4 text-lg text-left">
-                  {currentVibe.title}
-                </h1>
-              )}
-              
-              {/* Match Type and Score Display - LEFT ALIGNED */}
-              <div className="mb-3 space-y-2 text-left">
-                {matchInfo?.matchedConcept && (
-                  <div className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
-                    ✨ {matchInfo.matchedConcept} inspired
-                  </div>
+              {/* Title positioned below image - LEFT ALIGNED */}
+              <div className="mb-6">
+                {currentVibe?.title && (
+                  <h1 className="font-calling-code font-bold text-[#3F3F3F] mb-4 text-lg text-left">
+                    {currentVibe.title}
+                  </h1>
                 )}
                 
-                {currentVibe?.match_type === 'all_primary' && (
-                  <div className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full ml-2">
-                    🎯 Perfect match
-                  </div>
-                )}
+                {/* Match Type and Score Display - LEFT ALIGNED */}
+                <div className="mb-3 space-y-2 text-left">
+                  {matchInfo?.matchedConcept && (
+                    <div className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
+                      ✨ {matchInfo.matchedConcept} inspired
+                    </div>
+                  )}
+                  
+                  {currentVibe?.match_type === 'all_primary' && (
+                    <div className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full ml-2">
+                      🎯 Perfect match
+                    </div>
+                  )}
+                  
+                  {currentVibe?.match_type === 'some_primary' && (
+                    <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full ml-2">
+                      ✅ Great match
+                    </div>
+                  )}
+                  
+                  {currentVibe && currentVibe.primary_matches > 0 && (
+                    <div className="text-xs text-gray-600 mt-1 text-left">
+                      {currentVibe.primary_matches} core match{currentVibe.primary_matches > 1 ? 'es' : ''}
+                      {currentVibe.modifier_matches > 0 && ` + ${currentVibe.modifier_matches} style match${currentVibe.modifier_matches > 1 ? 'es' : ''}`}
+                    </div>
+                  )}
+                </div>
                 
-                {currentVibe?.match_type === 'some_primary' && (
-                  <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full ml-2">
-                    ✅ Great match
-                  </div>
-                )}
-                
-                {currentVibe && currentVibe.primary_matches > 0 && (
-                  <div className="text-xs text-gray-600 mt-1 text-left">
-                    {currentVibe.primary_matches} core match{currentVibe.primary_matches > 1 ? 'es' : ''}
-                    {currentVibe.modifier_matches > 0 && ` + ${currentVibe.modifier_matches} style match${currentVibe.modifier_matches > 1 ? 'es' : ''}`}
+                {/* Tags Display - LEFT ALIGNED */}
+                {currentVibe?.tags && currentVibe.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {currentVibe.tags.slice(0, 6).map((tag, index) => (
+                      <span 
+                        key={index}
+                        className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    {currentVibe.tags.length > 6 && (
+                      <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                        +{currentVibe.tags.length - 6} more
+                      </span>
+                    )}
                   </div>
                 )}
               </div>
               
-              {/* Tags Display - LEFT ALIGNED */}
-              {currentVibe?.tags && currentVibe.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {currentVibe.tags.slice(0, 6).map((tag, index) => (
-                    <span 
-                      key={index}
-                      className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                  {currentVibe.tags.length > 6 && (
-                    <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                      +{currentVibe.tags.length - 6} more
-                    </span>
-                  )}
-                </div>
-              )}
-            </div>
-            
-            {/* Chat Trigger */}
-            <div className="text-center">
-              <button
-                onClick={onOpenChat}
-                className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg focus-ring"
-                disabled={isRefining}
-              >
-                <span className="text-sm font-medium">
-                  {isRefining ? 'Refining...' : 'Keep vibing'}
-                </span>
-              </button>
+              {/* Chat Trigger */}
+              <div className="text-center">
+                <button
+                  onClick={onOpenChat}
+                  className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg focus-ring"
+                  disabled={isRefining}
+                >
+                  <span className="text-sm font-medium">
+                    {isRefining ? 'Refining...' : 'Keep vibing'}
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
+
+          {/* Footer for Mobile/Tablet */}
+          <Footer />
         </div>
       </div>
 

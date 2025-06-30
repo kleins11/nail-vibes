@@ -1,4 +1,5 @@
 import React from 'react';
+import Footer from './Footer';
 
 interface LoadingPageProps {
   onLogoClick: () => void;
@@ -37,6 +38,9 @@ export default function LoadingPage({ onLogoClick }: LoadingPageProps) {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { VibeMatchData } from '../services/vibeService';
 import GradientShapesScroll from './GradientShapesScroll';
+import Footer from './Footer';
 
 interface TransitionPageProps {
   currentVibe: VibeMatchData | null;
@@ -91,7 +92,7 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
 
       {/* Phase 3 & 4: Gentle landing on homepage - ULTRA SMOOTH */}
       {(phase === 'gentleLanding' || phase === 'fullyLanded') && (
-        <div className="absolute inset-0 flex flex-col justify-center landing-page">
+        <div className="absolute inset-0 flex flex-col landing-page">
           {/* Header that gracefully appears - PRELOADED AND SMOOTH */}
           <div 
             className="w-full px-4 md:px-8 lg:px-12 animate-ultra-smooth-appear" 
@@ -174,6 +175,18 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
             }}
           >
             <GradientShapesScroll />
+          </div>
+
+          {/* Footer that appears with the rest of the content */}
+          <div 
+            className="animate-ultra-smooth-appear" 
+            style={{ 
+              animationDelay: '350ms',
+              animationFillMode: 'both',
+              zIndex: 100
+            }}
+          >
+            <Footer />
           </div>
 
           {/* Subtle floating sparkles that continue after landing - SMOOTH CONTINUATION */}

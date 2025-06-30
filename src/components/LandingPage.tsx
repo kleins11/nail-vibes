@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowUp } from 'lucide-react';
 import GradientShapesScroll from './GradientShapesScroll';
 import MagicalSparkles from './MagicalSparkles';
+import Footer from './Footer';
 
 interface LandingPageProps {
   prompt: string;
@@ -93,6 +94,11 @@ export default function LandingPage({
       {/* Gradient Shapes Auto-Scroll - Only on landing page */}
       <div style={{ zIndex: 10 }}>
         <GradientShapesScroll />
+      </div>
+
+      {/* Footer */}
+      <div style={{ zIndex: 10 }}>
+        <Footer />
       </div>
     </div>
   );
