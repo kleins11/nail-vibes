@@ -611,12 +611,24 @@ export default function ResultPage({
         <div className="lg:hidden w-full flex flex-col relative">
           <div className="flex-1 flex flex-col justify-center px-6" style={{ paddingBottom: '30vh' }}>
             <div className="max-w-md mx-auto w-full">
-              {/* Title positioned above image - Mobile Only */}
+              {/* UPDATED: Title positioned above image with gradient shape - Mobile Version */}
               {currentVibe?.title && (
                 <div className="mb-6">
-                  <h1 className="font-calling-code font-bold text-[#3F3F3F] text-lg text-left">
-                    {currentVibe.title}
-                  </h1>
+                  <div className="flex items-center space-x-3 mb-2">
+                    {/* NEW: Gradient shape for mobile - smaller size than desktop */}
+                    <div className="flex items-center justify-center flex-shrink-0" style={{ width: '36px', height: '36px' }}>
+                      <img 
+                        src={lastUsedGradientShape}
+                        alt="Gradient shape"
+                        className="object-contain"
+                        style={{ width: '36px', height: '36px' }}
+                      />
+                    </div>
+                    {/* Title with proper spacing */}
+                    <h1 className="font-calling-code font-bold text-[#3F3F3F] text-lg leading-tight flex-1">
+                      {currentVibe.title}
+                    </h1>
+                  </div>
                 </div>
               )}
               
