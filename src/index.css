@@ -459,23 +459,23 @@
     }
   }
 
-  /* ✨ ENHANCED MAGICAL SPARKLY ANIMATIONS - More pronounced and visible */
+  /* ✨ BALANCED MAGICAL SPARKLY ANIMATIONS - Visible but not overwhelming */
   @keyframes magical-float {
     0% {
       opacity: 0;
       transform: translateY(20px) scale(0.8) rotate(0deg);
     }
     25% {
-      opacity: 0.9; /* Increased from 0.8 */
-      transform: translateY(-10px) scale(1.3) rotate(90deg); /* Increased scale */
+      opacity: 0.7; /* Balanced from enhanced 0.9 */
+      transform: translateY(-10px) scale(1.2) rotate(90deg); /* Slightly reduced scale */
     }
     50% {
-      opacity: 0.8; /* Increased from 0.6 */
+      opacity: 0.6; /* Balanced from enhanced 0.8 */
       transform: translateY(-20px) scale(1.1) rotate(180deg);
     }
     75% {
-      opacity: 0.6; /* Increased from 0.4 */
-      transform: translateY(-15px) scale(1.2) rotate(270deg);
+      opacity: 0.5; /* Balanced from enhanced 0.6 */
+      transform: translateY(-15px) scale(1.15) rotate(270deg);
     }
     100% {
       opacity: 0;
@@ -489,16 +489,16 @@
       transform: scale(0.5) rotate(0deg);
     }
     25% {
-      opacity: 0.8; /* Increased from 0.6 */
-      transform: scale(1.4) rotate(90deg); /* Increased scale */
+      opacity: 0.6; /* Balanced from enhanced 0.8 */
+      transform: scale(1.2) rotate(90deg); /* Slightly reduced scale */
     }
     50% {
-      opacity: 0.9; /* Increased from 0.8 */
-      transform: scale(1.2) rotate(180deg);
+      opacity: 0.7; /* Balanced from enhanced 0.9 */
+      transform: scale(1.1) rotate(180deg);
     }
     75% {
-      opacity: 0.6; /* Increased from 0.4 */
-      transform: scale(1.3) rotate(270deg);
+      opacity: 0.5; /* Balanced from enhanced 0.6 */
+      transform: scale(1.15) rotate(270deg);
     }
   }
 
@@ -508,8 +508,8 @@
       transform: scale(0.3);
     }
     50% {
-      opacity: 1; /* Already at max, but ensuring it's bright */
-      transform: scale(1.2); /* Increased scale */
+      opacity: 0.8; /* Slightly reduced from 1.0 */
+      transform: scale(1.1); /* Slightly reduced scale */
     }
   }
 
@@ -519,16 +519,16 @@
       transform: translateY(0) translateX(0) scale(0.5);
     }
     25% {
-      opacity: 0.8; /* Increased from 0.6 */
-      transform: translateY(-15px) translateX(10px) scale(1.2); /* Increased scale */
+      opacity: 0.6; /* Balanced from enhanced 0.8 */
+      transform: translateY(-15px) translateX(10px) scale(1.1); /* Slightly reduced scale */
     }
     50% {
-      opacity: 0.9; /* Increased from 0.8 */
+      opacity: 0.7; /* Balanced from enhanced 0.9 */
       transform: translateY(-25px) translateX(-5px) scale(1); 
     }
     75% {
-      opacity: 0.6; /* Increased from 0.4 */
-      transform: translateY(-35px) translateX(15px) scale(1.4); /* Increased scale */
+      opacity: 0.5; /* Balanced from enhanced 0.6 */
+      transform: translateY(-35px) translateX(15px) scale(1.2); /* Slightly reduced scale */
     }
     100% {
       opacity: 0;
