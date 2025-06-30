@@ -199,11 +199,6 @@ export default function ResultPage({
 
   // Function to get the appropriate gradient shape for a message
   const getGradientShapeForMessage = (message: ChatMessage) => {
-    // For system messages during refinement, don't show the new shape until image loads
-    if (message.type === 'system' && isRefining) {
-      return lastUsedGradientShape; // Keep showing the previous shape
-    }
-    
     // Check if there's a pending update for this message
     const pendingShape = pendingGradientUpdates[message.id];
     if (pendingShape && refinedImageUrl && !imageLoadStates[refinedImageUrl]) {
@@ -307,26 +302,15 @@ export default function ResultPage({
                 );
               })}
               
-              {/* Clean Typing Indicator - REMOVED REDUNDANT SPINNER */}
+              {/* Clean Loading State - ONLY bouncing dots + text, NO gradient shape */}
               {isRefining && (
-                <div className="flex items-start space-x-2">
-                  <div className="flex items-center justify-center flex-shrink-0 mt-1" style={{ width: '44px', height: '44px' }}>
-                    {/* Keep showing the current gradient shape, no spinner here */}
-                    <img 
-                      src={lastUsedGradientShape}
-                      alt="Gradient shape"
-                      className="object-contain"
-                      style={{ width: '44px', height: '44px' }}
-                    />
+                <div className="flex items-center space-x-3 justify-center py-4">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                   </div>
-                  <div className="flex items-center space-x-2 flex-1">
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                      <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                      <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                    </div>
-                    <span className="text-sm text-gray-500 italic animate-pulse">Crafting your perfect design...</span>
-                  </div>
+                  <span className="text-sm text-gray-500 italic animate-pulse">Crafting your perfect design...</span>
                 </div>
               )}
             </div>
@@ -598,6 +582,18 @@ export default function ResultPage({
                   </div>
                 );
               })}
+              
+              {/* Clean Loading State for Mobile - ONLY bouncing dots + text, NO gradient shape */}
+              {isRefining && (
+                <div className="flex items-center space-x-3 justify-center py-4">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  </div>
+                  <span className="text-sm text-gray-500 italic animate-pulse">Crafting your perfect design...</span>
+                </div>
+              )}
             </div>
             
             {/* Input Area with enhanced styling and CORRECTED button positioning */}
