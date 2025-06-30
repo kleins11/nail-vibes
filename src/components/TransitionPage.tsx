@@ -109,8 +109,12 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
             }}
           >
             <div className="flex justify-center md:justify-start pt-8 pb-4">
-              <div className="text-2xl font-pilar font-bold text-blue-600 transition-all duration-300">
-                nailvibes
+              <div className="transition-all duration-300">
+                <img 
+                  src="/nail-vibes-long-logo.png" 
+                  alt="NailVibes" 
+                  className="h-8 w-auto object-contain"
+                />
               </div>
             </div>
           </div>

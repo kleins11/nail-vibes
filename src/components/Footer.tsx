@@ -13,9 +13,9 @@ export default function Footer({ variant = 'default' }: FooterProps) {
         {/* Left side - Small logo image */}
         <div className="flex-shrink-0">
           <img 
-            src="https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//white_circle_360x360.png"
+            src="/bolt-mark.png"
             alt="NailVibes logo"
-            className="w-8 h-8 md:w-10 md:h-10 object-contain opacity-60 hover:opacity-80 transition-opacity duration-200"
+            className="w-8 h-8 md:w-10 md:h-10 object-contain opacity-60"
           />
         </div>
 

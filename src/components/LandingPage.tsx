@@ -48,9 +48,13 @@ export default function LandingPage({
         <div className="flex justify-center pt-8 pb-4 md:hidden px-4">
           <button 
             onClick={onLogoClick}
-            className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
+            className="transition-all duration-300 hover:scale-105 hover:opacity-80"
           >
-            nailvibes
+            <img 
+              src="/nail-vibes-short-logo.png" 
+              alt="NailVibes" 
+              className="h-11 w-auto object-contain"
+            />
           </button>
         </div>
 
@@ -61,9 +65,13 @@ export default function LandingPage({
               <div className="pt-8 pb-4 md:col-span-8 lg:col-span-12">
                 <button 
                   onClick={onLogoClick}
-                  className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                  className="transition-all duration-300 hover:scale-105 hover:opacity-80"
                 >
-                  nailvibes
+                  <img 
+                    src="/nail-vibes-long-logo.png" 
+                    alt="NailVibes" 
+                    className="h-8 w-auto object-contain"
+                  />
                 </button>
               </div>
             </div>
