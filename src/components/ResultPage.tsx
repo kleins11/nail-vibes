@@ -457,11 +457,15 @@ export default function ResultPage({
           {/* Bottom Chat Drawer - Collapsed State */}
           {!isChatOpen && (
             <div className="fixed bottom-0 left-0 right-0 z-40">
-              {/* Chat Drawer Container */}
+              {/* Chat Drawer Container with rounded top corners */}
               <div 
                 className="bg-white border-t border-gray-200 px-4 py-3 cursor-pointer"
                 onClick={onOpenChat}
-                style={{ backgroundColor: '#F5F1EC', borderTop: '1px solid #D9CFC3' }}
+                style={{ 
+                  backgroundColor: '#F5F1EC', 
+                  borderTop: '1px solid #D9CFC3',
+                  borderRadius: '32px 32px 0px 0px'
+                }}
               >
                 {/* Last System Message Preview */}
                 {lastSystemMessage && (
