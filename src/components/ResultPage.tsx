@@ -243,7 +243,7 @@ export default function ResultPage({
         {/* Desktop Layout: Two Columns */}
         <div className="hidden lg:flex w-full h-full">
           {/* Left Column: Chat - Narrower width */}
-          <div className="w-1/4 flex flex-col border-r border-gray-200 h-full" style={{ backgroundColor: '#F5F1EC' }}>
+          <div className="w-1/4 flex flex-col h-full" style={{ backgroundColor: '#F5F1EC', borderRight: '1px solid #D9CFC3' }}>
             {/* Logo in Chat Section - Desktop Only with bottom border */}
             <div className="p-6 flex-shrink-0" style={{ borderBottom: '1px solid #D9CFC3' }}>
               <button 
@@ -315,8 +315,8 @@ export default function ResultPage({
               )}
             </div>
             
-            {/* Chat Input - Fixed at bottom */}
-            <div className="p-6 border-t border-gray-200 flex-shrink-0">
+            {/* Chat Input - Fixed at bottom with matching border */}
+            <div className="p-6 flex-shrink-0" style={{ borderTop: '1px solid #D9CFC3' }}>
               <div className="relative flex items-center">
                 <input
                   type="text"
@@ -484,7 +484,7 @@ export default function ResultPage({
           {/* Chat Panel */}
           <div className="absolute bottom-0 left-0 right-0 rounded-t-2xl max-h-[80vh] flex flex-col animate-slide-up" style={{ backgroundColor: '#F5F1EC' }}>
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b">
+            <div className="flex items-center justify-between p-4" style={{ borderBottom: '1px solid #D9CFC3' }}>
               <button
                 onClick={onCloseChat}
                 className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors focus-ring"
@@ -561,7 +561,7 @@ export default function ResultPage({
             </div>
             
             {/* Input Area */}
-            <div className="p-4 border-t">
+            <div className="p-4" style={{ borderTop: '1px solid #D9CFC3' }}>
               <div className="relative flex items-center">
                 <input
                   type="text"
