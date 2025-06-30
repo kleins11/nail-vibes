@@ -1,6 +1,8 @@
 import React from 'react';
 import { ArrowUp } from 'lucide-react';
 import GradientShapesScroll from './GradientShapesScroll';
+import MagicalSparkles from './MagicalSparkles';
+import Footer from './Footer';
 
 interface LandingPageProps {
   prompt: string;
@@ -35,9 +37,13 @@ export default function LandingPage({
 }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-input-background flex flex-col relative landing-page">
-      {/* Header */}
-      <div className="w-full px-4 md:px-8 lg:px-12">
-        <div className="flex justify-center md:justify-start pt-8 pb-4">
+      {/* Magical Sparkly Background Effect - Behind all content */}
+      <MagicalSparkles />
+
+      {/* Header - Updated to use Material Design Grid for alignment */}
+      <div className="w-full" style={{ zIndex: 10 }}>
+        {/* Mobile: Center the logo */}
+        <div className="flex justify-center pt-8 pb-4 md:hidden px-4">
           <button 
             onClick={onLogoClick}
             className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
@@ -45,10 +51,26 @@ export default function LandingPage({
             nailvibes
           </button>
         </div>
+
+        {/* Tablet & Desktop: Use Material Design Grid for alignment */}
+        <div className="hidden md:block">
+          <div className="m3-grid-container">
+            <div className="m3-grid">
+              <div className="pt-8 pb-4 md:col-span-8 lg:col-span-12">
+                <button 
+                  onClick={onLogoClick}
+                  className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  nailvibes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       
       {/* Main Content */}
-      <div className="flex-1 flex flex-col justify-center pb-20">
+      <div className="flex-1 flex flex-col justify-center pb-20" style={{ zIndex: 10 }}>
         <div className="m3-grid-container">
           <div className="m3-grid">
             <div className="m3-content-area">
@@ -87,7 +109,14 @@ export default function LandingPage({
       </div>
       
       {/* Gradient Shapes Auto-Scroll - Only on landing page */}
-      <GradientShapesScroll />
+      <div style={{ zIndex: 10 }}>
+        <GradientShapesScroll />
+      </div>
+
+      {/* Footer */}
+      <div style={{ zIndex: 10 }}>
+        <Footer />
+      </div>
     </div>
   );
 }

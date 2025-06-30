@@ -6,6 +6,7 @@ import LandingPage from './components/LandingPage';
 import ResultPage from './components/ResultPage';
 import LoadingPage from './components/LoadingPage';
 import TransitionPage from './components/TransitionPage';
+import HomepageToResultTransition from './components/HomepageToResultTransition';
 
 interface ChatMessage {
   id: string;
@@ -14,7 +15,7 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-type AppState = 'landing' | 'result' | 'loading' | 'transitioning';
+type AppState = 'landing' | 'result' | 'loading' | 'transitioning' | 'homepage-to-result-transition';
 
 function App() {
   const [appState, setAppState] = useState<AppState>('landing');
@@ -291,87 +292,94 @@ function App() {
     if (!prompt.trim()) return;
     
     setError(null);
-    setAppState('loading');
     
-    try {
-      console.log('🚀 Searching for best vibe match with prompt:', prompt);
+    // Start the smooth homepage-to-result transition
+    setAppState('homepage-to-result-transition');
+    
+    // After transition animation completes, start the actual search
+    setTimeout(async () => {
+      setAppState('loading');
       
-      // Call the enhanced backend service
-      const result: VibeMatchResult = await findBestVibeMatch(prompt);
-      
-      if (result.success && result.data) {
-        const { vibe, primaryTags, modifierTags, matchedConcept, searchStrategy } = result.data;
+      try {
+        console.log('🚀 Searching for best vibe match with prompt:', prompt);
         
-        console.log('✅ Found best matching vibe:', vibe);
-        console.log('🎯 Match details:', {
-          concept: matchedConcept,
-          primaryTags,
-          modifierTags,
-          strategy: searchStrategy,
-          matchType: vibe.match_type,
-          score: vibe.match_score
-        });
+        // Call the enhanced backend service
+        const result: VibeMatchResult = await findBestVibeMatch(prompt);
         
-        // Generate dynamic title based on user prompt
-        const dynamicTitle = generateTitle(prompt, matchedConcept);
-        console.log('🏷️ Generated title:', dynamicTitle);
-        
-        // Update the vibe with the dynamic title
-        const updatedVibe = {
-          ...vibe,
-          title: dynamicTitle
-        };
-        
-        // Set the current vibe and match info for display
-        setCurrentVibe(updatedVibe);
-        setMatchInfo({
-          primaryTags,
-          modifierTags,
-          matchedConcept,
-          searchStrategy
-        });
-        
-        // Create chat messages with enhanced match information
-        const userMessage: ChatMessage = {
-          id: Date.now().toString(),
-          type: 'user',
-          content: prompt,
-          timestamp: new Date()
-        };
-        
-        // Create a more informative system message
-        let systemMessageContent = "Here's a perfect nail design that matches your vibe! ✨";
-        
-        if (matchedConcept) {
-          systemMessageContent = `Perfect! I found a ${matchedConcept} inspired design that matches your vibe! ✨`;
+        if (result.success && result.data) {
+          const { vibe, primaryTags, modifierTags, matchedConcept, searchStrategy } = result.data;
+          
+          console.log('✅ Found best matching vibe:', vibe);
+          console.log('🎯 Match details:', {
+            concept: matchedConcept,
+            primaryTags,
+            modifierTags,
+            strategy: searchStrategy,
+            matchType: vibe.match_type,
+            score: vibe.match_score
+          });
+          
+          // Generate dynamic title based on user prompt
+          const dynamicTitle = generateTitle(prompt, matchedConcept);
+          console.log('🏷️ Generated title:', dynamicTitle);
+          
+          // Update the vibe with the dynamic title
+          const updatedVibe = {
+            ...vibe,
+            title: dynamicTitle
+          };
+          
+          // Set the current vibe and match info for display
+          setCurrentVibe(updatedVibe);
+          setMatchInfo({
+            primaryTags,
+            modifierTags,
+            matchedConcept,
+            searchStrategy
+          });
+          
+          // Create chat messages with enhanced match information
+          const userMessage: ChatMessage = {
+            id: Date.now().toString(),
+            type: 'user',
+            content: prompt,
+            timestamp: new Date()
+          };
+          
+          // Create a more informative system message
+          let systemMessageContent = "Here's a perfect nail design that matches your vibe! ✨";
+          
+          if (matchedConcept) {
+            systemMessageContent = `Perfect! I found a ${matchedConcept} inspired design that matches your vibe! ✨`;
+          }
+          
+          if (vibe.match_type === 'all_primary') {
+            systemMessageContent += ` This design matches all your core style elements.`;
+          } else if (vibe.match_type === 'some_primary') {
+            systemMessageContent += ` This design captures the essence of your style.`;
+          }
+          
+          const systemMessage: ChatMessage = {
+            id: (Date.now() + 1).toString(),
+            type: 'system',
+            content: vibe.description || systemMessageContent,
+            timestamp: new Date()
+          };
+          
+          setChatMessages([userMessage, systemMessage]);
+          setAppState('result');
+        } else {
+          // Handle error case
+          console.error('❌ Failed to find best vibe match:', result.error);
+          setError(result.error || 'Failed to find a matching vibe');
+          setAppState('landing');
         }
-        
-        if (vibe.match_type === 'all_primary') {
-          systemMessageContent += ` This design matches all your core style elements.`;
-        } else if (vibe.match_type === 'some_primary') {
-          systemMessageContent += ` This design captures the essence of your style.`;
-        }
-        
-        const systemMessage: ChatMessage = {
-          id: (Date.now() + 1).toString(),
-          type: 'system',
-          content: vibe.description || systemMessageContent,
-          timestamp: new Date()
-        };
-        
-        setChatMessages([userMessage, systemMessage]);
-        setAppState('result');
-      } else {
-        // Handle error case
-        console.error('❌ Failed to find best vibe match:', result.error);
-        setError(result.error || 'Failed to find a matching vibe');
+      } catch (error) {
+        console.error('❌ Error in handleInitialSubmit:', error);
+        setError('An unexpected error occurred. Please try again.');
         setAppState('landing');
       }
-    } catch (error) {
-      console.error('❌ Error in handleInitialSubmit:', error);
-      setError('An unexpected error occurred. Please try again.');
-      setAppState('landing');
-    }
+    }, 800); // Wait for transition to complete before starting search
   };
 
   // NIKO CREATED FUNCTION
@@ -527,7 +535,12 @@ function App() {
     setTimeout(() => setIsTyping(false), 100);
   };
 
-  // Transition Screen - ULTRA SMOOTH
+  // Homepage to Result Transition Screen - NEW SMOOTH TRANSITION
+  if (appState === 'homepage-to-result-transition') {
+    return <HomepageToResultTransition prompt={prompt} />;
+  }
+
+  // Transition Screen - ULTRA SMOOTH (Result to Homepage)
   if (appState === 'transitioning') {
     return <TransitionPage currentVibe={currentVibe} />;
   }

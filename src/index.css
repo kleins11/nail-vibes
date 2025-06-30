@@ -170,53 +170,56 @@
     }
   }
   
-  /* 🎯 CRITICAL FIX: Gradient background - ALWAYS behind content with negative z-index */
-  .landing-page .m3-content-area::before {
+  /* 🎨 HERO SWIRL BACKGROUND - Large gradient wash across the entire landing page */
+  .landing-page {
+    position: relative;
+    min-height: 100vh;
+    background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+  }
+  
+  /* Add overlay for 40% transparency effect */
+  .landing-page::before {
     content: '';
     position: absolute;
-    /* Position gradient to match Figma - centered but lower to accommodate title above */
-    top: 60%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 1200px; /* Much larger width to match Figma's spread */
-    height: 600px; /* Taller height to match Figma proportions */
-    background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    /* 🚨 CRITICAL: Negative z-index ensures gradient is ALWAYS behind content */
-    z-index: -10; /* NEGATIVE z-index puts it behind everything */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(245, 241, 236, 0.6); /* Overlay to reduce opacity */
     pointer-events: none;
-    opacity: 1;
-    display: block;
+    z-index: 0;
   }
   
-  /* Mobile: Adjust gradient for mobile to match Figma proportions */
-  @media (max-width: 599px) {
-    .landing-page .m3-content-area::before {
-      width: 900px;
-      height: 450px;
-      top: 55%;
-      /* Keep negative z-index on mobile too */
-      z-index: -10;
-    }
-  }
-  
-  /* Tablet: Adjust gradient for tablet to match Figma proportions */
-  @media (min-width: 600px) and (max-width: 839px) {
-    .landing-page .m3-content-area::before {
-      width: 1000px;
-      height: 500px;
-      top: 58%;
-      /* Keep negative z-index on tablet too */
-      z-index: -10;
-    }
-  }
-  
-  /* 🎯 CRITICAL: Ensure title is ALWAYS above the gradient with high positive z-index */
-  .text-display {
+  /* Ensure all content is above the background */
+  .landing-page > * {
     position: relative;
-    z-index: 100; /* Very high positive z-index ensures it's always above gradient */
+    z-index: 1;
+  }
+  
+  /* Responsive adjustments for hero swirl */
+  @media (max-width: 599px) {
+    .landing-page {
+      background-size: cover;
+      background-position: center center;
+    }
+  }
+  
+  @media (min-width: 600px) and (max-width: 839px) {
+    .landing-page {
+      background-size: cover;
+      background-position: center center;
+    }
+  }
+  
+  @media (min-width: 840px) {
+    .landing-page {
+      background-size: cover;
+      background-position: center center;
+    }
   }
   
   /* Textarea Long Component - Updated to work with M3 grid and match Figma spacing */
@@ -225,8 +228,8 @@
     width: 100%;
     /* Set exact 40px spacing as requested to match Figma */
     margin-top: 40px;
-    /* 🎯 CRITICAL: High z-index to ensure container is ALWAYS above gradient */
-    z-index: 100; /* Very high positive z-index ensures it's always above gradient */
+    /* High z-index to ensure container is above background */
+    z-index: 10;
   }
   
   /* Textarea Long Component Styling with Drop Shadow and Enhanced Focus States */
@@ -246,8 +249,8 @@
     /* Drop shadow matching Figma: X=0, Y=20px, Blur=20px, Spread=0px, Color=#9B9BA9 at 25% opacity */
     box-shadow: 0 20px 20px 0 rgba(155, 155, 169, 0.25);
     position: relative;
-    /* 🎯 CRITICAL: Very high z-index to ensure textarea is ALWAYS above gradient */
-    z-index: 110; /* Even higher z-index for the actual input */
+    /* High z-index to ensure textarea is above background */
+    z-index: 20;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     /* ULTRA SMOOTH hardware acceleration */
     will-change: transform, opacity, filter, box-shadow;
@@ -290,8 +293,8 @@
     align-items: center;
     justify-content: center;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    /* 🎯 CRITICAL: Highest z-index for the button to be ALWAYS above everything */
-    z-index: 120; /* Highest z-index for the button */
+    /* Highest z-index for the button */
+    z-index: 30;
     /* ULTRA SMOOTH hardware acceleration */
     will-change: transform, box-shadow;
     backface-visibility: hidden;
@@ -377,16 +380,18 @@
     box-shadow: none;
   }
   
-  /* Gradient Shapes Auto-Scroll Component - Seamless infinite scroll */
+  /* 🎨 GRADIENT SHAPES AUTO-SCROLL - FIXED: Positioned above footer with proper spacing */
   .gradient-shapes-container {
     position: fixed;
-    bottom: 0;
+    /* 🔧 FIXED: Position above footer with proper spacing */
+    bottom: 120px; /* Increased from 48px to 120px to clear footer completely */
     left: 0;
     right: 0;
     height: 88px;
     background: transparent;
     overflow: hidden;
-    z-index: 10;
+    /* 🔧 FIXED: Higher z-index to ensure it's above footer */
+    z-index: 20; /* Increased from 10 to 20 to be above footer */
     pointer-events: none;
   }
   
@@ -428,10 +433,12 @@
     }
   }
   
-  /* Responsive adjustments for gradient shapes */
+  /* 📱 RESPONSIVE ADJUSTMENTS for gradient shapes positioning - All positioned above footer */
   @media (max-width: 640px) {
     .gradient-shapes-container {
       height: 66px;
+      /* Mobile: Position above footer with proper spacing */
+      bottom: 100px; /* Increased from 40px to 100px to clear mobile footer */
     }
     
     .gradient-shape {
@@ -441,6 +448,20 @@
     
     .gradient-shapes-scroll {
       animation-duration: 40.5s;
+    }
+  }
+  
+  @media (min-width: 641px) and (max-width: 1023px) {
+    .gradient-shapes-container {
+      /* Tablet: Position above footer with proper spacing */
+      bottom: 110px; /* Increased from 44px to 110px to clear tablet footer */
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .gradient-shapes-container {
+      /* Desktop: Position above footer with proper spacing */
+      bottom: 120px; /* Increased from 48px to 120px to clear desktop footer */
     }
   }
   
@@ -455,26 +476,111 @@
       margin-top: 40px;
     }
   }
-  
-  /* Very small screens - ensure gradient still covers everything but stays behind */
-  @media (max-width: 400px) {
-    .landing-page .m3-content-area::before {
-      width: 800px; /* Smaller for very small screens */
-      height: 400px;
-      top: 52%;
-      /* Keep negative z-index */
-      z-index: -10;
+
+  /* ✨ BALANCED MAGICAL SPARKLY ANIMATIONS - Visible but not overwhelming */
+  @keyframes magical-float {
+    0% {
+      opacity: 0;
+      transform: translateY(20px) scale(0.8) rotate(0deg);
+    }
+    25% {
+      opacity: 0.7; /* Balanced from enhanced 0.9 */
+      transform: translateY(-10px) scale(1.2) rotate(90deg); /* Slightly reduced scale */
+    }
+    50% {
+      opacity: 0.6; /* Balanced from enhanced 0.8 */
+      transform: translateY(-20px) scale(1.1) rotate(180deg);
+    }
+    75% {
+      opacity: 0.5; /* Balanced from enhanced 0.6 */
+      transform: translateY(-15px) scale(1.15) rotate(270deg);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-30px) scale(0.7) rotate(360deg);
     }
   }
-  
-  /* Extra small height screens - adjust gradient positioning but keep behind */
-  @media (max-height: 600px) {
-    .landing-page .m3-content-area::before {
-      height: 400px; /* Slightly smaller height for very short screens */
-      top: 55%;
-      /* Keep negative z-index */
-      z-index: -10;
+
+  @keyframes gentle-sparkle {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(0.5) rotate(0deg);
     }
+    25% {
+      opacity: 0.6; /* Balanced from enhanced 0.8 */
+      transform: scale(1.2) rotate(90deg); /* Slightly reduced scale */
+    }
+    50% {
+      opacity: 0.7; /* Balanced from enhanced 0.9 */
+      transform: scale(1.1) rotate(180deg);
+    }
+    75% {
+      opacity: 0.5; /* Balanced from enhanced 0.6 */
+      transform: scale(1.15) rotate(270deg);
+    }
+  }
+
+  @keyframes twinkle {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    50% {
+      opacity: 0.8; /* Slightly reduced from 1.0 */
+      transform: scale(1.1); /* Slightly reduced scale */
+    }
+  }
+
+  @keyframes magical-dust {
+    0% {
+      opacity: 0;
+      transform: translateY(0) translateX(0) scale(0.5);
+    }
+    25% {
+      opacity: 0.6; /* Balanced from enhanced 0.8 */
+      transform: translateY(-15px) translateX(10px) scale(1.1); /* Slightly reduced scale */
+    }
+    50% {
+      opacity: 0.7; /* Balanced from enhanced 0.9 */
+      transform: translateY(-25px) translateX(-5px) scale(1); 
+    }
+    75% {
+      opacity: 0.5; /* Balanced from enhanced 0.6 */
+      transform: translateY(-35px) translateX(15px) scale(1.2); /* Slightly reduced scale */
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-50px) translateX(-10px) scale(0.3);
+    }
+  }
+
+  /* Animation classes */
+  .animate-magical-float {
+    animation: magical-float ease-in-out infinite;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  .animate-gentle-sparkle {
+    animation: gentle-sparkle ease-in-out infinite;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  .animate-twinkle {
+    animation: twinkle ease-in-out infinite;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  .animate-magical-dust {
+    animation: magical-dust ease-in-out infinite;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
   }
 }
 
