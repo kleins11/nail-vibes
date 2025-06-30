@@ -143,19 +143,19 @@
     .m3-col-desktop-12 { grid-column: span 12; }
   }
   
-  /* Content area with M3 grid constraints - UPDATED with gradient background aligned to input center */
+  /* Content area with M3 grid constraints - UPDATED with gradient background positioned lower */
   .m3-content-area {
     width: 100%;
     position: relative;
   }
   
-  /* Gradient background positioned to align with text input's vertical center */
+  /* Gradient background positioned to align with text input's vertical center but not overlap title */
   .m3-content-area::before {
     content: '';
     position: absolute;
-    /* Calculate position to align gradient center with input center */
-    /* Title height (~56px) + 40px margin + half of input height (69px) = ~165px from top */
-    top: 165px;
+    /* Position gradient lower to avoid title overlap - align with bottom half of input */
+    /* Title height (~56px) + 40px margin + 75% of input height (~103px) = ~199px from top */
+    top: 199px;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 900px;
@@ -176,10 +176,10 @@
       grid-column: span 4;
     }
     
-    /* Adjust gradient positioning for mobile */
+    /* Adjust gradient positioning for mobile to avoid title overlap */
     .m3-content-area::before {
-      /* Mobile title height (~40px) + 40px margin + half of input height (69px) = ~149px from top */
-      top: 149px;
+      /* Mobile title height (~40px) + 40px margin + 75% of input height (~103px) = ~183px from top */
+      top: 183px;
       width: 800px;
       height: 600px;
     }
@@ -191,10 +191,10 @@
       grid-column: 2 / span 6;
     }
     
-    /* Adjust gradient positioning for tablet */
+    /* Adjust gradient positioning for tablet to avoid title overlap */
     .m3-content-area::before {
-      /* Tablet title height (~48px) + 40px margin + half of input height (69px) = ~157px from top */
-      top: 157px;
+      /* Tablet title height (~48px) + 40px margin + 75% of input height (~103px) = ~191px from top */
+      top: 191px;
       width: 750px;
       height: 550px;
     }
