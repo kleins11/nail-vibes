@@ -159,7 +159,7 @@ export default function ResultPage({
             nv
           </button>
           
-          {/* Mobile/Tablet New Vibe Button - Styled like attachment */}
+          {/* Mobile/Tablet New Vibe Button - Styled like attachment with Calling Code font */}
           <button
             onClick={onLogoClick}
             className="flex items-center space-x-3 px-4 py-2 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all duration-200 hover:scale-105 group"
@@ -167,7 +167,7 @@ export default function ResultPage({
             <div className="w-8 h-8 border-2 border-blue-600 rounded-full flex items-center justify-center group-hover:border-blue-700 transition-colors">
               <RefreshCw className="w-4 h-4 text-blue-600 group-hover:text-blue-700 transition-colors" />
             </div>
-            <span className="text-blue-600 font-medium group-hover:text-blue-700 transition-colors">New vibe</span>
+            <span className="text-blue-600 font-calling-code font-medium group-hover:text-blue-700 transition-colors">New vibe</span>
           </button>
         </div>
       </div>
@@ -298,7 +298,7 @@ export default function ResultPage({
           
           {/* Right Column: Image - 3/4 width to match the narrower chat */}
           <div className="w-3/4 flex flex-col h-full relative">
-            {/* Desktop New Vibe Button - Styled exactly like attachment */}
+            {/* Desktop New Vibe Button - Styled exactly like attachment with Calling Code font */}
             <div className="absolute top-8 right-8 z-10">
               <button
                 onClick={onLogoClick}
@@ -307,7 +307,7 @@ export default function ResultPage({
                 <div className="w-8 h-8 border-2 border-blue-600 rounded-full flex items-center justify-center group-hover:border-blue-700 transition-colors">
                   <RefreshCw className="w-4 h-4 text-blue-600 group-hover:text-blue-700 transition-colors" />
                 </div>
-                <span className="text-blue-600 font-medium group-hover:text-blue-700 transition-colors">New vibe</span>
+                <span className="text-blue-600 font-calling-code font-medium group-hover:text-blue-700 transition-colors">New vibe</span>
               </button>
             </div>
 
