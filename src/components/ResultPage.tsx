@@ -957,7 +957,7 @@ export default function ResultPage({
             
             {/* ULTRA-SMOOTH: Enhanced input area */}
             <div className="flex-shrink-0 ultra-smooth-input-area" style={{ borderTop: '1px solid #D9CFC3' }}>
-              <div className="p-4 flex items-center">
+              <div className="p-4r">
                 <div className="relative">
                   <textarea
                     ref={mobileExpandedInputRef}
