@@ -369,9 +369,9 @@ export default function ResultPage({
             {/* Image Display - Centered vertically with title */}
             <div className="flex-1 flex flex-col justify-center items-center px-8 py-16">
               <div className="w-full max-w-lg">
-                {/* Title positioned above image with proper spacing */}
-                <div className="mb-6 text-center">
-                  <div className="flex items-center justify-center space-x-4 mb-2">
+                {/* Title positioned above image with proper spacing - LEFT ALIGNED */}
+                <div className="mb-6">
+                  <div className="flex items-center space-x-4 mb-2">
                     <div className="flex items-center justify-center" style={{ width: '48px', height: '48px' }}>
                       <img 
                         src={lastUsedGradientShape}
@@ -435,16 +435,16 @@ export default function ResultPage({
               />
             </div>
             
-            {/* Title positioned below image */}
-            <div className="mb-6 text-center">
+            {/* Title positioned below image - LEFT ALIGNED */}
+            <div className="mb-6">
               {currentVibe?.title && (
-                <h1 className="font-calling-code font-bold text-[#3F3F3F] mb-4 text-lg">
+                <h1 className="font-calling-code font-bold text-[#3F3F3F] mb-4 text-lg text-left">
                   {currentVibe.title}
                 </h1>
               )}
               
-              {/* Match Type and Score Display */}
-              <div className="mb-3 space-y-2">
+              {/* Match Type and Score Display - LEFT ALIGNED */}
+              <div className="mb-3 space-y-2 text-left">
                 {matchInfo?.matchedConcept && (
                   <div className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
                     ✨ {matchInfo.matchedConcept} inspired
@@ -464,16 +464,16 @@ export default function ResultPage({
                 )}
                 
                 {currentVibe && currentVibe.primary_matches > 0 && (
-                  <div className="text-xs text-gray-600 mt-1">
+                  <div className="text-xs text-gray-600 mt-1 text-left">
                     {currentVibe.primary_matches} core match{currentVibe.primary_matches > 1 ? 'es' : ''}
                     {currentVibe.modifier_matches > 0 && ` + ${currentVibe.modifier_matches} style match${currentVibe.modifier_matches > 1 ? 'es' : ''}`}
                   </div>
                 )}
               </div>
               
-              {/* Tags Display */}
+              {/* Tags Display - LEFT ALIGNED */}
               {currentVibe?.tags && currentVibe.tags.length > 0 && (
-                <div className="flex flex-wrap justify-center gap-2 mb-4">
+                <div className="flex flex-wrap gap-2 mb-4">
                   {currentVibe.tags.slice(0, 6).map((tag, index) => (
                     <span 
                       key={index}
