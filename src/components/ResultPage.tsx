@@ -307,21 +307,11 @@ export default function ResultPage({
                 );
               })}
               
-              {/* Enhanced Typing Indicator with magical loading */}
+              {/* Enhanced Typing Indicator - NO GRADIENT SHAPE ICON */}
               {isRefining && (
                 <div className="flex items-start space-x-2">
                   <div className="flex items-center justify-center flex-shrink-0 mt-1" style={{ width: '44px', height: '44px' }}>
-                    <div className="relative">
-                      <img 
-                        src={lastUsedGradientShape}
-                        alt="Gradient shape"
-                        className="object-contain opacity-30"
-                        style={{ width: '44px', height: '44px' }}
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-                      </div>
-                    </div>
+                    <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
                   </div>
                   <div className="flex items-center space-x-2 flex-1">
                     <div className="flex space-x-1">
