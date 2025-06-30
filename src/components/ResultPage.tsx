@@ -410,9 +410,9 @@ export default function ResultPage({
               </div>
             </div>
 
-            {/* Footer in Image Section - Desktop Only */}
+            {/* Footer in Image Section - Desktop Only with minimal styling */}
             <div className="flex-shrink-0">
-              <Footer />
+              <Footer variant="minimal" />
             </div>
           </div>
         </div>
@@ -466,7 +466,7 @@ export default function ResultPage({
             </div>
           </div>
 
-          {/* Footer for Mobile/Tablet */}
+          {/* Footer for Mobile/Tablet - Keep default styling */}
           <Footer />
         </div>
       </div>
