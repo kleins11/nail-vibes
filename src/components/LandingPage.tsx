@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowUp } from 'lucide-react';
 import GradientShapesScroll from './GradientShapesScroll';
+import MagicalSparkles from './MagicalSparkles';
 
 interface LandingPageProps {
   prompt: string;
@@ -36,75 +37,7 @@ export default function LandingPage({
   return (
     <div className="min-h-screen bg-input-background flex flex-col relative landing-page">
       {/* Magical Sparkly Background Effect - Behind all content */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
-        {/* Large floating sparkles */}
-        {Array.from({ length: 20 }).map((_, i) => (
-          <div
-            key={`large-${i}`}
-            className="absolute rounded-full animate-magical-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${4 + Math.random() * 8}px`,
-              height: `${4 + Math.random() * 8}px`,
-              background: `radial-gradient(circle, rgba(${Math.random() > 0.5 ? '147, 51, 234' : '59, 130, 246'}, ${0.3 + Math.random() * 0.4}) 0%, transparent 70%)`,
-              animationDelay: `${Math.random() * 8}s`,
-              animationDuration: `${6 + Math.random() * 4}s`
-            }}
-          />
-        ))}
-        
-        {/* Medium sparkles */}
-        {Array.from({ length: 35 }).map((_, i) => (
-          <div
-            key={`medium-${i}`}
-            className="absolute rounded-full animate-gentle-sparkle"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${2 + Math.random() * 4}px`,
-              height: `${2 + Math.random() * 4}px`,
-              background: `rgba(${Math.random() > 0.6 ? '147, 51, 234' : Math.random() > 0.3 ? '59, 130, 246' : '236, 72, 153'}, ${0.2 + Math.random() * 0.3})`,
-              animationDelay: `${Math.random() * 10}s`,
-              animationDuration: `${8 + Math.random() * 6}s`
-            }}
-          />
-        ))}
-        
-        {/* Small twinkling stars */}
-        {Array.from({ length: 50 }).map((_, i) => (
-          <div
-            key={`small-${i}`}
-            className="absolute rounded-full animate-twinkle"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: '1.5px',
-              height: '1.5px',
-              background: `rgba(${Math.random() > 0.7 ? '147, 51, 234' : Math.random() > 0.4 ? '59, 130, 246' : '236, 72, 153'}, ${0.4 + Math.random() * 0.4})`,
-              animationDelay: `${Math.random() * 12}s`,
-              animationDuration: `${4 + Math.random() * 8}s`
-            }}
-          />
-        ))}
-
-        {/* Magical dust particles */}
-        {Array.from({ length: 30 }).map((_, i) => (
-          <div
-            key={`dust-${i}`}
-            className="absolute rounded-full animate-magical-dust"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: '1px',
-              height: '1px',
-              background: `rgba(255, 255, 255, ${0.2 + Math.random() * 0.3})`,
-              animationDelay: `${Math.random() * 15}s`,
-              animationDuration: `${10 + Math.random() * 10}s`
-            }}
-          />
-        ))}
-      </div>
+      <MagicalSparkles />
 
       {/* Header */}
       <div className="w-full px-4 md:px-8 lg:px-12" style={{ zIndex: 10 }}>
