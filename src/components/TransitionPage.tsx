@@ -108,15 +108,23 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
               zIndex: 200
             }}
           >
-            <div className="flex justify-center md:justify-start pt-8 pb-4">
-              <div className="transition-all duration-300">
-                <img 
-                  src="/nail-vibes-long-logo.png" 
-                  alt="NailVibes" 
-                  className="h-8 w-auto object-contain"
-                />
+            <div className="hidden md:block">
+          <div className="m3-grid-container">
+            <div className="m3-grid">
+              <div className="pt-8 pb-4 md:col-span-8 lg:col-span-12">
+                <button 
+                  className="transition-all duration-300 hover:scale-105 hover:opacity-80"
+                >
+                  <img 
+                    src="/nail-vibes-long-logo.png" 
+                    alt="NailVibes" 
+                    className="h-8 w-auto object-contain"
+                  />
+                </button>
               </div>
             </div>
+          </div>
+        </div>
           </div>
           
           {/* Main content that flows in beautifully - PRELOADED */}

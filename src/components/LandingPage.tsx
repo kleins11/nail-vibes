@@ -19,19 +19,11 @@ interface LandingPageProps {
   handleKeyPress: (e: React.KeyboardEvent, isChat?: boolean, isRefine?: boolean, isGenerate?: boolean) => void;
 }
 
-const SAMPLE_NAIL_IMAGE = "https://images.pexels.com/photos/3997379/pexels-photo-3997379.jpeg?auto=compress&cs=tinysrgb&w=800";
-
 export default function LandingPage({
   prompt,
   setPrompt,
-  generatePrompt,
-  setGeneratePrompt,
-  generatedImageUrl,
-  isGenerating,
-  generateError,
   error,
   onInitialSubmit,
-  onGenerateImage,
   onLogoClick,
   handleKeyPress
 }: LandingPageProps) {

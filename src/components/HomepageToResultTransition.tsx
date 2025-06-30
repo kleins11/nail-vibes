@@ -41,16 +41,23 @@ export default function HomepageToResultTransition({ prompt }: HomepageToResultT
           </div>
 
           {/* Header fading out */}
-          <div 
-            className="w-full px-4 md:px-8 lg:px-12 animate-fade-out-smooth"
-            style={{ zIndex: 10 }}
-          >
-            <div className="flex justify-center md:justify-start pt-8 pb-4">
-              <div className="text-2xl font-pilar font-bold text-blue-600 transition-all duration-300">
-                nailvibes
+          <div className="hidden md:block">
+          <div className="m3-grid-container">
+            <div className="m3-grid">
+              <div className="pt-8 pb-4 md:col-span-8 lg:col-span-12">
+                <button 
+                  className="transition-all duration-300 hover:scale-105 hover:opacity-80"
+                >
+                  <img 
+                    src="/nail-vibes-long-logo.png" 
+                    alt="NailVibes" 
+                    className="h-8 w-auto object-contain"
+                  />
+                </button>
               </div>
             </div>
           </div>
+        </div>
           
           {/* Main content fading out */}
           <div className="flex-1 flex flex-col justify-center pb-20 animate-fade-out-smooth" style={{ zIndex: 10 }}>
