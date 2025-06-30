@@ -255,15 +255,16 @@
       0 20px 20px 0 rgba(155, 155, 169, 0.25),
       0 0 0 3px rgba(59, 130, 246, 0.1),
       0 4px 12px 0 rgba(59, 130, 246, 0.15);
-    transform: translateY(-1px);
+    transform: translateY(-1px) scale(1.02);
   }
   
-  /* Hover state for long textarea */
+  /* Hover state for long textarea - MATCHES NEW VIBE BUTTON MOTION */
   .textarea-long:hover:not(:focus) {
     border-color: #D1D5DB; /* Gray-300 */
     box-shadow: 
       0 20px 20px 0 rgba(155, 155, 169, 0.3),
       0 2px 8px 0 rgba(155, 155, 169, 0.1);
+    transform: scale(1.02);
   }
   
   /* Button positioning within textarea container */
@@ -308,16 +309,17 @@
       0 4px 8px 0 rgba(155, 155, 169, 0.25),
       0 0 0 3px rgba(59, 130, 246, 0.1),
       0 2px 6px 0 rgba(59, 130, 246, 0.15);
-    transform: translateY(-1px);
+    transform: translateY(-1px) scale(1.02);
   }
   
-  /* Hover state for short inputs */
+  /* Hover state for short inputs - MATCHES NEW VIBE BUTTON MOTION */
   .input-short:hover:not(:focus):not(:disabled) {
     border-color: #D1D5DB; /* Gray-300 */
     background-color: #FFFFFF;
     box-shadow: 
       0 4px 8px 0 rgba(155, 155, 169, 0.25),
       0 1px 3px 0 rgba(155, 155, 169, 0.1);
+    transform: scale(1.02);
   }
   
   /* Disabled state for inputs */
@@ -326,6 +328,7 @@
     cursor: not-allowed;
     background-color: #F3F4F6; /* Gray-100 */
     border-color: #E5E7EB; /* Gray-200 */
+    transform: none; /* No hover effects when disabled */
   }
   
   /* Input button styling for consistency */
