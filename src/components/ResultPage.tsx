@@ -287,7 +287,8 @@ export default function ResultPage({
                       </div>
                     ) : (
                       <div className="flex items-start space-x-2">
-                        <div className="flex items-center justify-center flex-shrink-0 mt-1" style={{ width: '44px', height: '44px' }}>
+                        {/* FIXED: Gradient shape alignment - positioned to align with first line of text */}
+                        <div className="flex items-start justify-center flex-shrink-0" style={{ width: '44px', height: '44px', paddingTop: '2px' }}>
                           <img 
                             src={getGradientShapeForMessage(message)}
                             alt="Gradient shape"
@@ -532,7 +533,8 @@ export default function ResultPage({
                       </div>
                     ) : (
                       <div className="flex items-start space-x-2">
-                        <div className="flex items-center justify-center flex-shrink-0 mt-1" style={{ width: '44px', height: '44px' }}>
+                        {/* FIXED: Gradient shape alignment for mobile - positioned to align with first line of text */}
+                        <div className="flex items-start justify-center flex-shrink-0" style={{ width: '44px', height: '44px', paddingTop: '2px' }}>
                           <img 
                             src={getGradientShapeForMessage(message)}
                             alt="Gradient shape"
