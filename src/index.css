@@ -212,8 +212,8 @@
   .textarea-long-container {
     position: relative;
     width: 100%;
-    /* Reduced spacing to fix the gap issue */
-    margin-top: 80px;
+    /* Set exact 40px spacing as requested */
+    margin-top: 40px;
     /* Ensure this container can hold positioned elements */
     z-index: 3; /* Above the gradient background */
   }
@@ -333,9 +333,9 @@
       font-size: 2.5rem;
     }
     
-    /* FIXED: Reduce spacing between title and textarea on mobile to match Figma */
+    /* Keep 40px spacing on mobile as well for consistency */
     .textarea-long-container {
-      margin-top: 40px; /* Further reduced for mobile */
+      margin-top: 40px;
     }
   }
   
