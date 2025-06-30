@@ -52,6 +52,20 @@ const CHAT_BUBBLE_STYLES = [
   }
 ];
 
+// Gradient shapes from Supabase bucket
+const GRADIENT_SHAPES = [
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-11-Col2%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-12-Col4%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-1-Col3%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-2-Col5%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-4-Col8%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-5-Col10%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-5-Col1%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-6-Col4%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-7-Col9%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-8-Col2%201.png"
+];
+
 export default function ResultPage({
   currentVibe,
   matchInfo,
@@ -103,6 +117,17 @@ export default function ResultPage({
     if (length <= 60) return 'lg:max-w-[280px]'; // Medium messages  
     if (length <= 100) return 'lg:max-w-[360px]'; // Long messages
     return 'lg:max-w-[400px]'; // Very long messages
+  };
+
+  // Function to get a random gradient shape for system messages
+  const getRandomGradientShape = (messageId: string) => {
+    // Use message ID to ensure consistent shape for each message
+    const hash = messageId.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    const index = Math.abs(hash) % GRADIENT_SHAPES.length;
+    return GRADIENT_SHAPES[index];
   };
 
   // Get only user messages to determine the correct index for styling
@@ -172,8 +197,12 @@ export default function ResultPage({
                       </div>
                     ) : (
                       <div className="flex items-start space-x-2">
-                        <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                          <span className="text-white text-xs">🤖</span>
+                        <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                          <img 
+                            src={getRandomGradientShape(message.id)}
+                            alt="Gradient shape"
+                            className="w-6 h-6 object-contain"
+                          />
                         </div>
                         <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words flex-1">{message.content}</p>
                       </div>
@@ -185,8 +214,12 @@ export default function ResultPage({
               {/* Typing Indicator */}
               {isRefining && (
                 <div className="flex items-start space-x-2">
-                  <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-xs">🤖</span>
+                  <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                    <img 
+                      src={GRADIENT_SHAPES[0]}
+                      alt="Gradient shape"
+                      className="w-6 h-6 object-contain opacity-50"
+                    />
                   </div>
                   <div className="flex items-center space-x-2 flex-1">
                     <div className="animate-spin w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full"></div>
@@ -440,8 +473,12 @@ export default function ResultPage({
                       </div>
                     ) : (
                       <div className="flex items-start space-x-2">
-                        <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                          <span className="text-white text-xs">🤖</span>
+                        <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                          <img 
+                            src={getRandomGradientShape(message.id)}
+                            alt="Gradient shape"
+                            className="w-6 h-6 object-contain"
+                          />
                         </div>
                         <p className="font-calling-code text-sm text-[#3F3F3F] break-words flex-1">{message.content}</p>
                       </div>
