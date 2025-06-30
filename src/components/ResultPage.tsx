@@ -197,11 +197,12 @@ export default function ResultPage({
                       </div>
                     ) : (
                       <div className="flex items-start space-x-2">
-                        <div className="w-7 h-7 flex items-center justify-center flex-shrink-0 mt-1">
+                        <div className="flex items-center justify-center flex-shrink-0 mt-1" style={{ width: '44px', height: '44px' }}>
                           <img 
                             src={getRandomGradientShape(message.id)}
                             alt="Gradient shape"
-                            className="w-7 h-7 object-contain"
+                            className="object-contain"
+                            style={{ width: '44px', height: '44px' }}
                           />
                         </div>
                         <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words flex-1">{message.content}</p>
@@ -214,11 +215,12 @@ export default function ResultPage({
               {/* Typing Indicator */}
               {isRefining && (
                 <div className="flex items-start space-x-2">
-                  <div className="w-7 h-7 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="flex items-center justify-center flex-shrink-0 mt-1" style={{ width: '44px', height: '44px' }}>
                     <img 
                       src={GRADIENT_SHAPES[0]}
                       alt="Gradient shape"
-                      className="w-7 h-7 object-contain opacity-50"
+                      className="object-contain opacity-50"
+                      style={{ width: '44px', height: '44px' }}
                     />
                   </div>
                   <div className="flex items-center space-x-2 flex-1">
@@ -473,11 +475,12 @@ export default function ResultPage({
                       </div>
                     ) : (
                       <div className="flex items-start space-x-2">
-                        <div className="w-7 h-7 flex items-center justify-center flex-shrink-0 mt-1">
+                        <div className="flex items-center justify-center flex-shrink-0 mt-1" style={{ width: '44px', height: '44px' }}>
                           <img 
                             src={getRandomGradientShape(message.id)}
                             alt="Gradient shape"
-                            className="w-7 h-7 object-contain"
+                            className="object-contain"
+                            style={{ width: '44px', height: '44px' }}
                           />
                         </div>
                         <p className="font-calling-code text-sm text-[#3F3F3F] break-words flex-1">{message.content}</p>
