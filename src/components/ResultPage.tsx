@@ -773,8 +773,8 @@ export default function ResultPage({
                   onKeyDown={(e) => handleKeyPress(e, false, true)}
                   onFocus={onChatInputFocus}
                   onBlur={onChatInputBlur}
-                  placeholder="make it chrome, add glitter, more pink..."
-                  className="input-short flex-1 px-4 py-3 pr-12 rounded-lg text-sm placeholder-calling-code textarea-calling-code"
+                  placeholder="Keep vibing"
+                  className="input-short flex-1 px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
                   style={{
                     boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
                     color: '#3F3F3F'
@@ -795,14 +795,7 @@ export default function ResultPage({
               </div>
             </div>
             
-            {/* Typing Indicator - CONDITIONAL: Only show when not keyboard active to save space */}
-            {isTyping && !isRefining && !isKeyboardActive && (
-              <div className="p-4 pt-0">
-                <div className="text-xs text-gray-500 italic animate-pulse">
-                  Typing...
-                </div>
-              </div>
-            )}
+            {/* REMOVED: Typing Indicator - No longer needed */}
           </div>
         </div>
       )}
