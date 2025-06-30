@@ -870,7 +870,7 @@ export default function ResultPage({
               <div 
                 className="bg-gray-400 rounded-full ultra-smooth-expanded-handle"
                 style={{ 
-                  // width: '36px', 
+                  width: '36px', 
                   height: '4px',
                   transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                   willChange: 'background-color, transform, width',
@@ -957,7 +957,7 @@ export default function ResultPage({
             
             {/* ULTRA-SMOOTH: Enhanced input area */}
             <div className="flex-shrink-0 ultra-smooth-input-area" style={{ borderTop: '1px solid #D9CFC3' }}>
-              <div className="p-4">
+              <div className="p-4 flex items-center">
                 <div className="relative">
                   <textarea
                     ref={mobileExpandedInputRef}
