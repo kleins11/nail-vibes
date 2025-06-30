@@ -6,7 +6,7 @@ interface HomepageToResultTransitionProps {
 }
 
 export default function HomepageToResultTransition({ prompt }: HomepageToResultTransitionProps) {
-  const [phase, setPhase] = useState<'fadeOut' | 'sparklyMist' | 'gentleLanding' | 'fullyLanded'>('fadeOut');
+  const [phase, setPhase] = useState<'fadeOut' | 'sparklyMist' | 'complete'>('fadeOut');
 
   useEffect(() => {
     // Phase 1: Gentle fade out of homepage content (300ms)
@@ -16,18 +16,12 @@ export default function HomepageToResultTransition({ prompt }: HomepageToResultT
 
     // Phase 2: Sparkly mist effect (400ms)
     const timer2 = setTimeout(() => {
-      setPhase('gentleLanding');
+      setPhase('complete');
     }, 700);
-
-    // Phase 3: Complete transition (100ms)
-    const timer3 = setTimeout(() => {
-      setPhase('fullyLanded');
-    }, 800);
 
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
-      clearTimeout(timer3);
     };
   }, []);
 
@@ -122,16 +116,16 @@ export default function HomepageToResultTransition({ prompt }: HomepageToResultT
         </div>
       )}
 
-      {/* Phase 3 & 4: Complete transition - MINIMAL CONTENT */}
-      {(phase === 'gentleLanding' || phase === 'fullyLanded') && (
+      {/* Phase 3: Complete transition - CLEAN FINISH */}
+      {phase === 'complete' && (
         <div className="absolute inset-0 flex items-center justify-center">
-          {/* Just a subtle glow indicating transition completion */}
+          {/* Just a subtle final glow - NO LOADING ELEMENTS */}
           <div 
             className="animate-gentle-completion-glow"
             style={{
-              width: '100px',
-              height: '100px',
-              background: 'radial-gradient(circle, rgba(147, 51, 234, 0.08) 0%, transparent 70%)',
+              width: '80px',
+              height: '80px',
+              background: 'radial-gradient(circle, rgba(147, 51, 234, 0.06) 0%, transparent 70%)',
               borderRadius: '50%'
             }}
           />
@@ -168,16 +162,16 @@ export default function HomepageToResultTransition({ prompt }: HomepageToResultT
 
         @keyframes gentle-completion-glow {
           0% {
-            opacity: 0.3;
+            opacity: 0.2;
             transform: scale(0.8);
           }
           50% {
-            opacity: 0.6;
-            transform: scale(1.2);
+            opacity: 0.4;
+            transform: scale(1.1);
           }
           100% {
             opacity: 0;
-            transform: scale(1.5);
+            transform: scale(1.3);
           }
         }
 
