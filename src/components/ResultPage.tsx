@@ -588,62 +588,77 @@ export default function ResultPage({
 
                 {/* Chat Content - Moved down to accommodate drawer pull */}
                 <div className="px-4 pt-8 pb-6 h-full flex flex-col">
-                  {/* Last System Message Preview */}
-                  {lastSystemMessage && (
-                    <div className="flex space-x-2 mb-6 flex-shrink-0">
-                      <div className="flex-shrink-0" style={{ width: '32px' }}>
-                        <img 
-                          src={getGradientShapeForMessage(lastSystemMessage)}
-                          alt="Gradient shape"
-                          className="object-contain"
-                          style={{ 
-                            width: '32px', 
-                            height: '32px',
-                            // CRITICAL: Align with text baseline for mobile too
-                            marginTop: '-1px' // Slightly less offset for smaller mobile text
-                          }}
-                        />
+                  {/* CONDITIONAL CONTENT: Show loading state when refining, otherwise show last message */}
+                  {isRefining ? (
+                    /* NEW: Loading State in Closed Drawer - Matches desktop loading state exactly */
+                    <div className="flex items-center space-x-3 justify-center py-8 flex-1">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                        <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                        <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words line-clamp-3">
-                          {lastSystemMessage.content}
-                        </p>
+                      <span className="text-sm text-gray-500 italic animate-pulse">Crafting your perfect design...</span>
+                    </div>
+                  ) : (
+                    /* Last System Message Preview - Only shown when NOT refining */
+                    lastSystemMessage && (
+                      <div className="flex space-x-2 mb-6 flex-shrink-0">
+                        <div className="flex-shrink-0" style={{ width: '32px' }}>
+                          <img 
+                            src={getGradientShapeForMessage(lastSystemMessage)}
+                            alt="Gradient shape"
+                            className="object-contain"
+                            style={{ 
+                              width: '32px', 
+                              height: '32px',
+                              // CRITICAL: Align with text baseline for mobile too
+                              marginTop: '-1px' // Slightly less offset for smaller mobile text
+                            }}
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words line-clamp-3">
+                            {lastSystemMessage.content}
+                          </p>
+                        </div>
+                      </div>
+                    )
+                  )}
+
+                  {/* Input Field Preview - Positioned at bottom - ONLY shown when NOT refining */}
+                  {!isRefining && (
+                    <div className="mt-auto">
+                      <div className="relative flex items-center">
+                        <input
+                          type="text"
+                          value={refinePrompt}
+                          onChange={(e) => setRefinePrompt(e.target.value)}
+                          onFocus={handleClosedDrawerInputFocus} // UPDATED: Use enhanced input focus handler
+                          placeholder="Keep vibing"
+                          className="input-short flex-1 px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
+                          style={{
+                            boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
+                            color: '#3F3F3F'
+                          }}
+                          disabled={isRefining}
+                        />
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onRefineSubmit();
+                          }}
+                          disabled={!refinePrompt.trim() || isRefining}
+                          className="input-button absolute right-1 mr-1 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10"
+                        >
+                          {isRefining ? (
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          ) : (
+                            <ArrowUp className="w-4 h-4" />
+                          )}
+                        </button>
                       </div>
                     </div>
                   )}
-
-                  {/* Input Field Preview - Positioned at bottom */}
-                  <div className="mt-auto">
-                    <div className="relative flex items-center">
-                      <input
-                        type="text"
-                        value={refinePrompt}
-                        onChange={(e) => setRefinePrompt(e.target.value)}
-                        onFocus={handleClosedDrawerInputFocus} // UPDATED: Use enhanced input focus handler
-                        placeholder="Keep vibing"
-                        className="input-short flex-1 px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
-                        style={{
-                          boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
-                          color: '#3F3F3F'
-                        }}
-                        disabled={isRefining}
-                      />
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onRefineSubmit();
-                        }}
-                        disabled={!refinePrompt.trim() || isRefining}
-                        className="input-button absolute right-1 mr-1 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10"
-                      >
-                        {isRefining ? (
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        ) : (
-                          <ArrowUp className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
                 </div>
               </div>
 
