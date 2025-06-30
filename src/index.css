@@ -380,17 +380,18 @@
     box-shadow: none;
   }
   
-  /* 🎨 GRADIENT SHAPES AUTO-SCROLL - Positioned to match logo spacing for perfect visual balance */
+  /* 🎨 GRADIENT SHAPES AUTO-SCROLL - FIXED: Positioned above footer with proper spacing */
   .gradient-shapes-container {
     position: fixed;
-    /* 🎯 PERFECT BALANCE: Match the logo's top spacing (32px + 16px padding = 48px) */
-    bottom: 48px; /* Moved up significantly from 80px to 48px to match logo spacing */
+    /* 🔧 FIXED: Position above footer with proper spacing */
+    bottom: 120px; /* Increased from 48px to 120px to clear footer completely */
     left: 0;
     right: 0;
     height: 88px;
     background: transparent;
     overflow: hidden;
-    z-index: 10;
+    /* 🔧 FIXED: Higher z-index to ensure it's above footer */
+    z-index: 20; /* Increased from 10 to 20 to be above footer */
     pointer-events: none;
   }
   
@@ -432,12 +433,12 @@
     }
   }
   
-  /* 📱 RESPONSIVE ADJUSTMENTS for gradient shapes positioning - All match logo spacing */
+  /* 📱 RESPONSIVE ADJUSTMENTS for gradient shapes positioning - All positioned above footer */
   @media (max-width: 640px) {
     .gradient-shapes-container {
       height: 66px;
-      /* Mobile: Match logo spacing (24px + 16px padding = 40px) */
-      bottom: 40px; /* Adjusted to match mobile logo spacing */
+      /* Mobile: Position above footer with proper spacing */
+      bottom: 100px; /* Increased from 40px to 100px to clear mobile footer */
     }
     
     .gradient-shape {
@@ -452,15 +453,15 @@
   
   @media (min-width: 641px) and (max-width: 1023px) {
     .gradient-shapes-container {
-      /* Tablet: Match logo spacing (32px + 24px padding = 56px) */
-      bottom: 44px; /* Adjusted to match tablet logo spacing */
+      /* Tablet: Position above footer with proper spacing */
+      bottom: 110px; /* Increased from 44px to 110px to clear tablet footer */
     }
   }
   
   @media (min-width: 1024px) {
     .gradient-shapes-container {
-      /* Desktop: Match logo spacing (32px + 24px padding = 56px) */
-      bottom: 48px; /* Adjusted to match desktop logo spacing */
+      /* Desktop: Position above footer with proper spacing */
+      bottom: 120px; /* Increased from 48px to 120px to clear desktop footer */
     }
   }
   
