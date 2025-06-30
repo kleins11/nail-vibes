@@ -265,16 +265,16 @@ export default function ResultPage({
               )}
             </div>
             
-            {/* Chat Input - Fixed at bottom with enhanced styling and FIXED button positioning */}
+            {/* Chat Input - Fixed at bottom with enhanced styling and CORRECTED button positioning */}
             <div className="p-6 border-t border-gray-200 flex-shrink-0">
-              <div className="relative">
+              <div className="relative flex items-center">
                 <input
                   type="text"
                   value={refinePrompt}
                   onChange={(e) => setRefinePrompt(e.target.value)}
                   onKeyDown={(e) => handleKeyPress(e, false, true)}
                   placeholder="Keep vibing"
-                  className="input-short w-full px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
+                  className="input-short flex-1 px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
                   style={{
                     boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
                     color: '#3F3F3F'
@@ -284,7 +284,7 @@ export default function ResultPage({
                 <button
                   onClick={onRefineSubmit}
                   disabled={!refinePrompt.trim() || isRefining}
-                  className="input-button absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center"
+                  className="input-button absolute right-1 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10"
                 >
                   {isRefining ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -530,9 +530,9 @@ export default function ResultPage({
               })}
             </div>
             
-            {/* Input Area with enhanced styling and FIXED button positioning */}
+            {/* Input Area with enhanced styling and CORRECTED button positioning */}
             <div className="p-4 border-t" style={{ marginTop: '30px' }}>
-              <div className="relative">
+              <div className="relative flex items-center">
                 <input
                   type="text"
                   value={refinePrompt}
@@ -541,7 +541,7 @@ export default function ResultPage({
                   onFocus={onChatInputFocus}
                   onBlur={onChatInputBlur}
                   placeholder="make it chrome, add glitter, more pink..."
-                  className="input-short w-full px-4 py-3 pr-12 rounded-lg text-sm placeholder-calling-code textarea-calling-code"
+                  className="input-short flex-1 px-4 py-3 pr-12 rounded-lg text-sm placeholder-calling-code textarea-calling-code"
                   style={{
                     boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
                     color: '#3F3F3F'
@@ -551,7 +551,7 @@ export default function ResultPage({
                 <button
                   onClick={onRefineSubmit}
                   disabled={!refinePrompt.trim() || isRefining}
-                  className="input-button absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center"
+                  className="input-button absolute right-1 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10"
                 >
                   {isRefining ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
