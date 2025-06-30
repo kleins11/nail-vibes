@@ -265,7 +265,7 @@ export default function ResultPage({
               )}
             </div>
             
-            {/* Chat Input - Fixed at bottom with enhanced styling */}
+            {/* Chat Input - Fixed at bottom with enhanced styling and FIXED button positioning */}
             <div className="p-6 border-t border-gray-200 flex-shrink-0">
               <div className="relative">
                 <input
@@ -284,7 +284,7 @@ export default function ResultPage({
                 <button
                   onClick={onRefineSubmit}
                   disabled={!refinePrompt.trim() || isRefining}
-                  className="input-button absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center"
+                  className="input-button absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center"
                 >
                   {isRefining ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -530,7 +530,7 @@ export default function ResultPage({
               })}
             </div>
             
-            {/* Input Area with enhanced styling */}
+            {/* Input Area with enhanced styling and FIXED button positioning */}
             <div className="p-4 border-t" style={{ marginTop: '30px' }}>
               <div className="relative">
                 <input
@@ -551,7 +551,7 @@ export default function ResultPage({
                 <button
                   onClick={onRefineSubmit}
                   disabled={!refinePrompt.trim() || isRefining}
-                  className="input-button absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center"
+                  className="input-button absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center"
                 >
                   {isRefining ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
