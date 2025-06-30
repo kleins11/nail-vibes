@@ -244,10 +244,10 @@ export default function ResultPage({
         <div className="hidden lg:flex w-full h-full">
           {/* Left Column: Chat - Narrower width */}
           <div className="w-1/4 flex flex-col h-full" style={{ backgroundColor: '#F5F1EC', borderRight: '1px solid #D9CFC3' }}>
-            {/* Chat Messages - Scrollable - NO HEADER */}
+            {/* Chat Messages - Scrollable with INCREASED TOP PADDING for visual balance */}
             <div 
               ref={desktopChatMessagesRef}
-              className="flex-1 overflow-y-auto p-6 space-y-4"
+              className="flex-1 overflow-y-auto px-6 pt-20 pb-6 space-y-4"
             >
               {chatMessages.map((message, index) => {
                 // Find the index of this user message among all user messages
