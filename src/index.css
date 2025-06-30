@@ -149,13 +149,13 @@
     position: relative;
   }
   
-  /* Gradient background positioned to align with text input's vertical center but not overlap title */
+  /* Gradient background positioned to align with text input area only - no title overlap */
   .m3-content-area::before {
     content: '';
     position: absolute;
-    /* Position gradient lower to avoid title overlap - align with bottom half of input */
-    /* Title height (~56px) + 40px margin + 75% of input height (~103px) = ~199px from top */
-    top: 199px;
+    /* Position gradient much lower to completely avoid title overlap */
+    /* Title height (~56px) + 40px margin + input top position = ~250px from top */
+    top: 250px;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 900px;
@@ -178,8 +178,8 @@
     
     /* Adjust gradient positioning for mobile to avoid title overlap */
     .m3-content-area::before {
-      /* Mobile title height (~40px) + 40px margin + 75% of input height (~103px) = ~183px from top */
-      top: 183px;
+      /* Mobile title height (~40px) + 40px margin + input position = ~220px from top */
+      top: 220px;
       width: 800px;
       height: 600px;
     }
@@ -193,8 +193,8 @@
     
     /* Adjust gradient positioning for tablet to avoid title overlap */
     .m3-content-area::before {
-      /* Tablet title height (~48px) + 40px margin + 75% of input height (~103px) = ~191px from top */
-      top: 191px;
+      /* Tablet title height (~48px) + 40px margin + input position = ~235px from top */
+      top: 235px;
       width: 750px;
       height: 550px;
     }
