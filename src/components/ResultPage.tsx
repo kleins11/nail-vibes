@@ -422,6 +422,15 @@ export default function ResultPage({
         <div className="lg:hidden w-full flex flex-col relative">
           <div className="flex-1 flex flex-col justify-center px-6 pb-32">
             <div className="max-w-md mx-auto w-full">
+              {/* Title positioned above image - Mobile Only */}
+              {currentVibe?.title && (
+                <div className="mb-6">
+                  <h1 className="font-calling-code font-bold text-[#3F3F3F] text-lg text-left">
+                    {currentVibe.title}
+                  </h1>
+                </div>
+              )}
+              
               {/* Image - Smaller to prevent scrolling */}
               <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6 max-h-[50vh]">
                 <img 
@@ -441,15 +450,6 @@ export default function ResultPage({
                   isVisible={isRefining} 
                   message="Refining your design"
                 />
-              </div>
-              
-              {/* Title positioned below image - LEFT ALIGNED - CLEAN VERSION */}
-              <div className="mb-6">
-                {currentVibe?.title && (
-                  <h1 className="font-calling-code font-bold text-[#3F3F3F] mb-4 text-lg text-left">
-                    {currentVibe.title}
-                  </h1>
-                )}
               </div>
             </div>
           </div>
@@ -519,8 +519,7 @@ export default function ResultPage({
                 </div>
               </div>
 
-              {/* Footer for Mobile/Tablet - Keep default styling */}
-              <Footer />
+              {/* NO FOOTER ON MOBILE - Completely hidden */}
             </div>
           )}
         </div>
