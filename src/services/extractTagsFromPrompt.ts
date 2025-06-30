@@ -31,6 +31,7 @@ const customMap: Record<string, string[]> = {
   "fall vibes": ["burnt orange", "matte", "cozy", "warm"],
   "holiday party": ["red", "sparkle", "glam", "festive"],
   "wedding guest": ["elegant", "simple", "neutral", "refined"],
+  "spider webs": ['matte', 'badass', 'goth', 'detailed'],
 
   // 🎨 Color-Specific But Vibe-First
   "match my olive dress": ["olive", "earthy", "neutral", "muted"],
