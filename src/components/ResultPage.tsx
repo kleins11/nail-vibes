@@ -138,10 +138,11 @@ export default function ResultPage({
               </button>
             </div>
             
-            {/* Chat Messages - Scrollable */}
+            {/* Chat Messages - Scrollable with 30px bottom margin */}
             <div 
               ref={desktopChatMessagesRef}
               className="flex-1 overflow-y-auto p-6 space-y-4"
+              style={{ marginBottom: '30px' }}
             >
               {chatMessages.map((message, index) => {
                 // Find the index of this user message among all user messages
@@ -195,7 +196,7 @@ export default function ResultPage({
               )}
             </div>
             
-            {/* Chat Input - Fixed at bottom */}
+            {/* Chat Input - Fixed at bottom with shadow and proper spacing */}
             <div className="p-6 border-t border-gray-200 flex-shrink-0">
               <div className="flex items-center space-x-3">
                 <input
@@ -205,6 +206,9 @@ export default function ResultPage({
                   onKeyDown={(e) => handleKeyPress(e, false, true)}
                   placeholder="Keep vibing"
                   className="flex-1 px-4 py-3 bg-gray-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code"
+                  style={{
+                    boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)'
+                  }}
                   disabled={isRefining}
                 />
                 <button
@@ -443,8 +447,8 @@ export default function ResultPage({
               })}
             </div>
             
-            {/* Input Area */}
-            <div className="p-4 border-t">
+            {/* Input Area with shadow and proper spacing */}
+            <div className="p-4 border-t" style={{ marginTop: '30px' }}>
               <div className="flex space-x-2">
                 <input
                   type="text"
@@ -455,6 +459,9 @@ export default function ResultPage({
                   onBlur={onChatInputBlur}
                   placeholder="make it chrome, add glitter, more pink..."
                   className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code"
+                  style={{
+                    boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)'
+                  }}
                   disabled={isRefining}
                 />
                 <button
