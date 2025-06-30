@@ -380,10 +380,11 @@
     box-shadow: none;
   }
   
-  /* 🎨 GRADIENT SHAPES AUTO-SCROLL - Positioned above footer with visual balance */
+  /* 🎨 GRADIENT SHAPES AUTO-SCROLL - Positioned to match logo spacing for perfect visual balance */
   .gradient-shapes-container {
     position: fixed;
-    bottom: 80px; /* Moved up from 0 to 80px to clear footer space */
+    /* 🎯 PERFECT BALANCE: Match the logo's top spacing (32px + 16px padding = 48px) */
+    bottom: 48px; /* Moved up significantly from 80px to 48px to match logo spacing */
     left: 0;
     right: 0;
     height: 88px;
@@ -431,11 +432,12 @@
     }
   }
   
-  /* 📱 RESPONSIVE ADJUSTMENTS for gradient shapes positioning */
+  /* 📱 RESPONSIVE ADJUSTMENTS for gradient shapes positioning - All match logo spacing */
   @media (max-width: 640px) {
     .gradient-shapes-container {
       height: 66px;
-      bottom: 70px; /* Adjusted for mobile footer height */
+      /* Mobile: Match logo spacing (24px + 16px padding = 40px) */
+      bottom: 40px; /* Adjusted to match mobile logo spacing */
     }
     
     .gradient-shape {
@@ -450,13 +452,15 @@
   
   @media (min-width: 641px) and (max-width: 1023px) {
     .gradient-shapes-container {
-      bottom: 75px; /* Adjusted for tablet footer height */
+      /* Tablet: Match logo spacing (32px + 24px padding = 56px) */
+      bottom: 44px; /* Adjusted to match tablet logo spacing */
     }
   }
   
   @media (min-width: 1024px) {
     .gradient-shapes-container {
-      bottom: 85px; /* Adjusted for desktop footer height */
+      /* Desktop: Match logo spacing (32px + 24px padding = 56px) */
+      bottom: 48px; /* Adjusted to match desktop logo spacing */
     }
   }
   
