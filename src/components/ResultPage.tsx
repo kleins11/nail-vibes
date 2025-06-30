@@ -688,17 +688,21 @@ export default function ResultPage({
               height: isKeyboardActive ? '80vh' : '80vh'
             }}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between p-4" style={{ borderBottom: '1px solid #D9CFC3' }}>
+            {/* UPDATED: Header - Match closed drawer design with drawer handle */}
+            <div className="flex items-center justify-center p-4 relative">
+              {/* Drawer Pull Handle - Centered like closed drawer */}
+              <div 
+                className="bg-gray-400 rounded-full"
+                style={{ 
+                  width: '36px', 
+                  height: '4px' 
+                }}
+              />
+              
+              {/* Close button - Positioned absolutely in top right corner */}
               <button
                 onClick={onCloseChat}
-                className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors focus-ring"
-              >
-                <Minus className="w-6 h-6 text-gray-400" />
-              </button>
-              <button
-                onClick={onCloseChat}
-                className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors focus-ring"
+                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors focus-ring"
               >
                 <X className="w-5 h-5 text-gray-400" />
               </button>
