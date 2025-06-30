@@ -382,7 +382,7 @@ function App() {
     }, 800); // Wait for transition to complete before starting search
   };
 
-  // NIKO CREATED FUNCTION
+  // NIKO CREATED FUNCTION - ENHANCED with mobile chat auto-close
   const handleRefineSubmit = async () => {
     if (!refinePrompt.trim() || !currentVibe?.image_url) {
       console.log('⚠️ Missing refine prompt or base image URL');
@@ -392,6 +392,13 @@ function App() {
     setIsRefining(true);
     console.log('🎨 Refining design with prompt:', refinePrompt);
     const promptWithContext = `Adjust only the nails in the image and make the nails ${refinePrompt} keeping the background, hands, and fingers unchanged.`
+    
+    // NEW: Auto-close mobile chat drawer on XS-S form factors
+    const isMobileViewport = window.innerWidth < 1024; // lg breakpoint
+    if (isMobileViewport && isChatOpen) {
+      console.log('📱 Auto-closing mobile chat drawer after submit');
+      setIsChatOpen(false);
+    }
     
     try {
       // Make POST request to the refine nail design endpoint
@@ -503,12 +510,14 @@ function App() {
     setIsTyping(false);
   };
 
+  // ENHANCED: Mobile-aware key press handler
   const handleKeyPress = (e: React.KeyboardEvent, isChat: boolean = false, isRefine: boolean = false, isGenerate: boolean = false) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       if (isGenerate) {
         handleGenerateImage();
       } else if (isRefine) {
+        // NEW: Enhanced refine submit with mobile auto-close
         handleRefineSubmit();
       } else if (isChat) {
         handleChatSubmit();
