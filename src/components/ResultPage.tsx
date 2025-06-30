@@ -91,6 +91,10 @@ export default function ResultPage({
 
   // State to track the most recently used gradient shape
   const [lastUsedGradientShape, setLastUsedGradientShape] = useState<string>(GRADIENT_SHAPES[0]);
+  
+  // State to track when new images have loaded
+  const [imageLoadStates, setImageLoadStates] = useState<Record<string, boolean>>({});
+  const [pendingGradientUpdates, setPendingGradientUpdates] = useState<Record<string, string>>({});
 
   // Refs for auto-scrolling
   const desktopChatMessagesRef = useRef<HTMLDivElement>(null);
@@ -109,15 +113,64 @@ export default function ResultPage({
     }
   }, [chatMessages, isRefining]); // Trigger on message changes and refining state
 
-  // Update the last used gradient shape whenever chat messages change
+  // Handle gradient shape updates when images load
   useEffect(() => {
     const systemMessages = chatMessages.filter(message => message.type === 'system');
     if (systemMessages.length > 0) {
       const lastSystemMessage = systemMessages[systemMessages.length - 1];
-      const shape = getRandomGradientShape(lastSystemMessage.id);
-      setLastUsedGradientShape(shape);
+      const newShape = getRandomGradientShape(lastSystemMessage.id);
+      
+      // Check if this is a refinement completion (when isRefining becomes false and we have a refined image)
+      const isRefinementComplete = !isRefining && refinedImageUrl;
+      
+      if (isRefinementComplete) {
+        // Store the pending gradient update for this message
+        setPendingGradientUpdates(prev => ({
+          ...prev,
+          [lastSystemMessage.id]: newShape
+        }));
+        
+        // Check if the refined image has already loaded
+        if (imageLoadStates[refinedImageUrl]) {
+          // Image is already loaded, update immediately
+          setLastUsedGradientShape(newShape);
+          setPendingGradientUpdates(prev => {
+            const updated = { ...prev };
+            delete updated[lastSystemMessage.id];
+            return updated;
+          });
+        }
+      } else if (!refinedImageUrl) {
+        // No refinement, update immediately (initial load)
+        setLastUsedGradientShape(newShape);
+      }
     }
-  }, [chatMessages]);
+  }, [chatMessages, isRefining, refinedImageUrl, imageLoadStates]);
+
+  // Handle image load events
+  const handleImageLoad = (imageUrl: string) => {
+    setImageLoadStates(prev => ({
+      ...prev,
+      [imageUrl]: true
+    }));
+
+    // Check if there are any pending gradient updates that can now be applied
+    const systemMessages = chatMessages.filter(message => message.type === 'system');
+    if (systemMessages.length > 0) {
+      const lastSystemMessage = systemMessages[systemMessages.length - 1];
+      const pendingShape = pendingGradientUpdates[lastSystemMessage.id];
+      
+      if (pendingShape && imageUrl === refinedImageUrl) {
+        // Apply the pending gradient update now that the image has loaded
+        setLastUsedGradientShape(pendingShape);
+        setPendingGradientUpdates(prev => {
+          const updated = { ...prev };
+          delete updated[lastSystemMessage.id];
+          return updated;
+        });
+      }
+    }
+  };
 
   // Function to get chat bubble style based on user message index
   const getChatBubbleStyle = (messageIndex: number) => {
@@ -142,6 +195,23 @@ export default function ResultPage({
     }, 0);
     const index = Math.abs(hash) % GRADIENT_SHAPES.length;
     return GRADIENT_SHAPES[index];
+  };
+
+  // Function to get the appropriate gradient shape for a message
+  const getGradientShapeForMessage = (message: ChatMessage) => {
+    // For system messages during refinement, don't show the new shape until image loads
+    if (message.type === 'system' && isRefining) {
+      return lastUsedGradientShape; // Keep showing the previous shape
+    }
+    
+    // Check if there's a pending update for this message
+    const pendingShape = pendingGradientUpdates[message.id];
+    if (pendingShape && refinedImageUrl && !imageLoadStates[refinedImageUrl]) {
+      return lastUsedGradientShape; // Keep showing the previous shape until image loads
+    }
+    
+    // Otherwise, show the shape for this message
+    return getRandomGradientShape(message.id);
   };
 
   // Get only user messages to determine the correct index for styling
@@ -224,7 +294,7 @@ export default function ResultPage({
                       <div className="flex items-start space-x-2">
                         <div className="flex items-center justify-center flex-shrink-0 mt-1" style={{ width: '44px', height: '44px' }}>
                           <img 
-                            src={getRandomGradientShape(message.id)}
+                            src={getGradientShapeForMessage(message)}
                             alt="Gradient shape"
                             className="object-contain"
                             style={{ width: '44px', height: '44px' }}
@@ -243,7 +313,7 @@ export default function ResultPage({
                   <div className="flex items-center justify-center flex-shrink-0 mt-1" style={{ width: '44px', height: '44px' }}>
                     <div className="relative">
                       <img 
-                        src={GRADIENT_SHAPES[0]}
+                        src={lastUsedGradientShape}
                         alt="Gradient shape"
                         className="object-contain opacity-30"
                         style={{ width: '44px', height: '44px' }}
@@ -337,9 +407,11 @@ export default function ResultPage({
                     src={displayImageUrl} 
                     alt="Generated nail design" 
                     className="w-full h-full object-cover transition-all duration-300"
+                    onLoad={() => handleImageLoad(displayImageUrl)}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = SAMPLE_NAIL_IMAGE;
+                      handleImageLoad(SAMPLE_NAIL_IMAGE);
                     }}
                   />
                   
@@ -364,9 +436,11 @@ export default function ResultPage({
                     src={displayImageUrl} 
                     alt="Generated nail design" 
                     className="w-full h-full object-cover transition-all duration-300"
+                    onLoad={() => handleImageLoad(displayImageUrl)}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = SAMPLE_NAIL_IMAGE;
+                      handleImageLoad(SAMPLE_NAIL_IMAGE);
                     }}
                   />
                   
@@ -516,7 +590,7 @@ export default function ResultPage({
                       <div className="flex items-start space-x-2">
                         <div className="flex items-center justify-center flex-shrink-0 mt-1" style={{ width: '44px', height: '44px' }}>
                           <img 
-                            src={getRandomGradientShape(message.id)}
+                            src={getGradientShapeForMessage(message)}
                             alt="Gradient shape"
                             className="object-contain"
                             style={{ width: '44px', height: '44px' }}
