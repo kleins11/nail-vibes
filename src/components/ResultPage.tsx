@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { X, Minus, ArrowUp, Maximize2, RotateCcw } from 'lucide-react';
 import { VibeMatchData } from '../services/vibeService';
+import MagicalLoadingOverlay from './MagicalLoadingOverlay';
 
 interface ChatMessage {
   id: string;
@@ -225,20 +226,29 @@ export default function ResultPage({
                 );
               })}
               
-              {/* Typing Indicator */}
+              {/* Enhanced Typing Indicator with magical loading */}
               {isRefining && (
                 <div className="flex items-start space-x-2">
                   <div className="flex items-center justify-center flex-shrink-0 mt-1" style={{ width: '44px', height: '44px' }}>
-                    <img 
-                      src={GRADIENT_SHAPES[0]}
-                      alt="Gradient shape"
-                      className="object-contain opacity-50"
-                      style={{ width: '44px', height: '44px' }}
-                    />
+                    <div className="relative">
+                      <img 
+                        src={GRADIENT_SHAPES[0]}
+                        alt="Gradient shape"
+                        className="object-contain opacity-30"
+                        style={{ width: '44px', height: '44px' }}
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex items-center space-x-2 flex-1">
-                    <div className="animate-spin w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full"></div>
-                    <span className="text-sm text-gray-500 italic">Refining your design...</span>
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                      <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                      <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    </div>
+                    <span className="text-sm text-gray-500 italic animate-pulse">Crafting your perfect design...</span>
                   </div>
                 </div>
               )}
@@ -253,7 +263,7 @@ export default function ResultPage({
                   onChange={(e) => setRefinePrompt(e.target.value)}
                   onKeyDown={(e) => handleKeyPress(e, false, true)}
                   placeholder="Keep vibing"
-                  className="w-full px-4 py-3 pr-12 bg-gray-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code"
+                  className="w-full px-4 py-3 pr-12 bg-gray-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code transition-all duration-200"
                   style={{
                     boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)'
                   }}
@@ -262,10 +272,10 @@ export default function ResultPage({
                 <button
                   onClick={onRefineSubmit}
                   disabled={!refinePrompt.trim() || isRefining}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105"
                 >
                   {isRefining ? (
-                    <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   ) : (
                     <ArrowUp className="w-4 h-4" />
                   )}
@@ -296,37 +306,33 @@ export default function ResultPage({
                   </div>
                 </div>
                 
-                {/* Image */}
-                <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
+                {/* Image with magical loading overlay */}
+                <div className="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
                   <img 
                     src={displayImageUrl} 
                     alt="Generated nail design" 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-all duration-300"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = SAMPLE_NAIL_IMAGE;
                     }}
                   />
                   
-                  {/* Refining indicator */}
-                  {isRefining && (
-                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <div className="animate-spin w-8 h-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-2"></div>
-                        <p className="text-sm">Refining design...</p>
-                      </div>
-                    </div>
-                  )}
+                  {/* Magical Loading Overlay */}
+                  <MagicalLoadingOverlay 
+                    isVisible={isRefining} 
+                    message="Refining your design"
+                  />
                 </div>
               </div>
             </div>
             
             {/* Action buttons at bottom right - subtle positioning */}
             <div className="absolute bottom-8 right-8 flex items-center space-x-2">
-              <button className="p-3 hover:bg-gray-100 rounded-full transition-colors bg-white shadow-sm">
+              <button className="p-3 hover:bg-gray-100 rounded-full transition-all duration-200 bg-white shadow-sm hover:shadow-md hover:scale-105">
                 <Maximize2 className="w-5 h-5 text-gray-500" />
               </button>
-              <button className="p-3 hover:bg-gray-100 rounded-full transition-colors bg-white shadow-sm">
+              <button className="p-3 hover:bg-gray-100 rounded-full transition-all duration-200 bg-white shadow-sm hover:shadow-md hover:scale-105">
                 <RotateCcw className="w-5 h-5 text-gray-500" />
               </button>
             </div>
@@ -338,26 +344,22 @@ export default function ResultPage({
           <div className="m3-grid-container">
             <div className="m3-grid">
               <div className="m3-content-area">
-                <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6 relative">
+                <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6">
                   <img 
                     src={displayImageUrl} 
                     alt="Generated nail design" 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-all duration-300"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = SAMPLE_NAIL_IMAGE;
                     }}
                   />
                   
-                  {/* Refining indicator */}
-                  {isRefining && (
-                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <div className="animate-spin w-8 h-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-2"></div>
-                        <p className="text-sm">Refining design...</p>
-                      </div>
-                    </div>
-                  )}
+                  {/* Magical Loading Overlay for mobile */}
+                  <MagicalLoadingOverlay 
+                    isVisible={isRefining} 
+                    message="Refining your design"
+                  />
                 </div>
                 
                 {/* Enhanced Vibe Info */}
@@ -422,9 +424,12 @@ export default function ResultPage({
                 <div className="text-center">
                   <button
                     onClick={onOpenChat}
-                    className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                    className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                    disabled={isRefining}
                   >
-                    <span className="text-sm font-medium">Keep vibing</span>
+                    <span className="text-sm font-medium">
+                      {isRefining ? 'Refining...' : 'Keep vibing'}
+                    </span>
                   </button>
                 </div>
               </div>
@@ -438,7 +443,7 @@ export default function ResultPage({
         <div className="fixed inset-0 z-50 lg:hidden">
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black bg-opacity-50"
+            className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"
             onClick={onCloseChat}
           />
           
@@ -448,13 +453,13 @@ export default function ResultPage({
             <div className="flex items-center justify-between p-4 border-b">
               <button
                 onClick={onCloseChat}
-                className="w-8 h-8 flex items-center justify-center"
+                className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors"
               >
                 <Minus className="w-6 h-6 text-gray-400" />
               </button>
               <button
                 onClick={onCloseChat}
-                className="w-8 h-8 flex items-center justify-center"
+                className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors"
               >
                 <X className="w-5 h-5 text-gray-400" />
               </button>
@@ -520,7 +525,7 @@ export default function ResultPage({
                   onFocus={onChatInputFocus}
                   onBlur={onChatInputBlur}
                   placeholder="make it chrome, add glitter, more pink..."
-                  className="w-full px-4 py-3 pr-12 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code"
+                  className="w-full px-4 py-3 pr-12 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code transition-all duration-200"
                   style={{
                     boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)'
                   }}
@@ -529,10 +534,10 @@ export default function ResultPage({
                 <button
                   onClick={onRefineSubmit}
                   disabled={!refinePrompt.trim() || isRefining}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105"
                 >
                   {isRefining ? (
-                    <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   ) : (
                     <ArrowUp className="w-4 h-4" />
                   )}
@@ -543,7 +548,7 @@ export default function ResultPage({
             {/* Typing Indicator */}
             {isTyping && !isRefining && (
               <div className="p-4 pt-0">
-                <div className="text-xs text-gray-500 italic">
+                <div className="text-xs text-gray-500 italic animate-pulse">
                   Typing...
                 </div>
               </div>
