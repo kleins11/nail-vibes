@@ -364,15 +364,6 @@
     perspective: 1000px;
   }
   
-  .input-button:hover:not(:disabled) {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px 0 rgba(59, 130, 246, 0.3);
-  }
-  
-  .input-button:active:not(:disabled) {
-    transform: scale(0.95);
-  }
-  
   .input-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
