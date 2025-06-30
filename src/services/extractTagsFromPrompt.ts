@@ -39,6 +39,7 @@ const customMap: Record<string, string[]> = {
   "complement red lipstick": ["bold", "classic", "elegant", "striking"],
   "pair with white linen": ["minimal", "neutral", "clean", "fresh"],
   "accent my tan skin": ["bronze", "warm", "shimmer", "golden"],
+  "plain": ['minimal', 'easy', 'gloss', 'skin'],
 
   // 🎀 Mood-Based Prompts
   "feeling flirty": ["pink", "playful", "glossy", "cute"],
@@ -46,6 +47,8 @@ const customMap: Record<string, string[]> = {
   "need something low effort": ["neutral", "minimal", "clean", "simple"],
   "trying something edgy": ["black", "matte", "punk", "dramatic"],
   "feeling soft": ["sheer", "pastel", "delicate", "gentle"],
+  'test': ['art deco', 'stained glass', 'complex', 'punk'],
+  "fuck": ['fire', 'goth', 'anger', 'metal'],
 
   // 🎭 Additional Pop Culture References
   "disney princess": ["pastel", "glittery", "whimsical", "dreamy"],

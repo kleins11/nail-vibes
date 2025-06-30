@@ -70,15 +70,12 @@ const GRADIENT_SHAPES = [
 
 export default function ResultPage({
   currentVibe,
-  matchInfo,
   refinedImageUrl,
   isRefining,
   refinePrompt,
   setRefinePrompt,
   chatMessages,
   isChatOpen,
-  isTyping,
-  prompt,
   onLogoClick,
   onRefineSubmit,
   onOpenChat,
@@ -440,7 +437,11 @@ export default function ResultPage({
             onClick={onLogoClick}
             className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors focus-ring"
           >
-            nv
+           <img 
+                    src="/nail-vibes-short-logo.png" 
+                    alt="NailVibes" 
+                    className="h-8 w-auto object-contain"
+                  />
           </button>
           
           {/* Mobile/Tablet New Vibe Button */}
