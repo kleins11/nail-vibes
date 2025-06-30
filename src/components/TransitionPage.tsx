@@ -82,46 +82,102 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
         </div>
       )}
 
-      {/* Phase 3: Gentle landing on homepage */}
+      {/* Phase 3: Gentle landing on homepage - SMOOTH AND GRACEFUL */}
       {phase === 'gentleLanding' && (
         <div className="absolute inset-0 flex flex-col justify-center landing-page">
-          <div className="m3-grid-container">
-            <div className="m3-grid">
-              <div className="m3-content-area text-center">
-                {/* Logo gently appearing */}
-                <div className="mb-8 animate-gentle-appear" style={{ animationDelay: '0ms' }}>
-                  <div className="text-2xl font-pilar font-bold text-blue-600">
-                    nailvibes
+          {/* Header that gracefully appears */}
+          <div className="w-full px-4 md:px-8 lg:px-12 animate-gentle-appear" style={{ animationDelay: '0ms' }}>
+            <div className="flex justify-center md:justify-start pt-8 pb-4">
+              <div className="text-2xl font-pilar font-bold text-blue-600">
+                nailvibes
+              </div>
+            </div>
+          </div>
+          
+          {/* Main content that flows in beautifully */}
+          <div className="flex-1 flex flex-col justify-center pb-20">
+            <div className="m3-grid-container">
+              <div className="m3-grid">
+                <div className="m3-content-area">
+                  {/* Title floating in with elegant timing */}
+                  <div className="animate-gentle-appear" style={{ animationDelay: '150ms' }}>
+                    <h1 className="text-display font-stratos-extrabold text-blue-600 mb-8 leading-tight text-center">
+                      What's your nail vibe?
+                    </h1>
                   </div>
-                </div>
 
-                {/* Title floating in */}
-                <div className="animate-gentle-appear" style={{ animationDelay: '150ms' }}>
-                  <h1 className="text-display font-stratos-extrabold text-blue-600 leading-tight">
-                    What's your nail vibe?
-                  </h1>
-                </div>
-
-                {/* Textarea materializing */}
-                <div className="mt-10 animate-gentle-appear" style={{ animationDelay: '300ms' }}>
-                  <div className="textarea-long-container">
-                    <textarea
-                      placeholder="Harry Potter cutesy, Barbie glam metallic, dark academia matte"
-                      className="textarea-long placeholder-calling-code"
-                      style={{
-                        background: 'rgba(252, 252, 252, 0.95)',
-                        backdropFilter: 'blur(8px)',
-                        border: '1px solid rgba(230, 230, 230, 0.8)'
-                      }}
-                      readOnly
-                    />
-                    <div className="textarea-long-button bg-blue-600 text-white">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                      </svg>
+                  {/* Textarea materializing with glassmorphism effect */}
+                  <div className="animate-gentle-appear" style={{ animationDelay: '300ms' }}>
+                    <div className="textarea-long-container">
+                      <textarea
+                        placeholder="Harry Potter cutesy, Barbie glam metallic, dark academia matte"
+                        className="textarea-long placeholder-calling-code"
+                        style={{
+                          background: 'rgba(252, 252, 252, 0.95)',
+                          backdropFilter: 'blur(8px)',
+                          border: '1px solid rgba(230, 230, 230, 0.8)',
+                          boxShadow: '0 20px 20px 0 rgba(155, 155, 169, 0.25)'
+                        }}
+                        readOnly
+                      />
+                      <div className="textarea-long-button bg-blue-600 text-white">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Gradient shapes that gracefully appear at the bottom */}
+          <div className="animate-gentle-appear" style={{ animationDelay: '450ms' }}>
+            <div className="gradient-shapes-container">
+              <div className="gradient-shapes-scroll">
+                {/* First set of shapes */}
+                {[
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-11-Col2%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-12-Col4%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-1-Col3%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-2-Col5%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-4-Col8%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-5-Col10%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-5-Col1%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-6-Col4%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-7-Col9%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-8-Col2%201.png"
+                ].map((shape, index) => (
+                  <div key={`first-${index}`} className="gradient-shape">
+                    <img 
+                      src={shape} 
+                      alt={`Gradient shape ${index + 1}`}
+                      className="gradient-shape-image"
+                    />
+                  </div>
+                ))}
+                {/* Duplicate set for seamless loop */}
+                {[
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-11-Col2%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-12-Col4%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-1-Col3%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-2-Col5%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-4-Col8%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-5-Col10%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-5-Col1%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-6-Col4%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-7-Col9%201.png",
+                  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-8-Col2%201.png"
+                ].map((shape, index) => (
+                  <div key={`second-${index}`} className="gradient-shape">
+                    <img 
+                      src={shape} 
+                      alt={`Gradient shape ${index + 1}`}
+                      className="gradient-shape-image"
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -147,7 +203,7 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
         </div>
       )}
 
-      {/* Custom animations for the elegant transition */}
+      {/* Enhanced custom animations for the elegant transition */}
       <style jsx>{`
         @keyframes sparkle-float {
           0% {
@@ -178,11 +234,18 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
         @keyframes gentle-appear {
           0% {
             opacity: 0;
-            transform: translateY(15px) scale(0.98);
+            transform: translateY(20px) scale(0.96);
+            filter: blur(4px);
+          }
+          60% {
+            opacity: 0.8;
+            transform: translateY(5px) scale(0.99);
+            filter: blur(1px);
           }
           100% {
             opacity: 1;
             transform: translateY(0) scale(1);
+            filter: blur(0px);
           }
         }
 
@@ -202,11 +265,11 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
         }
 
         .animate-fade-out {
-          animation: fadeOutGently 0.4s ease-out forwards;
+          animation: fadeOutGently 0.4s cubic-bezier(0.4, 0, 0.6, 1) forwards;
         }
 
         .animate-sparkle-float {
-          animation: sparkle-float 1.5s ease-out forwards;
+          animation: sparkle-float 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         .animate-gentle-pulse {
@@ -214,7 +277,7 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
         }
 
         .animate-gentle-appear {
-          animation: gentle-appear 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          animation: gentle-appear 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
           opacity: 0;
         }
 
