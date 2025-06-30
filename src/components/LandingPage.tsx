@@ -80,66 +80,7 @@ export default function LandingPage({
                   <ArrowUp className="w-4 h-4" />
                 </button>
               </div>
-
-              {/* Divider */}
-              <div className="my-8 border-t border-gray-200"></div>
-
-              {/* Generate Image Section */}
-              <div className="space-y-4">
-                <h2 className="text-xl font-semibold text-gray-800">
-                  Generate Custom Design
-                </h2>
-                
-                {/* Generate Error Message */}
-                {generateError && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-sm text-red-600">{generateError}</p>
-                  </div>
-                )}
-                
-                <div className="relative">
-                  <textarea
-                    value={generatePrompt}
-                    onChange={(e) => setGeneratePrompt(e.target.value)}
-                    onKeyDown={(e) => handleKeyPress(e, false, false, true)}
-                    placeholder="Describe the nail design you want to generate..."
-                    className="w-full h-20 p-4 text-sm textarea-calling-code placeholder-calling-code border border-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
-                    disabled={isGenerating}
-                  />
-                </div>
-                
-                <button
-                  onClick={onGenerateImage}
-                  disabled={!generatePrompt.trim() || isGenerating}
-                  className="w-full py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white rounded-lg transition-colors font-medium flex items-center justify-center"
-                >
-                  {isGenerating ? (
-                    <>
-                      <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></div>
-                      Generating...
-                    </>
-                  ) : (
-                    'Generate Image'
-                  )}
-                </button>
-                
-                {/* Generated Image Display */}
-                {generatedImageUrl && (
-                  <div className="mt-4">
-                    <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                      <img 
-                        src={generatedImageUrl} 
-                        alt="Generated nail design" 
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = SAMPLE_NAIL_IMAGE;
-                        }}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
+              
             </div>
           </div>
         </div>
