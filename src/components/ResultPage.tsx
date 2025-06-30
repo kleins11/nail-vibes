@@ -214,9 +214,9 @@ export default function ResultPage({
 
   return (
     <div className="h-screen flex flex-col overflow-hidden" style={{ backgroundColor: '#FFFAF4' }}>
-      {/* Header - Only for mobile/tablet */}
-      <div className="w-full px-4 md:px-8 lg:hidden flex-shrink-0">
-        <div className="flex justify-between items-center pt-8 pb-4">
+      {/* Mobile/Tablet Header - Aligned like a proper header */}
+      <div className="w-full px-6 lg:hidden flex-shrink-0">
+        <div className="flex justify-between items-center pt-6 pb-4">
           <button 
             onClick={onLogoClick}
             className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors focus-ring"
@@ -224,7 +224,7 @@ export default function ResultPage({
             nv
           </button>
           
-          {/* Mobile/Tablet New Vibe Button - Styled like attachment with Calling Code font */}
+          {/* Mobile/Tablet New Vibe Button */}
           <button
             onClick={onLogoClick}
             className="flex items-center space-x-3 px-4 py-2 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all duration-200 hover:scale-105 group focus-ring"
@@ -241,7 +241,7 @@ export default function ResultPage({
       <div className="flex-1 flex overflow-hidden">
         {/* Desktop Layout: Two Columns */}
         <div className="hidden lg:flex w-full h-full">
-          {/* Left Column: Chat - Narrower width to match Figma */}
+          {/* Left Column: Chat - Narrower width */}
           <div className="w-1/4 flex flex-col border-r border-gray-200 h-full" style={{ backgroundColor: '#F5F1EC' }}>
             {/* Logo in Chat Section - Desktop Only with bottom border */}
             <div className="p-6 flex-shrink-0" style={{ borderBottom: '1px solid #D9CFC3' }}>
@@ -253,11 +253,10 @@ export default function ResultPage({
               </button>
             </div>
             
-            {/* Chat Messages - Scrollable with 30px bottom margin */}
+            {/* Chat Messages - Scrollable */}
             <div 
               ref={desktopChatMessagesRef}
               className="flex-1 overflow-y-auto p-6 space-y-4"
-              style={{ marginBottom: '30px' }}
             >
               {chatMessages.map((message, index) => {
                 // Find the index of this user message among all user messages
@@ -315,7 +314,7 @@ export default function ResultPage({
               )}
             </div>
             
-            {/* Chat Input - Fixed at bottom with enhanced styling and CORRECTED button positioning */}
+            {/* Chat Input - Fixed at bottom */}
             <div className="p-6 border-t border-gray-200 flex-shrink-0">
               <div className="relative flex items-center">
                 <input
@@ -346,10 +345,16 @@ export default function ResultPage({
             </div>
           </div>
           
-          {/* Right Column: Image - 3/4 width to match the narrower chat */}
+          {/* Right Column: Image - 3/4 width */}
           <div className="w-3/4 flex flex-col h-full relative">
-            {/* Desktop New Vibe Button - Styled exactly like attachment with Calling Code font */}
-            <div className="absolute top-8 right-8 z-10">
+            {/* Desktop Header - Aligned like mobile header */}
+            <div className="absolute top-6 left-6 right-6 z-10 flex justify-between items-center">
+              <div className="opacity-0 pointer-events-none">
+                {/* Invisible spacer to center the button */}
+                <span className="text-2xl font-pilar font-bold">nv</span>
+              </div>
+              
+              {/* Desktop New Vibe Button - Aligned to match mobile */}
               <button
                 onClick={onLogoClick}
                 className="flex items-center space-x-3 px-5 py-3 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all duration-200 hover:scale-105 group shadow-sm focus-ring"
@@ -361,28 +366,28 @@ export default function ResultPage({
               </button>
             </div>
 
-            {/* Image Display - Takes up most of the space with title positioned around the image */}
-            <div className="flex-1 p-8 flex flex-col justify-center overflow-hidden">
-              <div className="relative w-full max-w-2xl mx-auto">
-                {/* Title positioned to align with left edge of image - REDUCED SPACING TO 1rem */}
-                <div className="mb-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex items-center justify-center" style={{ width: '64px', height: '64px' }}>
+            {/* Image Display - Centered vertically with title */}
+            <div className="flex-1 flex flex-col justify-center items-center px-8 py-16">
+              <div className="w-full max-w-lg">
+                {/* Title positioned above image with proper spacing */}
+                <div className="mb-6 text-center">
+                  <div className="flex items-center justify-center space-x-4 mb-2">
+                    <div className="flex items-center justify-center" style={{ width: '48px', height: '48px' }}>
                       <img 
                         src={lastUsedGradientShape}
                         alt="Gradient shape"
                         className="object-contain"
-                        style={{ width: '64px', height: '64px' }}
+                        style={{ width: '48px', height: '48px' }}
                       />
                     </div>
-                    <h1 className="font-calling-code font-bold text-[#3F3F3F] text-2xl leading-tight">
+                    <h1 className="font-calling-code font-bold text-[#3F3F3F] text-xl leading-tight">
                       {currentVibe?.title || "Black French tips on short natural nails"}
                     </h1>
                   </div>
                 </div>
                 
-                {/* Image with magical loading overlay */}
-                <div className="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
+                {/* Image - Smaller to prevent scrolling */}
+                <div className="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg max-h-[60vh]">
                   <img 
                     src={displayImageUrl} 
                     alt="Generated nail design" 
@@ -407,101 +412,96 @@ export default function ResultPage({
         </div>
         
         {/* Mobile/Tablet Layout: Single Column with Modal Chat */}
-        <div className="lg:hidden w-full flex flex-col justify-center">
-          <div className="m3-grid-container">
-            <div className="m3-grid">
-              <div className="m3-content-area">
-                <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6">
-                  <img 
-                    src={displayImageUrl} 
-                    alt="Generated nail design" 
-                    className="w-full h-full object-cover transition-all duration-300"
-                    onLoad={() => handleImageLoad(displayImageUrl)}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = SAMPLE_NAIL_IMAGE;
-                      handleImageLoad(SAMPLE_NAIL_IMAGE);
-                    }}
-                  />
-                  
-                  {/* Magical Loading Overlay for mobile */}
-                  <MagicalLoadingOverlay 
-                    isVisible={isRefining} 
-                    message="Refining your design"
-                  />
-                </div>
-                
-                {/* Enhanced Vibe Info */}
-                {currentVibe && (
-                  <div className="mb-4 text-center">
-                    {currentVibe.title && (
-                      <h1 className="font-calling-code font-bold text-[#3F3F3F] mb-2 text-lg">
-                        {currentVibe.title}
-                      </h1>
-                    )}
-                    
-                    {/* Match Type and Score Display */}
-                    <div className="mb-3 space-y-2">
-                      {matchInfo?.matchedConcept && (
-                        <div className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
-                          ✨ {matchInfo.matchedConcept} inspired
-                        </div>
-                      )}
-                      
-                      {currentVibe.match_type === 'all_primary' && (
-                        <div className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full ml-2">
-                          🎯 Perfect match
-                        </div>
-                      )}
-                      
-                      {currentVibe.match_type === 'some_primary' && (
-                        <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full ml-2">
-                          ✅ Great match
-                        </div>
-                      )}
-                      
-                      {currentVibe.primary_matches > 0 && (
-                        <div className="text-xs text-gray-600 mt-1">
-                          {currentVibe.primary_matches} core match{currentVibe.primary_matches > 1 ? 'es' : ''}
-                          {currentVibe.modifier_matches > 0 && ` + ${currentVibe.modifier_matches} style match${currentVibe.modifier_matches > 1 ? 'es' : ''}`}
-                        </div>
-                      )}
-                    </div>
-                    
-                    {/* Tags Display */}
-                    {currentVibe.tags && currentVibe.tags.length > 0 && (
-                      <div className="flex flex-wrap justify-center gap-2 mb-2">
-                        {currentVibe.tags.slice(0, 6).map((tag, index) => (
-                          <span 
-                            key={index}
-                            className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                        {currentVibe.tags.length > 6 && (
-                          <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                            +{currentVibe.tags.length - 6} more
-                          </span>
-                        )}
-                      </div>
-                    )}
+        <div className="lg:hidden w-full flex flex-col justify-center px-6">
+          <div className="max-w-md mx-auto w-full">
+            {/* Image - Smaller to prevent scrolling */}
+            <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6 max-h-[50vh]">
+              <img 
+                src={displayImageUrl} 
+                alt="Generated nail design" 
+                className="w-full h-full object-cover transition-all duration-300"
+                onLoad={() => handleImageLoad(displayImageUrl)}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = SAMPLE_NAIL_IMAGE;
+                  handleImageLoad(SAMPLE_NAIL_IMAGE);
+                }}
+              />
+              
+              {/* Magical Loading Overlay for mobile */}
+              <MagicalLoadingOverlay 
+                isVisible={isRefining} 
+                message="Refining your design"
+              />
+            </div>
+            
+            {/* Title positioned below image */}
+            <div className="mb-6 text-center">
+              {currentVibe?.title && (
+                <h1 className="font-calling-code font-bold text-[#3F3F3F] mb-4 text-lg">
+                  {currentVibe.title}
+                </h1>
+              )}
+              
+              {/* Match Type and Score Display */}
+              <div className="mb-3 space-y-2">
+                {matchInfo?.matchedConcept && (
+                  <div className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
+                    ✨ {matchInfo.matchedConcept} inspired
                   </div>
                 )}
                 
-                {/* Chat Trigger */}
-                <div className="text-center">
-                  <button
-                    onClick={onOpenChat}
-                    className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg focus-ring"
-                    disabled={isRefining}
-                  >
-                    <span className="text-sm font-medium">
-                      {isRefining ? 'Refining...' : 'Keep vibing'}
-                    </span>
-                  </button>
-                </div>
+                {currentVibe?.match_type === 'all_primary' && (
+                  <div className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full ml-2">
+                    🎯 Perfect match
+                  </div>
+                )}
+                
+                {currentVibe?.match_type === 'some_primary' && (
+                  <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full ml-2">
+                    ✅ Great match
+                  </div>
+                )}
+                
+                {currentVibe && currentVibe.primary_matches > 0 && (
+                  <div className="text-xs text-gray-600 mt-1">
+                    {currentVibe.primary_matches} core match{currentVibe.primary_matches > 1 ? 'es' : ''}
+                    {currentVibe.modifier_matches > 0 && ` + ${currentVibe.modifier_matches} style match${currentVibe.modifier_matches > 1 ? 'es' : ''}`}
+                  </div>
+                )}
               </div>
+              
+              {/* Tags Display */}
+              {currentVibe?.tags && currentVibe.tags.length > 0 && (
+                <div className="flex flex-wrap justify-center gap-2 mb-4">
+                  {currentVibe.tags.slice(0, 6).map((tag, index) => (
+                    <span 
+                      key={index}
+                      className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                  {currentVibe.tags.length > 6 && (
+                    <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                      +{currentVibe.tags.length - 6} more
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            {/* Chat Trigger */}
+            <div className="text-center">
+              <button
+                onClick={onOpenChat}
+                className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg focus-ring"
+                disabled={isRefining}
+              >
+                <span className="text-sm font-medium">
+                  {isRefining ? 'Refining...' : 'Keep vibing'}
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -596,8 +596,8 @@ export default function ResultPage({
               )}
             </div>
             
-            {/* Input Area with enhanced styling and CORRECTED button positioning */}
-            <div className="p-4 border-t" style={{ marginTop: '30px' }}>
+            {/* Input Area */}
+            <div className="p-4 border-t">
               <div className="relative flex items-center">
                 <input
                   type="text"
