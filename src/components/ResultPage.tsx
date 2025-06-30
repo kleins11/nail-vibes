@@ -459,63 +459,78 @@ export default function ResultPage({
             <div className="fixed bottom-0 left-0 right-0 z-40">
               {/* Chat Drawer Container with rounded top corners and 230px height */}
               <div 
-                className="bg-white border-t border-gray-200 px-4 py-6 cursor-pointer"
+                className="cursor-pointer relative"
                 onClick={onOpenChat}
                 style={{ 
                   backgroundColor: '#F5F1EC', 
-                  borderTop: '1px solid #D9CFC3',
                   borderRadius: '32px 32px 0px 0px',
-                  height: '230px'
+                  height: '230px',
+                  border: '1px solid #D9CFC3',
+                  borderBottom: 'none'
                 }}
               >
-                {/* Last System Message Preview */}
-                {lastSystemMessage && (
-                  <div className="flex space-x-2 mb-6">
-                    <div className="flex-shrink-0 flex items-start" style={{ width: '32px', paddingTop: '1px' }}>
-                      <img 
-                        src={getGradientShapeForMessage(lastSystemMessage)}
-                        alt="Gradient shape"
-                        className="object-contain"
-                        style={{ width: '32px', height: '32px' }}
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words line-clamp-3">
-                        {lastSystemMessage.content}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Input Field Preview */}
-                <div className="relative flex items-center">
-                  <input
-                    type="text"
-                    value={refinePrompt}
-                    onChange={(e) => setRefinePrompt(e.target.value)}
-                    onFocus={onOpenChat}
-                    placeholder="Keep vibing"
-                    className="input-short flex-1 px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
-                    style={{
-                      boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
-                      color: '#3F3F3F'
+                {/* Drawer Pull Handle - Positioned at the top center */}
+                <div className="absolute top-3 left-1/2 transform -translate-x-1/2">
+                  <div 
+                    className="bg-gray-400 rounded-full"
+                    style={{ 
+                      width: '36px', 
+                      height: '4px' 
                     }}
-                    disabled={isRefining}
                   />
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onRefineSubmit();
-                    }}
-                    disabled={!refinePrompt.trim() || isRefining}
-                    className="input-button absolute right-1 mr-1 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10"
-                  >
-                    {isRefining ? (
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    ) : (
-                      <ArrowUp className="w-4 h-4" />
-                    )}
-                  </button>
+                </div>
+
+                {/* Chat Content - Moved down to accommodate drawer pull */}
+                <div className="px-4 pt-8 pb-6">
+                  {/* Last System Message Preview */}
+                  {lastSystemMessage && (
+                    <div className="flex space-x-2 mb-6">
+                      <div className="flex-shrink-0 flex items-start" style={{ width: '32px', paddingTop: '1px' }}>
+                        <img 
+                          src={getGradientShapeForMessage(lastSystemMessage)}
+                          alt="Gradient shape"
+                          className="object-contain"
+                          style={{ width: '32px', height: '32px' }}
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words line-clamp-3">
+                          {lastSystemMessage.content}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Input Field Preview */}
+                  <div className="relative flex items-center">
+                    <input
+                      type="text"
+                      value={refinePrompt}
+                      onChange={(e) => setRefinePrompt(e.target.value)}
+                      onFocus={onOpenChat}
+                      placeholder="Keep vibing"
+                      className="input-short flex-1 px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
+                      style={{
+                        boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
+                        color: '#3F3F3F'
+                      }}
+                      disabled={isRefining}
+                    />
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onRefineSubmit();
+                      }}
+                      disabled={!refinePrompt.trim() || isRefining}
+                      className="input-button absolute right-1 mr-1 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10"
+                    >
+                      {isRefining ? (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      ) : (
+                        <ArrowUp className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
 
