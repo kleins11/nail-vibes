@@ -97,9 +97,50 @@ export default function ResultPage({
   const [imageLoadStates, setImageLoadStates] = useState<Record<string, boolean>>({});
   const [pendingGradientUpdates, setPendingGradientUpdates] = useState<Record<string, string>>({});
 
+  // NEW: State to track if mobile keyboard is active
+  const [isKeyboardActive, setIsKeyboardActive] = useState(false);
+
   // Refs for auto-scrolling
   const desktopChatMessagesRef = useRef<HTMLDivElement>(null);
   const mobileChatMessagesRef = useRef<HTMLDivElement>(null);
+
+  // NEW: Detect mobile keyboard activation
+  useEffect(() => {
+    const handleResize = () => {
+      // Only apply keyboard detection on mobile devices
+      if (window.innerWidth < 1024) { // lg breakpoint
+        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+        const windowHeight = window.innerHeight;
+        
+        // If viewport height is significantly smaller than window height, keyboard is likely active
+        const keyboardThreshold = 150; // pixels
+        const isKeyboardOpen = (windowHeight - viewportHeight) > keyboardThreshold;
+        
+        setIsKeyboardActive(isKeyboardOpen);
+      } else {
+        setIsKeyboardActive(false);
+      }
+    };
+
+    // Listen for viewport changes (keyboard show/hide)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleResize);
+    } else {
+      // Fallback for browsers without visualViewport support
+      window.addEventListener('resize', handleResize);
+    }
+
+    // Initial check
+    handleResize();
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleResize);
+      } else {
+        window.removeEventListener('resize', handleResize);
+      }
+    };
+  }, []);
 
   // Auto-scroll to bottom when new messages are added
   useEffect(() => {
@@ -562,8 +603,16 @@ export default function ResultPage({
             onClick={onCloseChat}
           />
           
-          {/* Chat Panel */}
-          <div className="absolute bottom-0 left-0 right-0 rounded-t-2xl max-h-[80vh] flex flex-col animate-slide-up" style={{ backgroundColor: '#F5F1EC' }}>
+          {/* Chat Panel - DYNAMIC HEIGHT: 80vh when keyboard is active, 80vh default */}
+          <div 
+            className="absolute bottom-0 left-0 right-0 rounded-t-2xl flex flex-col animate-slide-up" 
+            style={{ 
+              backgroundColor: '#F5F1EC',
+              // CRITICAL: Use 80vh when keyboard is active for optimal mobile experience
+              maxHeight: isKeyboardActive ? '80vh' : '80vh',
+              height: isKeyboardActive ? '80vh' : '80vh'
+            }}
+          >
             {/* Header */}
             <div className="flex items-center justify-between p-4" style={{ borderBottom: '1px solid #D9CFC3' }}>
               <button
@@ -580,10 +629,14 @@ export default function ResultPage({
               </button>
             </div>
             
-            {/* Messages */}
+            {/* Messages - FLEXIBLE HEIGHT: Adjusts based on keyboard state */}
             <div 
               ref={mobileChatMessagesRef}
               className="flex-1 overflow-y-auto p-4 space-y-4"
+              style={{
+                // CRITICAL: Ensure messages area takes remaining space after header and input
+                minHeight: 0 // Allow flex-shrink
+              }}
             >
               {chatMessages.map((message, index) => {
                 // Find the index of this user message among all user messages
@@ -649,8 +702,8 @@ export default function ResultPage({
               )}
             </div>
             
-            {/* Input Area */}
-            <div className="p-4" style={{ borderTop: '1px solid #D9CFC3' }}>
+            {/* Input Area - FIXED HEIGHT: Stays consistent regardless of keyboard */}
+            <div className="p-4 flex-shrink-0" style={{ borderTop: '1px solid #D9CFC3' }}>
               <div className="relative flex items-center">
                 <input
                   type="text"
@@ -681,8 +734,8 @@ export default function ResultPage({
               </div>
             </div>
             
-            {/* Typing Indicator */}
-            {isTyping && !isRefining && (
+            {/* Typing Indicator - CONDITIONAL: Only show when not keyboard active to save space */}
+            {isTyping && !isRefining && !isKeyboardActive && (
               <div className="p-4 pt-0">
                 <div className="text-xs text-gray-500 italic animate-pulse">
                   Typing...
