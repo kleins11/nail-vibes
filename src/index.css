@@ -380,10 +380,10 @@
     box-shadow: none;
   }
   
-  /* Gradient Shapes Auto-Scroll Component - Seamless infinite scroll */
+  /* 🎨 GRADIENT SHAPES AUTO-SCROLL - Positioned above footer with visual balance */
   .gradient-shapes-container {
     position: fixed;
-    bottom: 0;
+    bottom: 80px; /* Moved up from 0 to 80px to clear footer space */
     left: 0;
     right: 0;
     height: 88px;
@@ -431,10 +431,11 @@
     }
   }
   
-  /* Responsive adjustments for gradient shapes */
+  /* 📱 RESPONSIVE ADJUSTMENTS for gradient shapes positioning */
   @media (max-width: 640px) {
     .gradient-shapes-container {
       height: 66px;
+      bottom: 70px; /* Adjusted for mobile footer height */
     }
     
     .gradient-shape {
@@ -444,6 +445,18 @@
     
     .gradient-shapes-scroll {
       animation-duration: 40.5s;
+    }
+  }
+  
+  @media (min-width: 641px) and (max-width: 1023px) {
+    .gradient-shapes-container {
+      bottom: 75px; /* Adjusted for tablet footer height */
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .gradient-shapes-container {
+      bottom: 85px; /* Adjusted for desktop footer height */
     }
   }
   
