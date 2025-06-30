@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { findBestVibeMatch, VibeMatchResult, VibeMatchData, fetchBestMatchingDesign } from './services/vibeService';
 import { extractTagsFromPrompt } from './services/extractTagsFromPrompt';
+import { generateTitle } from './services/titleGenerator';
 import LandingPage from './components/LandingPage';
 import ResultPage from './components/ResultPage';
 import LoadingPage from './components/LoadingPage';
@@ -151,11 +152,15 @@ function App() {
       if (result.data) {
         console.log('✅ Found design via RPC:', result.data);
         
+        // Generate dynamic title based on user prompt
+        const dynamicTitle = generateTitle(prompt, tagExtraction.matchedConcept);
+        console.log('🏷️ Generated title:', dynamicTitle);
+        
         // Create a mock vibe object that matches our interface
         const mockVibe: VibeMatchData = {
           id: result.data.id,
           image_url: result.data.image_url,
-          title: result.data.title,
+          title: dynamicTitle, // Use the generated title instead of database title
           tags: result.data.tags || [],
           description: result.data.description,
           source_url: result.data.source_url,
@@ -290,8 +295,18 @@ function App() {
           score: vibe.match_score
         });
         
+        // Generate dynamic title based on user prompt
+        const dynamicTitle = generateTitle(prompt, matchedConcept);
+        console.log('🏷️ Generated title:', dynamicTitle);
+        
+        // Update the vibe with the dynamic title
+        const updatedVibe = {
+          ...vibe,
+          title: dynamicTitle
+        };
+        
         // Set the current vibe and match info for display
-        setCurrentVibe(vibe);
+        setCurrentVibe(updatedVibe);
         setMatchInfo({
           primaryTags,
           modifierTags,
@@ -389,6 +404,20 @@ function App() {
         
         // Set the refined image URL
         setRefinedImageUrl(result.image);
+        
+        // Generate updated title that incorporates the refinement
+        const originalPrompt = prompt;
+        const refinementPrompt = refinePrompt;
+        const combinedPrompt = `${originalPrompt} ${refinementPrompt}`;
+        const updatedTitle = generateTitle(combinedPrompt, matchInfo?.matchedConcept);
+        
+        // Update the current vibe with the new title
+        if (currentVibe) {
+          setCurrentVibe({
+            ...currentVibe,
+            title: updatedTitle
+          });
+        }
         
         // Add success message to chat
         const userMessage: ChatMessage = {
