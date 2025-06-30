@@ -143,23 +143,22 @@
     .m3-col-desktop-12 { grid-column: span 12; }
   }
   
-  /* Content area with M3 grid constraints - UPDATED with gradient background positioned lower */
+  /* Content area with M3 grid constraints - UPDATED with gradient background positioned to match Figma */
   .m3-content-area {
     width: 100%;
     position: relative;
   }
   
-  /* Gradient background positioned to align with text input area only - no title overlap */
+  /* Gradient background positioned exactly like Figma - centered around text input */
   .m3-content-area::before {
     content: '';
     position: absolute;
-    /* Position gradient much lower to completely avoid title overlap */
-    /* Title height (~56px) + 40px margin + input top position = ~250px from top */
-    top: 250px;
+    /* Position gradient to center around the text input area, matching Figma */
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 900px;
-    height: 700px;
+    height: 500px; /* Reduced height to better match Figma proportions */
     background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
     background-size: contain;
     background-repeat: no-repeat;
@@ -176,12 +175,10 @@
       grid-column: span 4;
     }
     
-    /* Adjust gradient positioning for mobile to avoid title overlap */
+    /* Adjust gradient for mobile to match Figma proportions */
     .m3-content-area::before {
-      /* Mobile title height (~40px) + 40px margin + input position = ~220px from top */
-      top: 220px;
-      width: 800px;
-      height: 600px;
+      width: 700px;
+      height: 400px;
     }
   }
   
@@ -191,12 +188,10 @@
       grid-column: 2 / span 6;
     }
     
-    /* Adjust gradient positioning for tablet to avoid title overlap */
+    /* Adjust gradient for tablet to match Figma proportions */
     .m3-content-area::before {
-      /* Tablet title height (~48px) + 40px margin + input position = ~235px from top */
-      top: 235px;
-      width: 750px;
-      height: 550px;
+      width: 800px;
+      height: 450px;
     }
   }
   
@@ -213,11 +208,11 @@
     z-index: 3; /* Above gradient background */
   }
   
-  /* Textarea Long Component - Updated to work with M3 grid */
+  /* Textarea Long Component - Updated to work with M3 grid and match Figma spacing */
   .textarea-long-container {
     position: relative;
     width: 100%;
-    /* Set exact 40px spacing as requested */
+    /* Set exact 40px spacing as requested to match Figma */
     margin-top: 40px;
     /* Ensure this container can hold positioned elements */
     z-index: 3; /* Above the gradient background */
@@ -338,7 +333,7 @@
       font-size: 2.5rem;
     }
     
-    /* Keep 40px spacing on mobile as well for consistency */
+    /* Keep 40px spacing on mobile as well for consistency with Figma */
     .textarea-long-container {
       margin-top: 40px;
     }
@@ -347,15 +342,15 @@
   /* Very small screens - ensure gradient still covers everything */
   @media (max-width: 400px) {
     .m3-content-area::before {
-      width: 700px; /* Still large enough */
-      height: 500px;
+      width: 600px; /* Smaller for very small screens */
+      height: 350px;
     }
   }
   
   /* Extra small height screens - adjust gradient positioning */
   @media (max-height: 600px) {
     .m3-content-area::before {
-      height: 450px; /* Slightly smaller height for very short screens */
+      height: 350px; /* Slightly smaller height for very short screens */
     }
   }
 }
