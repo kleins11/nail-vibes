@@ -53,7 +53,7 @@ export default function LandingPage({
             <img 
               src="/nail-vibes-short-logo.png" 
               alt="NailVibes" 
-              className="h-8 w-auto object-contain"
+              className="h-11 w-auto object-contain"
             />
           </button>
         </div>
