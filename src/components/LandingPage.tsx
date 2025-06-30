@@ -40,15 +40,32 @@ export default function LandingPage({
       {/* Magical Sparkly Background Effect - Behind all content */}
       <MagicalSparkles />
 
-      {/* Header */}
-      <div className="w-full px-4 md:px-8 lg:px-12" style={{ zIndex: 10 }}>
-        <div className="flex justify-center md:justify-start pt-8 pb-4">
+      {/* Header - Updated to use Material Design Grid for alignment */}
+      <div className="w-full" style={{ zIndex: 10 }}>
+        {/* Mobile: Center the logo */}
+        <div className="flex justify-center pt-8 pb-4 md:hidden px-4">
           <button 
             onClick={onLogoClick}
             className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
           >
             nailvibes
           </button>
+        </div>
+
+        {/* Tablet & Desktop: Use Material Design Grid for alignment */}
+        <div className="hidden md:block">
+          <div className="m3-grid-container">
+            <div className="m3-grid">
+              <div className="pt-8 pb-4 md:col-span-8 lg:col-span-12">
+                <button 
+                  onClick={onLogoClick}
+                  className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  nailvibes
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       
