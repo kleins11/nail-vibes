@@ -440,59 +440,12 @@ export default function ResultPage({
                 />
               </div>
               
-              {/* Title positioned below image - LEFT ALIGNED */}
+              {/* Title positioned below image - LEFT ALIGNED - CLEAN VERSION */}
               <div className="mb-6">
                 {currentVibe?.title && (
                   <h1 className="font-calling-code font-bold text-[#3F3F3F] mb-4 text-lg text-left">
                     {currentVibe.title}
                   </h1>
-                )}
-                
-                {/* Match Type and Score Display - LEFT ALIGNED */}
-                <div className="mb-3 space-y-2 text-left">
-                  {matchInfo?.matchedConcept && (
-                    <div className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
-                      ✨ {matchInfo.matchedConcept} inspired
-                    </div>
-                  )}
-                  
-                  {currentVibe?.match_type === 'all_primary' && (
-                    <div className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full ml-2">
-                      🎯 Perfect match
-                    </div>
-                  )}
-                  
-                  {currentVibe?.match_type === 'some_primary' && (
-                    <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full ml-2">
-                      ✅ Great match
-                    </div>
-                  )}
-                  
-                  {currentVibe && currentVibe.primary_matches > 0 && (
-                    <div className="text-xs text-gray-600 mt-1 text-left">
-                      {currentVibe.primary_matches} core match{currentVibe.primary_matches > 1 ? 'es' : ''}
-                      {currentVibe.modifier_matches > 0 && ` + ${currentVibe.modifier_matches} style match${currentVibe.modifier_matches > 1 ? 'es' : ''}`}
-                    </div>
-                  )}
-                </div>
-                
-                {/* Tags Display - LEFT ALIGNED */}
-                {currentVibe?.tags && currentVibe.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {currentVibe.tags.slice(0, 6).map((tag, index) => (
-                      <span 
-                        key={index}
-                        className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                    {currentVibe.tags.length > 6 && (
-                      <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                        +{currentVibe.tags.length - 6} more
-                      </span>
-                    )}
-                  </div>
                 )}
               </div>
               
