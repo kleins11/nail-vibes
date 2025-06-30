@@ -5,38 +5,18 @@ interface TransitionPageProps {
   currentVibe: VibeMatchData | null;
 }
 
-// Gradient shapes for the transition animation
-const GRADIENT_SHAPES = [
-  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-11-Col2%201.png",
-  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-12-Col4%201.png",
-  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-1-Col3%201.png",
-  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-2-Col5%201.png",
-  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-4-Col8%201.png",
-  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-5-Col10%201.png",
-  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-5-Col1%201.png",
-  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-6-Col4%201.png",
-  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-7-Col9%201.png",
-  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-8-Col2%201.png"
-];
-
 export default function TransitionPage({ currentVibe }: TransitionPageProps) {
-  const [phase, setPhase] = useState<'fadeOut' | 'morphing' | 'fadeIn'>('fadeOut');
-  const [morphingShapes, setMorphingShapes] = useState<string[]>([]);
+  const [phase, setPhase] = useState<'fadeOut' | 'sparklyMist' | 'gentleLanding'>('fadeOut');
 
   useEffect(() => {
-    // Phase 1: Fade out current content (300ms)
+    // Phase 1: Gentle fade out (400ms)
     const timer1 = setTimeout(() => {
-      setPhase('morphing');
-      // Generate random shapes for morphing animation
-      const randomShapes = Array.from({ length: 8 }, () => 
-        GRADIENT_SHAPES[Math.floor(Math.random() * GRADIENT_SHAPES.length)]
-      );
-      setMorphingShapes(randomShapes);
-    }, 300);
+      setPhase('sparklyMist');
+    }, 400);
 
-    // Phase 2: Morphing animation (600ms)
+    // Phase 2: Sparkly mist (500ms)
     const timer2 = setTimeout(() => {
-      setPhase('fadeIn');
+      setPhase('gentleLanding');
     }, 900);
 
     return () => {
@@ -52,16 +32,11 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
         background: 'linear-gradient(135deg, #F5F1EC 0%, #FFFAF4 50%, #F5F1EC 100%)'
       }}
     >
-      {/* Phase 1: Fade out current image */}
+      {/* Phase 1: Gentle fade out of current image */}
       {phase === 'fadeOut' && currentVibe && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div 
-            className="w-64 h-64 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 ease-out"
-            style={{
-              opacity: 0,
-              transform: 'scale(0.9)',
-              filter: 'blur(2px)'
-            }}
+            className="w-64 h-64 rounded-2xl overflow-hidden shadow-lg animate-fade-out"
           >
             <img 
               src={currentVibe.image_url} 
@@ -72,164 +47,189 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
         </div>
       )}
 
-      {/* Phase 2: Morphing gradient shapes */}
-      {phase === 'morphing' && (
+      {/* Phase 2: Sparkly mist effect */}
+      {phase === 'sparklyMist' && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative w-80 h-80">
-            {morphingShapes.map((shape, index) => (
+          {/* Ethereal mist particles */}
+          <div className="relative w-full h-full">
+            {Array.from({ length: 30 }).map((_, i) => (
               <div
-                key={index}
-                className="absolute transition-all duration-600 ease-in-out"
+                key={i}
+                className="absolute rounded-full animate-sparkle-float"
                 style={{
-                  left: `${20 + (index % 3) * 30}%`,
-                  top: `${20 + Math.floor(index / 3) * 25}%`,
-                  width: '60px',
-                  height: '60px',
-                  opacity: 0.7,
-                  transform: `
-                    rotate(${index * 45}deg) 
-                    scale(${0.8 + Math.sin(Date.now() / 1000 + index) * 0.3})
-                    translateX(${Math.sin(Date.now() / 800 + index) * 20}px)
-                    translateY(${Math.cos(Date.now() / 800 + index) * 20}px)
-                  `,
-                  animation: `float 2s ease-in-out infinite ${index * 0.2}s`,
-                  filter: 'blur(1px)'
+                  left: `${20 + Math.random() * 60}%`,
+                  top: `${20 + Math.random() * 60}%`,
+                  width: `${4 + Math.random() * 8}px`,
+                  height: `${4 + Math.random() * 8}px`,
+                  background: `radial-gradient(circle, rgba(${Math.random() > 0.5 ? '147, 51, 234' : '59, 130, 246'}, ${0.3 + Math.random() * 0.4}) 0%, transparent 70%)`,
+                  animationDelay: `${Math.random() * 0.5}s`,
+                  animationDuration: `${1.5 + Math.random() * 1}s`
                 }}
-              >
-                <img 
-                  src={shape}
-                  alt="Morphing shape"
-                  className="w-full h-full object-contain"
-                  style={{
-                    filter: 'brightness(1.1) saturate(1.2)'
-                  }}
-                />
-              </div>
+              />
             ))}
             
-            {/* Central pulsing glow */}
+            {/* Central gentle glow */}
             <div 
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-gentle-pulse"
               style={{
-                width: '120px',
-                height: '120px',
-                background: 'radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(147, 51, 234, 0.2) 50%, transparent 70%)',
-                borderRadius: '50%',
-                animation: 'pulse 1.5s ease-in-out infinite'
+                width: '200px',
+                height: '200px',
+                background: 'radial-gradient(circle, rgba(147, 51, 234, 0.1) 0%, rgba(59, 130, 246, 0.05) 50%, transparent 70%)',
+                borderRadius: '50%'
               }}
             />
           </div>
         </div>
       )}
 
-      {/* Phase 3: Fade in to landing page elements */}
-      {phase === 'fadeIn' && (
-        <div className="absolute inset-0 flex flex-col justify-center">
+      {/* Phase 3: Gentle landing on homepage */}
+      {phase === 'gentleLanding' && (
+        <div className="absolute inset-0 flex flex-col justify-center landing-page">
           <div className="m3-grid-container">
             <div className="m3-grid">
               <div className="m3-content-area text-center">
-                {/* Logo appearing */}
-                <div 
-                  className="mb-8 transition-all duration-300 ease-out"
-                  style={{
-                    opacity: 1,
-                    transform: 'translateY(0) scale(1)',
-                    animation: 'fadeInUp 0.6s ease-out'
-                  }}
-                >
+                {/* Logo gently appearing */}
+                <div className="mb-8 animate-gentle-appear" style={{ animationDelay: '0ms' }}>
                   <div className="text-2xl font-pilar font-bold text-blue-600">
                     nailvibes
                   </div>
                 </div>
 
-                {/* Title appearing */}
-                <div 
-                  className="transition-all duration-500 ease-out"
-                  style={{
-                    opacity: 1,
-                    transform: 'translateY(0) scale(1)',
-                    animation: 'fadeInUp 0.8s ease-out 0.2s both'
-                  }}
-                >
+                {/* Title floating in */}
+                <div className="animate-gentle-appear" style={{ animationDelay: '150ms' }}>
                   <h1 className="text-display font-stratos-extrabold text-blue-600 leading-tight">
                     What's your nail vibe?
                   </h1>
                 </div>
 
-                {/* Textarea appearing */}
-                <div 
-                  className="mt-10 transition-all duration-500 ease-out"
-                  style={{
-                    opacity: 1,
-                    transform: 'translateY(0) scale(1)',
-                    animation: 'fadeInUp 1s ease-out 0.4s both'
-                  }}
-                >
+                {/* Textarea materializing */}
+                <div className="mt-10 animate-gentle-appear" style={{ animationDelay: '300ms' }}>
                   <div className="textarea-long-container">
-                    <div 
-                      className="textarea-long"
+                    <textarea
+                      placeholder="Harry Potter cutesy, Barbie glam metallic, dark academia matte"
+                      className="textarea-long placeholder-calling-code"
                       style={{
-                        background: 'rgba(252, 252, 252, 0.9)',
-                        backdropFilter: 'blur(10px)',
+                        background: 'rgba(252, 252, 252, 0.95)',
+                        backdropFilter: 'blur(8px)',
                         border: '1px solid rgba(230, 230, 230, 0.8)'
                       }}
+                      readOnly
                     />
+                    <div className="textarea-long-button bg-blue-600 text-white">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Subtle floating sparkles that continue after landing */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div
+                key={i}
+                className="absolute rounded-full animate-gentle-sparkle"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  width: '2px',
+                  height: '2px',
+                  background: `rgba(${Math.random() > 0.5 ? '147, 51, 234' : '59, 130, 246'}, 0.4)`,
+                  animationDelay: `${Math.random() * 3}s`,
+                  animationDuration: `${4 + Math.random() * 2}s`
+                }}
+              />
+            ))}
+          </div>
         </div>
       )}
 
-      {/* Floating particles for extra magic */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {Array.from({ length: 20 }).map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-blue-400/30 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `float ${3 + Math.random() * 4}s ease-in-out infinite ${Math.random() * 2}s`,
-              opacity: Math.random() * 0.6 + 0.2
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Custom keyframes for the transition */}
+      {/* Custom animations for the elegant transition */}
       <style jsx>{`
-        @keyframes fadeInUp {
-          from {
+        @keyframes sparkle-float {
+          0% {
             opacity: 0;
-            transform: translateY(30px) scale(0.95);
+            transform: translateY(20px) scale(0);
           }
-          to {
+          50% {
+            opacity: 1;
+            transform: translateY(-10px) scale(1.2);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(-30px) scale(0.8);
+          }
+        }
+
+        @keyframes gentle-pulse {
+          0%, 100% {
+            opacity: 0.3;
+            transform: translate(-50%, -50%) scale(1);
+          }
+          50% {
+            opacity: 0.6;
+            transform: translate(-50%, -50%) scale(1.1);
+          }
+        }
+
+        @keyframes gentle-appear {
+          0% {
+            opacity: 0;
+            transform: translateY(15px) scale(0.98);
+          }
+          100% {
             opacity: 1;
             transform: translateY(0) scale(1);
           }
         }
 
-        @keyframes float {
+        @keyframes gentle-sparkle {
           0%, 100% {
-            transform: translateY(0px) rotate(0deg);
-            opacity: 0.3;
+            opacity: 0;
+            transform: translateY(0) scale(1);
           }
-          50% {
-            transform: translateY(-20px) rotate(180deg);
-            opacity: 0.8;
+          25% {
+            opacity: 0.6;
+            transform: translateY(-5px) scale(1.2);
+          }
+          75% {
+            opacity: 0.3;
+            transform: translateY(5px) scale(0.8);
           }
         }
 
-        @keyframes pulse {
-          0%, 100% {
-            transform: scale(1);
-            opacity: 0.3;
+        .animate-fade-out {
+          animation: fadeOutGently 0.4s ease-out forwards;
+        }
+
+        .animate-sparkle-float {
+          animation: sparkle-float 1.5s ease-out forwards;
+        }
+
+        .animate-gentle-pulse {
+          animation: gentle-pulse 2s ease-in-out infinite;
+        }
+
+        .animate-gentle-appear {
+          animation: gentle-appear 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          opacity: 0;
+        }
+
+        .animate-gentle-sparkle {
+          animation: gentle-sparkle 4s ease-in-out infinite;
+        }
+
+        @keyframes fadeOutGently {
+          0% {
+            opacity: 1;
+            transform: scale(1) blur(0px);
           }
-          50% {
-            transform: scale(1.2);
-            opacity: 0.6;
+          100% {
+            opacity: 0;
+            transform: scale(0.95) blur(3px);
           }
         }
       `}</style>
