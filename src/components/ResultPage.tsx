@@ -870,13 +870,12 @@ export default function ResultPage({
               <div 
                 className="bg-gray-400 rounded-full ultra-smooth-expanded-handle"
                 style={{ 
-                  width: '36px', 
+                  // width: '36px', 
                   height: '4px',
                   transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                   willChange: 'background-color, transform, width',
                   // ULTRA-SMOOTH: Handle responds to drag state
                   backgroundColor: isDragging ? '#6B7280' : '#9CA3AF',
-                  width: isDragging ? '48px' : '36px'
                 }}
               />
             </div>
