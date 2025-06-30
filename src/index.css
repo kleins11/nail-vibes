@@ -143,22 +143,23 @@
     .m3-col-desktop-12 { grid-column: span 12; }
   }
   
-  /* Content area with M3 grid constraints - UPDATED with gradient background */
+  /* Content area with M3 grid constraints - UPDATED with gradient background aligned to input center */
   .m3-content-area {
     width: 100%;
     position: relative;
   }
   
-  /* Add gradient background to the entire content area - positioned to cover title and textarea */
+  /* Gradient background positioned to align with text input's vertical center */
   .m3-content-area::before {
     content: '';
     position: absolute;
-    /* Position to cover both title and textarea area */
-    top: 50%;
+    /* Calculate position to align gradient center with input center */
+    /* Title height (~56px) + 40px margin + half of input height (69px) = ~165px from top */
+    top: 165px;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 900px; /* Large width to match Figma */
-    height: 700px; /* Increased height to ensure it covers title area */
+    width: 900px;
+    height: 700px;
     background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
     background-size: contain;
     background-repeat: no-repeat;
@@ -175,8 +176,10 @@
       grid-column: span 4;
     }
     
-    /* Larger gradient on mobile to ensure coverage */
+    /* Adjust gradient positioning for mobile */
     .m3-content-area::before {
+      /* Mobile title height (~40px) + 40px margin + half of input height (69px) = ~149px from top */
+      top: 149px;
       width: 800px;
       height: 600px;
     }
@@ -188,8 +191,10 @@
       grid-column: 2 / span 6;
     }
     
-    /* Adjust gradient size for tablet */
+    /* Adjust gradient positioning for tablet */
     .m3-content-area::before {
+      /* Tablet title height (~48px) + 40px margin + half of input height (69px) = ~157px from top */
+      top: 157px;
       width: 750px;
       height: 550px;
     }
