@@ -106,7 +106,7 @@ export default function ResultPage({
   // Refs for auto-scrolling and input focus
   const desktopChatMessagesRef = useRef<HTMLDivElement>(null);
   const mobileChatMessagesRef = useRef<HTMLDivElement>(null);
-  const mobileExpandedInputRef = useRef<HTMLInputElement>(null);
+  const mobileExpandedInputRef = useRef<HTMLTextAreaElement>(null); // CHANGED: Now textarea ref
 
   // NEW: Detect if device is mobile (has touch capability)
   useEffect(() => {
@@ -777,40 +777,55 @@ export default function ResultPage({
               )}
             </div>
             
-            {/* Input Area - FIXED HEIGHT: Stays consistent regardless of keyboard */}
-            <div className="p-4 flex-shrink-0" style={{ borderTop: '1px solid #D9CFC3' }}>
-              <div className="relative flex items-center">
-                <input
-                  ref={mobileExpandedInputRef} // CRITICAL: Ref for auto-focus on mobile
-                  type="text"
-                  value={refinePrompt}
-                  onChange={(e) => setRefinePrompt(e.target.value)}
-                  onKeyDown={(e) => handleKeyPress(e, false, true)}
-                  onFocus={onChatInputFocus}
-                  onBlur={onChatInputBlur}
-                  placeholder="Keep vibing"
-                  className="input-short flex-1 px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
-                  style={{
-                    boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
-                    color: '#3F3F3F'
-                  }}
-                  disabled={isRefining}
-                />
-                <button
-                  onClick={onRefineSubmit}
-                  disabled={!refinePrompt.trim() || isRefining}
-                  className="input-button absolute right-1 mr-1 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10"
-                >
-                  {isRefining ? (
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  ) : (
-                    <ArrowUp className="w-4 h-4" />
-                  )}
-                </button>
+            {/* FIXED: Input Area - FLEXIBLE HEIGHT that grows with content */}
+            <div className="flex-shrink-0" style={{ borderTop: '1px solid #D9CFC3' }}>
+              <div className="p-4">
+                <div className="relative">
+                  {/* CHANGED: Using textarea instead of input for multi-line support */}
+                  <textarea
+                    ref={mobileExpandedInputRef} // CRITICAL: Ref for auto-focus on mobile
+                    value={refinePrompt}
+                    onChange={(e) => setRefinePrompt(e.target.value)}
+                    onKeyDown={(e) => handleKeyPress(e, false, true)}
+                    onFocus={onChatInputFocus}
+                    onBlur={onChatInputBlur}
+                    placeholder="Keep vibing"
+                    rows={1} // Start with single row
+                    className="input-short w-full px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code resize-none overflow-hidden"
+                    style={{
+                      boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
+                      color: '#3F3F3F',
+                      minHeight: '48px', // Minimum height to match button
+                      maxHeight: '120px', // Maximum height before scrolling
+                      lineHeight: '1.5'
+                    }}
+                    disabled={isRefining}
+                    onInput={(e) => {
+                      // Auto-resize textarea based on content
+                      const target = e.target as HTMLTextAreaElement;
+                      target.style.height = 'auto';
+                      target.style.height = Math.min(target.scrollHeight, 120) + 'px';
+                    }}
+                  />
+                  {/* FIXED: Button positioned to stay with the textarea */}
+                  <button
+                    onClick={onRefineSubmit}
+                    disabled={!refinePrompt.trim() || isRefining}
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10 flex-shrink-0"
+                    style={{
+                      // CRITICAL: Ensure button stays properly positioned
+                      marginRight: '4px'
+                    }}
+                  >
+                    {isRefining ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    ) : (
+                      <ArrowUp className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
-            
-            {/* REMOVED: Typing Indicator - No longer needed */}
           </div>
         </div>
       )}
