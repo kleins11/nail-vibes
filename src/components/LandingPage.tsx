@@ -80,8 +80,10 @@ export default function LandingPage({
                   <ArrowUp className="w-4 h-4" />
                 </button>
               </div>
-
               
+            </div>
+          </div>
+        </div>
       </div>
       
       {/* Gradient Shapes Auto-Scroll - Only on landing page */}
