@@ -550,7 +550,7 @@ export default function ResultPage({
                 <button
                   onClick={onRefineSubmit}
                   disabled={!refinePrompt.trim() || isRefining}
-                  className="input-button absolute right-1 mr-1 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10"
+                  className="input-button absolute right-1 mr-1 transform w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10"
                 >
                   {isRefining ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
