@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { X, Minus, ArrowUp, Maximize2, RotateCcw } from 'lucide-react';
 import { VibeMatchData } from '../services/vibeService';
 
@@ -88,6 +88,9 @@ export default function ResultPage({
   const imageUrl = currentVibe?.image_url || SAMPLE_NAIL_IMAGE;
   const displayImageUrl = refinedImageUrl || imageUrl;
 
+  // State to track the most recently used gradient shape
+  const [lastUsedGradientShape, setLastUsedGradientShape] = useState<string>(GRADIENT_SHAPES[0]);
+
   // Refs for auto-scrolling
   const desktopChatMessagesRef = useRef<HTMLDivElement>(null);
   const mobileChatMessagesRef = useRef<HTMLDivElement>(null);
@@ -104,6 +107,16 @@ export default function ResultPage({
       mobileChatMessagesRef.current.scrollTop = mobileChatMessagesRef.current.scrollHeight;
     }
   }, [chatMessages, isRefining]); // Trigger on message changes and refining state
+
+  // Update the last used gradient shape whenever chat messages change
+  useEffect(() => {
+    const systemMessages = chatMessages.filter(message => message.type === 'system');
+    if (systemMessages.length > 0) {
+      const lastSystemMessage = systemMessages[systemMessages.length - 1];
+      const shape = getRandomGradientShape(lastSystemMessage.id);
+      setLastUsedGradientShape(shape);
+    }
+  }, [chatMessages]);
 
   // Function to get chat bubble style based on user message index
   const getChatBubbleStyle = (messageIndex: number) => {
@@ -269,8 +282,13 @@ export default function ResultPage({
                 {/* Title positioned to align with left edge of image - matching Figma */}
                 <div className="mb-6">
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-sm">💅</span>
+                    <div className="flex items-center justify-center" style={{ width: '32px', height: '32px' }}>
+                      <img 
+                        src={lastUsedGradientShape}
+                        alt="Gradient shape"
+                        className="object-contain"
+                        style={{ width: '32px', height: '32px' }}
+                      />
                     </div>
                     <h1 className="font-calling-code font-bold text-[#3F3F3F] text-xl">
                       {currentVibe?.title || "Black French tips on short natural nails"}
