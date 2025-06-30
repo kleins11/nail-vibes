@@ -143,13 +143,13 @@
     .m3-col-desktop-12 { grid-column: span 12; }
   }
   
-  /* Content area with M3 grid constraints - UPDATED with gradient background positioned exactly like Figma */
+  /* Content area with M3 grid constraints - ONLY for landing page */
   .m3-content-area {
     width: 100%;
     position: relative;
   }
   
-  /* Gradient background positioned exactly like Figma - larger and more spread out */
+  /* Gradient background positioned exactly like Figma - ONLY for landing page */
   .m3-content-area::before {
     content: '';
     position: absolute;
