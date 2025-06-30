@@ -5,6 +5,7 @@ import { generateTitle } from './services/titleGenerator';
 import LandingPage from './components/LandingPage';
 import ResultPage from './components/ResultPage';
 import LoadingPage from './components/LoadingPage';
+import TransitionPage from './components/TransitionPage';
 
 interface ChatMessage {
   id: string;
@@ -13,7 +14,7 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-type AppState = 'landing' | 'result' | 'loading';
+type AppState = 'landing' | 'result' | 'loading' | 'transitioning';
 
 function App() {
   const [appState, setAppState] = useState<AppState>('landing');
@@ -41,22 +42,29 @@ function App() {
   const [generateError, setGenerateError] = useState<string | null>(null);
 
   const handleLogoClick = () => {
-    setAppState('landing');
-    setPrompt('');
-    setRefinePrompt('');
-    setRefinedImageUrl('');
-    setChatMessages([]);
-    setChatInput('');
-    setIsChatOpen(false);
-    setIsTyping(false);
-    setIsRefining(false);
-    setCurrentVibe(null);
-    setMatchInfo(null);
-    setError(null);
-    setGeneratePrompt('');
-    setGeneratedImageUrl('');
-    setIsGenerating(false);
-    setGenerateError(null);
+    // Start the elegant transition
+    setAppState('transitioning');
+    
+    // After transition completes, reset everything and go to landing
+    setTimeout(() => {
+      setPrompt('');
+      setRefinePrompt('');
+      setRefinedImageUrl('');
+      setChatMessages([]);
+      setChatInput('');
+      setIsChatOpen(false);
+      setIsTyping(false);
+      setIsRefining(false);
+      setCurrentVibe(null);
+      setMatchInfo(null);
+      setError(null);
+      setGeneratePrompt('');
+      setGeneratedImageUrl('');
+      setIsGenerating(false);
+      setGenerateError(null);
+      
+      setAppState('landing');
+    }, 1200); // Match the transition duration
   };
 
   // Image generation function with improved error handling
@@ -509,6 +517,11 @@ function App() {
   const handleChatInputBlur = () => {
     setTimeout(() => setIsTyping(false), 100);
   };
+
+  // Transition Screen
+  if (appState === 'transitioning') {
+    return <TransitionPage currentVibe={currentVibe} />;
+  }
 
   // Loading Screen
   if (appState === 'loading') {
