@@ -420,7 +420,7 @@ export default function ResultPage({
         
         {/* Mobile/Tablet Layout: Single Column with Bottom Chat Drawer */}
         <div className="lg:hidden w-full flex flex-col relative">
-          <div className="flex-1 flex flex-col justify-center px-6 pb-32">
+          <div className="flex-1 flex flex-col justify-center px-6" style={{ paddingBottom: '25vh' }}>
             <div className="max-w-md mx-auto w-full">
               {/* Title positioned above image - Mobile Only */}
               {currentVibe?.title && (
@@ -457,14 +457,14 @@ export default function ResultPage({
           {/* Bottom Chat Drawer - Collapsed State */}
           {!isChatOpen && (
             <div className="fixed bottom-0 left-0 right-0 z-40">
-              {/* Chat Drawer Container with rounded top corners and 230px height */}
+              {/* Chat Drawer Container with rounded top corners and 25% viewport height */}
               <div 
                 className="cursor-pointer relative"
                 onClick={onOpenChat}
                 style={{ 
                   backgroundColor: '#F5F1EC', 
                   borderRadius: '32px 32px 0px 0px',
-                  height: '230px',
+                  height: '25vh', // Changed from 230px to 25% of viewport height
                   border: '1px solid #D9CFC3',
                   borderBottom: 'none'
                 }}
@@ -481,10 +481,10 @@ export default function ResultPage({
                 </div>
 
                 {/* Chat Content - Moved down to accommodate drawer pull */}
-                <div className="px-4 pt-8 pb-6">
+                <div className="px-4 pt-8 pb-6 h-full flex flex-col">
                   {/* Last System Message Preview */}
                   {lastSystemMessage && (
-                    <div className="flex space-x-2 mb-6">
+                    <div className="flex space-x-2 mb-6 flex-shrink-0">
                       <div className="flex-shrink-0 flex items-start" style={{ width: '32px', paddingTop: '1px' }}>
                         <img 
                           src={getGradientShapeForMessage(lastSystemMessage)}
@@ -501,35 +501,37 @@ export default function ResultPage({
                     </div>
                   )}
 
-                  {/* Input Field Preview */}
-                  <div className="relative flex items-center">
-                    <input
-                      type="text"
-                      value={refinePrompt}
-                      onChange={(e) => setRefinePrompt(e.target.value)}
-                      onFocus={onOpenChat}
-                      placeholder="Keep vibing"
-                      className="input-short flex-1 px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
-                      style={{
-                        boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
-                        color: '#3F3F3F'
-                      }}
-                      disabled={isRefining}
-                    />
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onRefineSubmit();
-                      }}
-                      disabled={!refinePrompt.trim() || isRefining}
-                      className="input-button absolute right-1 mr-1 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10"
-                    >
-                      {isRefining ? (
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      ) : (
-                        <ArrowUp className="w-4 h-4" />
-                      )}
-                    </button>
+                  {/* Input Field Preview - Positioned at bottom */}
+                  <div className="mt-auto">
+                    <div className="relative flex items-center">
+                      <input
+                        type="text"
+                        value={refinePrompt}
+                        onChange={(e) => setRefinePrompt(e.target.value)}
+                        onFocus={onOpenChat}
+                        placeholder="Keep vibing"
+                        className="input-short flex-1 px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
+                        style={{
+                          boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
+                          color: '#3F3F3F'
+                        }}
+                        disabled={isRefining}
+                      />
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onRefineSubmit();
+                        }}
+                        disabled={!refinePrompt.trim() || isRefining}
+                        className="input-button absolute right-1 mr-1 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10"
+                      >
+                        {isRefining ? (
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <ArrowUp className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
