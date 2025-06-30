@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { X, Minus, ArrowUp, Maximize2, RotateCcw } from 'lucide-react';
+import { X, Minus, ArrowUp } from 'lucide-react';
 import { VibeMatchData } from '../services/vibeService';
 import MagicalLoadingOverlay from './MagicalLoadingOverlay';
 
@@ -325,16 +325,6 @@ export default function ResultPage({
                   />
                 </div>
               </div>
-            </div>
-            
-            {/* Action buttons at bottom right - subtle positioning */}
-            <div className="absolute bottom-8 right-8 flex items-center space-x-2">
-              <button className="p-3 hover:bg-gray-100 rounded-full transition-all duration-200 bg-white shadow-sm hover:shadow-md hover:scale-105">
-                <Maximize2 className="w-5 h-5 text-gray-500" />
-              </button>
-              <button className="p-3 hover:bg-gray-100 rounded-full transition-all duration-200 bg-white shadow-sm hover:shadow-md hover:scale-105">
-                <RotateCcw className="w-5 h-5 text-gray-500" />
-              </button>
             </div>
           </div>
         </div>
