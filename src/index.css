@@ -143,22 +143,22 @@
     .m3-col-desktop-12 { grid-column: span 12; }
   }
   
-  /* Content area with M3 grid constraints - UPDATED with gradient background positioned to match Figma */
+  /* Content area with M3 grid constraints - UPDATED with gradient background positioned exactly like Figma */
   .m3-content-area {
     width: 100%;
     position: relative;
   }
   
-  /* Gradient background positioned exactly like Figma - centered around text input */
+  /* Gradient background positioned exactly like Figma - larger and more spread out */
   .m3-content-area::before {
     content: '';
     position: absolute;
-    /* Position gradient to center around the text input area, matching Figma */
-    top: 50%;
+    /* Position gradient to match Figma - centered but lower to accommodate title above */
+    top: 60%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 900px;
-    height: 500px; /* Reduced height to better match Figma proportions */
+    width: 1200px; /* Much larger width to match Figma's spread */
+    height: 600px; /* Taller height to match Figma proportions */
     background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
     background-size: contain;
     background-repeat: no-repeat;
@@ -177,8 +177,9 @@
     
     /* Adjust gradient for mobile to match Figma proportions */
     .m3-content-area::before {
-      width: 700px;
-      height: 400px;
+      width: 900px;
+      height: 450px;
+      top: 55%;
     }
   }
   
@@ -190,8 +191,9 @@
     
     /* Adjust gradient for tablet to match Figma proportions */
     .m3-content-area::before {
-      width: 800px;
-      height: 450px;
+      width: 1000px;
+      height: 500px;
+      top: 58%;
     }
   }
   
@@ -342,15 +344,17 @@
   /* Very small screens - ensure gradient still covers everything */
   @media (max-width: 400px) {
     .m3-content-area::before {
-      width: 600px; /* Smaller for very small screens */
-      height: 350px;
+      width: 800px; /* Smaller for very small screens */
+      height: 400px;
+      top: 52%;
     }
   }
   
   /* Extra small height screens - adjust gradient positioning */
   @media (max-height: 600px) {
     .m3-content-area::before {
-      height: 350px; /* Slightly smaller height for very short screens */
+      height: 400px; /* Slightly smaller height for very short screens */
+      top: 55%;
     }
   }
 }
