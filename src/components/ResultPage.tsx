@@ -457,19 +457,20 @@ export default function ResultPage({
           {/* Bottom Chat Drawer - Collapsed State */}
           {!isChatOpen && (
             <div className="fixed bottom-0 left-0 right-0 z-40">
-              {/* Chat Drawer Container with rounded top corners */}
+              {/* Chat Drawer Container with rounded top corners and 230px height */}
               <div 
-                className="bg-white border-t border-gray-200 px-4 py-3 cursor-pointer"
+                className="bg-white border-t border-gray-200 px-4 py-6 cursor-pointer"
                 onClick={onOpenChat}
                 style={{ 
                   backgroundColor: '#F5F1EC', 
                   borderTop: '1px solid #D9CFC3',
-                  borderRadius: '32px 32px 0px 0px'
+                  borderRadius: '32px 32px 0px 0px',
+                  height: '230px'
                 }}
               >
                 {/* Last System Message Preview */}
                 {lastSystemMessage && (
-                  <div className="flex space-x-2 mb-3">
+                  <div className="flex space-x-2 mb-6">
                     <div className="flex-shrink-0 flex items-start" style={{ width: '32px', paddingTop: '1px' }}>
                       <img 
                         src={getGradientShapeForMessage(lastSystemMessage)}
@@ -479,7 +480,7 @@ export default function ResultPage({
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words line-clamp-2">
+                      <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words line-clamp-3">
                         {lastSystemMessage.content}
                       </p>
                     </div>
@@ -666,6 +667,12 @@ export default function ResultPage({
         .line-clamp-2 {
           display: -webkit-box;
           -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        .line-clamp-3 {
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
