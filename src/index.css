@@ -311,7 +311,7 @@
     transform: scale(0.95);
   }
   
-  /* Short Form Input Styling - For chat and refine inputs - FIXED BUTTON POSITIONING */
+  /* Short Form Input Styling - For chat and refine inputs */
   .input-short {
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     border: 1px solid #E5E7EB; /* Gray-200 */
@@ -321,12 +321,9 @@
     backface-visibility: hidden;
     perspective: 1000px;
     transform-style: preserve-3d;
-    /* CRITICAL: Ensure input container maintains its bounds */
-    position: relative;
-    overflow: hidden;
   }
   
-  /* Enhanced Focus State for Short Inputs - ULTRA SMOOTH - FIXED SCALING */
+  /* Enhanced Focus State for Short Inputs - ULTRA SMOOTH */
   .input-short:focus {
     outline: none;
     border-color: #3B82F6; /* Blue-500 */
@@ -336,19 +333,17 @@
       0 4px 8px 0 rgba(155, 155, 169, 0.25),
       0 0 0 3px rgba(59, 130, 246, 0.1),
       0 2px 6px 0 rgba(59, 130, 246, 0.15);
-    /* FIXED: Removed transform scaling that was causing button to float outside */
-    transform: translateY(-1px);
+    transform: translateY(-1px) scale(1.01);
   }
   
-  /* Hover state for short inputs - ULTRA SMOOTH - FIXED SCALING */
+  /* Hover state for short inputs - ULTRA SMOOTH */
   .input-short:hover:not(:focus):not(:disabled) {
     border-color: #D1D5DB; /* Gray-300 */
     background-color: #FFFFFF;
     box-shadow: 
       0 4px 8px 0 rgba(155, 155, 169, 0.25),
       0 1px 3px 0 rgba(155, 155, 169, 0.1);
-    /* FIXED: Removed transform scaling that was causing button positioning issues */
-    transform: none;
+    transform: scale(1.01);
   }
   
   /* Disabled state for inputs */
@@ -360,75 +355,29 @@
     transform: none; /* No hover effects when disabled */
   }
   
-  /* Input button styling for consistency - ULTRA SMOOTH - FIXED POSITIONING */
+  /* Input button styling for consistency - ULTRA SMOOTH */
   .input-button {
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     /* ULTRA SMOOTH hardware acceleration */
     will-change: transform, box-shadow;
     backface-visibility: hidden;
     perspective: 1000px;
-    /* CRITICAL: Ensure button stays within input bounds */
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    /* FIXED: Prevent button from floating outside input on focus/hover */
-    z-index: 10;
   }
   
   .input-button:hover:not(:disabled) {
-    transform: translateY(-50%) scale(1.05);
+    transform: scale(1.05);
     box-shadow: 0 4px 12px 0 rgba(59, 130, 246, 0.3);
   }
   
   .input-button:active:not(:disabled) {
-    transform: translateY(-50%) scale(0.95);
+    transform: scale(0.95);
   }
   
   .input-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    transform: translateY(-50%);
+    transform: none;
     box-shadow: none;
-  }
-  
-  /* CRITICAL: Chat input container positioning fix */
-  .chat-input-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    /* Ensure container maintains proper bounds */
-    overflow: visible;
-  }
-  
-  /* CRITICAL: Chat input specific fixes */
-  .chat-input-container .input-short {
-    /* Ensure input doesn't scale and break button positioning */
-    transform-origin: center;
-  }
-  
-  .chat-input-container .input-short:focus {
-    /* Override the scaling transform for chat inputs specifically */
-    transform: none;
-  }
-  
-  .chat-input-container .input-short:hover:not(:focus):not(:disabled) {
-    /* Override the scaling transform for chat inputs specifically */
-    transform: none;
-  }
-  
-  .chat-input-container .input-button {
-    /* Ensure button positioning is always relative to the input container */
-    right: 4px; /* Small margin from edge */
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  .chat-input-container .input-button:hover:not(:disabled) {
-    transform: translateY(-50%) scale(1.05);
-  }
-  
-  .chat-input-container .input-button:active:not(:disabled) {
-    transform: translateY(-50%) scale(0.95);
   }
   
   /* 🎨 GRADIENT SHAPES AUTO-SCROLL - FIXED: Positioned above footer with proper spacing */
