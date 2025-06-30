@@ -198,14 +198,14 @@ export default function ResultPage({
             
             {/* Chat Input - Fixed at bottom with shadow and proper spacing */}
             <div className="p-6 border-t border-gray-200 flex-shrink-0">
-              <div className="flex items-center space-x-3">
+              <div className="relative">
                 <input
                   type="text"
                   value={refinePrompt}
                   onChange={(e) => setRefinePrompt(e.target.value)}
                   onKeyDown={(e) => handleKeyPress(e, false, true)}
                   placeholder="Keep vibing"
-                  className="flex-1 px-4 py-3 bg-gray-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code"
+                  className="w-full px-4 py-3 pr-12 bg-gray-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code"
                   style={{
                     boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)'
                   }}
@@ -214,9 +214,13 @@ export default function ResultPage({
                 <button
                   onClick={onRefineSubmit}
                   disabled={!refinePrompt.trim() || isRefining}
-                  className="px-4 py-3 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-300 text-white rounded-full transition-colors text-sm font-medium"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-colors"
                 >
-                  Send
+                  {isRefining ? (
+                    <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
+                  ) : (
+                    <ArrowUp className="w-4 h-4" />
+                  )}
                 </button>
               </div>
             </div>
@@ -449,7 +453,7 @@ export default function ResultPage({
             
             {/* Input Area with shadow and proper spacing */}
             <div className="p-4 border-t" style={{ marginTop: '30px' }}>
-              <div className="flex space-x-2">
+              <div className="relative">
                 <input
                   type="text"
                   value={refinePrompt}
@@ -458,7 +462,7 @@ export default function ResultPage({
                   onFocus={onChatInputFocus}
                   onBlur={onChatInputBlur}
                   placeholder="make it chrome, add glitter, more pink..."
-                  className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code"
+                  className="w-full px-4 py-3 pr-12 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code"
                   style={{
                     boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)'
                   }}
@@ -467,12 +471,12 @@ export default function ResultPage({
                 <button
                   onClick={onRefineSubmit}
                   disabled={!refinePrompt.trim() || isRefining}
-                  className="w-12 h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 rounded-lg flex items-center justify-center transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-colors"
                 >
                   {isRefining ? (
-                    <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+                    <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
                   ) : (
-                    <ArrowUp className="w-5 h-5 text-white" />
+                    <ArrowUp className="w-4 h-4" />
                   )}
                 </button>
               </div>
