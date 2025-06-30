@@ -286,9 +286,9 @@ export default function ResultPage({
                         <p className="text-sm font-calling-code break-words">{message.content}</p>
                       </div>
                     ) : (
-                      <div className="flex items-start space-x-2">
-                        {/* FIXED: Gradient shape alignment - positioned to align with first line of text */}
-                        <div className="flex items-start justify-center flex-shrink-0" style={{ width: '44px', height: '44px', paddingTop: '2px' }}>
+                      <div className="flex space-x-2">
+                        {/* FIXED: Gradient shape alignment - using flexbox alignment with text baseline */}
+                        <div className="flex-shrink-0 flex items-start" style={{ width: '44px', paddingTop: '1px' }}>
                           <img 
                             src={getGradientShapeForMessage(message)}
                             alt="Gradient shape"
@@ -296,7 +296,9 @@ export default function ResultPage({
                             style={{ width: '44px', height: '44px' }}
                           />
                         </div>
-                        <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words flex-1">{message.content}</p>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words">{message.content}</p>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -532,9 +534,9 @@ export default function ResultPage({
                         <p className="text-sm font-calling-code break-words">{message.content}</p>
                       </div>
                     ) : (
-                      <div className="flex items-start space-x-2">
-                        {/* FIXED: Gradient shape alignment for mobile - positioned to align with first line of text */}
-                        <div className="flex items-start justify-center flex-shrink-0" style={{ width: '44px', height: '44px', paddingTop: '2px' }}>
+                      <div className="flex space-x-2">
+                        {/* FIXED: Gradient shape alignment for mobile - using flexbox alignment with text baseline */}
+                        <div className="flex-shrink-0 flex items-start" style={{ width: '44px', paddingTop: '1px' }}>
                           <img 
                             src={getGradientShapeForMessage(message)}
                             alt="Gradient shape"
@@ -542,7 +544,9 @@ export default function ResultPage({
                             style={{ width: '44px', height: '44px' }}
                           />
                         </div>
-                        <p className="font-calling-code text-sm text-[#3F3F3F] break-words flex-1">{message.content}</p>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-calling-code text-sm text-[#3F3F3F] break-words">{message.content}</p>
+                        </div>
                       </div>
                     )}
                   </div>
