@@ -154,7 +154,7 @@ export default function ResultPage({
         <div className="flex justify-between items-center pt-8 pb-4">
           <button 
             onClick={onLogoClick}
-            className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
+            className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors focus-ring"
           >
             nv
           </button>
@@ -162,7 +162,7 @@ export default function ResultPage({
           {/* Mobile/Tablet New Vibe Button - Styled like attachment with Calling Code font */}
           <button
             onClick={onLogoClick}
-            className="flex items-center space-x-3 px-4 py-2 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all duration-200 hover:scale-105 group"
+            className="flex items-center space-x-3 px-4 py-2 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all duration-200 hover:scale-105 group focus-ring"
           >
             <div className="w-8 h-8 border-2 border-blue-600 rounded-full flex items-center justify-center group-hover:border-blue-700 transition-colors">
               <RefreshCw className="w-4 h-4 text-blue-600 group-hover:text-blue-700 transition-colors" />
@@ -182,7 +182,7 @@ export default function ResultPage({
             <div className="p-6 flex-shrink-0" style={{ borderBottom: '1px solid #D9CFC3' }}>
               <button 
                 onClick={onLogoClick}
-                className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors focus-ring"
               >
                 nv
               </button>
@@ -265,7 +265,7 @@ export default function ResultPage({
               )}
             </div>
             
-            {/* Chat Input - Fixed at bottom with shadow and proper spacing */}
+            {/* Chat Input - Fixed at bottom with enhanced styling */}
             <div className="p-6 border-t border-gray-200 flex-shrink-0">
               <div className="relative">
                 <input
@@ -274,7 +274,7 @@ export default function ResultPage({
                   onChange={(e) => setRefinePrompt(e.target.value)}
                   onKeyDown={(e) => handleKeyPress(e, false, true)}
                   placeholder="Keep vibing"
-                  className="w-full px-4 py-3 pr-12 bg-gray-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code transition-all duration-200"
+                  className="input-short w-full px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
                   style={{
                     boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
                     color: '#3F3F3F'
@@ -284,7 +284,7 @@ export default function ResultPage({
                 <button
                   onClick={onRefineSubmit}
                   disabled={!refinePrompt.trim() || isRefining}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105"
+                  className="input-button absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center"
                 >
                   {isRefining ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -302,7 +302,7 @@ export default function ResultPage({
             <div className="absolute top-8 right-8 z-10">
               <button
                 onClick={onLogoClick}
-                className="flex items-center space-x-3 px-5 py-3 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all duration-200 hover:scale-105 group shadow-sm"
+                className="flex items-center space-x-3 px-5 py-3 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all duration-200 hover:scale-105 group shadow-sm focus-ring"
               >
                 <div className="w-8 h-8 border-2 border-blue-600 rounded-full flex items-center justify-center group-hover:border-blue-700 transition-colors">
                   <RefreshCw className="w-4 h-4 text-blue-600 group-hover:text-blue-700 transition-colors" />
@@ -439,7 +439,7 @@ export default function ResultPage({
                 <div className="text-center">
                   <button
                     onClick={onOpenChat}
-                    className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                    className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg focus-ring"
                     disabled={isRefining}
                   >
                     <span className="text-sm font-medium">
@@ -469,13 +469,13 @@ export default function ResultPage({
             <div className="flex items-center justify-between p-4 border-b">
               <button
                 onClick={onCloseChat}
-                className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors"
+                className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors focus-ring"
               >
                 <Minus className="w-6 h-6 text-gray-400" />
               </button>
               <button
                 onClick={onCloseChat}
-                className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors"
+                className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors focus-ring"
               >
                 <X className="w-5 h-5 text-gray-400" />
               </button>
@@ -530,7 +530,7 @@ export default function ResultPage({
               })}
             </div>
             
-            {/* Input Area with shadow and proper spacing */}
+            {/* Input Area with enhanced styling */}
             <div className="p-4 border-t" style={{ marginTop: '30px' }}>
               <div className="relative">
                 <input
@@ -541,7 +541,7 @@ export default function ResultPage({
                   onFocus={onChatInputFocus}
                   onBlur={onChatInputBlur}
                   placeholder="make it chrome, add glitter, more pink..."
-                  className="w-full px-4 py-3 pr-12 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code transition-all duration-200"
+                  className="input-short w-full px-4 py-3 pr-12 rounded-lg text-sm placeholder-calling-code textarea-calling-code"
                   style={{
                     boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
                     color: '#3F3F3F'
@@ -551,7 +551,7 @@ export default function ResultPage({
                 <button
                   onClick={onRefineSubmit}
                   disabled={!refinePrompt.trim() || isRefining}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105"
+                  className="input-button absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center"
                 >
                   {isRefining ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

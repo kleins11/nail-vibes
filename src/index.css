@@ -224,7 +224,7 @@
     z-index: 3; /* Above the gradient background */
   }
   
-  /* Textarea Long Component Styling with Drop Shadow - Fixed to match Figma */
+  /* Textarea Long Component Styling with Drop Shadow and Enhanced Focus States */
   .textarea-long {
     width: 100%;
     height: 138px;
@@ -242,13 +242,28 @@
     box-shadow: 0 20px 20px 0 rgba(155, 155, 169, 0.25);
     position: relative;
     z-index: 4; /* Above everything */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
+  /* Enhanced Focus State for Long Textarea */
   .textarea-long:focus {
     outline: none;
-    border-color: #E6E6E6;
-    /* Maintain shadow on focus */
-    box-shadow: 0 20px 20px 0 rgba(155, 155, 169, 0.25);
+    border-color: #3B82F6; /* Blue-500 */
+    background-color: #FFFFFF;
+    /* Enhanced shadow with blue tint on focus */
+    box-shadow: 
+      0 20px 20px 0 rgba(155, 155, 169, 0.25),
+      0 0 0 3px rgba(59, 130, 246, 0.1),
+      0 4px 12px 0 rgba(59, 130, 246, 0.15);
+    transform: translateY(-1px);
+  }
+  
+  /* Hover state for long textarea */
+  .textarea-long:hover:not(:focus) {
+    border-color: #D1D5DB; /* Gray-300 */
+    box-shadow: 
+      0 20px 20px 0 rgba(155, 155, 169, 0.3),
+      0 2px 8px 0 rgba(155, 155, 169, 0.1);
   }
   
   /* Button positioning within textarea container */
@@ -262,8 +277,76 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 5; /* Above everything */
+  }
+  
+  /* Enhanced button states */
+  .textarea-long-button:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px 0 rgba(59, 130, 246, 0.3);
+  }
+  
+  .textarea-long-button:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+  
+  /* Short Form Input Styling - For chat and refine inputs */
+  .input-short {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #E5E7EB; /* Gray-200 */
+    background-color: #F9FAFB; /* Gray-50 */
+  }
+  
+  /* Enhanced Focus State for Short Inputs */
+  .input-short:focus {
+    outline: none;
+    border-color: #3B82F6; /* Blue-500 */
+    background-color: #FFFFFF;
+    /* Enhanced shadow with blue tint on focus */
+    box-shadow: 
+      0 4px 8px 0 rgba(155, 155, 169, 0.25),
+      0 0 0 3px rgba(59, 130, 246, 0.1),
+      0 2px 6px 0 rgba(59, 130, 246, 0.15);
+    transform: translateY(-1px);
+  }
+  
+  /* Hover state for short inputs */
+  .input-short:hover:not(:focus):not(:disabled) {
+    border-color: #D1D5DB; /* Gray-300 */
+    background-color: #FFFFFF;
+    box-shadow: 
+      0 4px 8px 0 rgba(155, 155, 169, 0.25),
+      0 1px 3px 0 rgba(155, 155, 169, 0.1);
+  }
+  
+  /* Disabled state for inputs */
+  .input-short:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #F3F4F6; /* Gray-100 */
+    border-color: #E5E7EB; /* Gray-200 */
+  }
+  
+  /* Input button styling for consistency */
+  .input-button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .input-button:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px 0 rgba(59, 130, 246, 0.3);
+  }
+  
+  .input-button:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+  
+  .input-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
   
   /* Gradient Shapes Auto-Scroll Component - Seamless infinite scroll */
@@ -361,34 +444,7 @@
       top: 55%;
     }
   }
-}
-
-@layer utilities {
-  .animate-slide-up {
-    animation: slideUp 0.3s ease-out;
-  }
   
-  @keyframes slideUp {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0);
-    }
-  }
-  
-  /* Custom placeholder styling for textarea */
-  .placeholder-calling-code::placeholder {
-    font-family: 'calling-code', 'Source Code Pro', monospace;
-    font-style: italic;
-    color: #808080;
-  }
-  
-  /* Custom background color for input page */
-  .bg-input-background {
-    background-color: #F5F1EC;
-  }
-
   /* Magical loading animations */
   .animate-spin-slow {
     animation: spin 3s linear infinite;
@@ -436,5 +492,41 @@
     100% {
       transform: translateX(100%);
     }
+  }
+}
+
+@layer utilities {
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  
+  /* Custom placeholder styling for textarea */
+  .placeholder-calling-code::placeholder {
+    font-family: 'calling-code', 'Source Code Pro', monospace;
+    font-style: italic;
+    color: #808080;
+  }
+  
+  /* Custom background color for input page */
+  .bg-input-background {
+    background-color: #F5F1EC;
+  }
+  
+  /* Focus ring utilities for accessibility */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  }
+  
+  .focus-ring-inset {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset;
   }
 }
