@@ -609,7 +609,7 @@ export default function ResultPage({
         
         {/* Mobile/Tablet Layout: Single Column with Bottom Chat Drawer */}
         <div className="lg:hidden w-full flex flex-col relative">
-          <div className="flex-1 flex flex-col justify-center px-6" style={{ paddingBottom: '25vh' }}>
+          <div className="flex-1 flex flex-col justify-center px-6" style={{ paddingBottom: '30vh' }}>
             <div className="max-w-md mx-auto w-full">
               {/* Title positioned above image - Mobile Only */}
               {currentVibe?.title && (
@@ -643,17 +643,24 @@ export default function ResultPage({
             </div>
           </div>
 
-          {/* Bottom Chat Drawer - Collapsed State */}
+          {/* Bottom Chat Drawer - Collapsed State with SAFE AREA SUPPORT */}
           {!isChatOpen && (
-            <div className="fixed bottom-0 left-0 right-0 z-40">
-              {/* Chat Drawer Container with rounded top corners and 25% viewport height */}
+            <div 
+              className="fixed left-0 right-0 z-40"
+              style={{ 
+                bottom: 'max(0px, env(safe-area-inset-bottom))', // Respect safe area
+                paddingBottom: 'env(safe-area-inset-bottom)' // Add padding for safe area
+              }}
+            >
+              {/* Chat Drawer Container with rounded top corners and responsive height */}
               <div 
                 className="cursor-pointer relative transition-transform duration-300 ease-out"
                 onClick={handleMobileChatOpen}
                 style={{ 
                   backgroundColor: '#F5F1EC', 
                   borderRadius: '32px 32px 0px 0px',
-                  height: '25vh',
+                  height: '28vh', // Slightly increased height for better visibility
+                  minHeight: '200px', // Minimum height to ensure content is visible
                   border: '1px solid #D9CFC3',
                   borderBottom: 'none'
                 }}
@@ -749,7 +756,7 @@ export default function ResultPage({
         </div>
       </div>
 
-      {/* Mobile Chat Drawer - Expanded State with SMOOTH ANIMATIONS */}
+      {/* Mobile Chat Drawer - Expanded State with SMOOTH ANIMATIONS and SAFE AREA SUPPORT */}
       {isChatOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           {/* Backdrop with smooth fade */}
@@ -759,7 +766,7 @@ export default function ResultPage({
             onClick={onCloseChat}
           />
           
-          {/* Chat Panel with ENHANCED SMOOTH MOTION */}
+          {/* Chat Panel with ENHANCED SMOOTH MOTION and SAFE AREA SUPPORT */}
           <div 
             ref={drawerRef}
             className="absolute bottom-0 left-0 right-0 rounded-t-2xl flex flex-col transition-all duration-300 ease-out" 
@@ -770,7 +777,10 @@ export default function ResultPage({
               // NEW: Apply drag transform for smooth dragging
               transform: isDragging ? `translateY(${Math.max(0, dragCurrentY - dragStartY)}px)` : 'translateY(0)',
               // NEW: Smooth animation when not dragging
-              transition: isDragging ? 'none' : 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+              transition: isDragging ? 'none' : 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+              // CRITICAL: Add safe area support for bottom
+              paddingBottom: 'env(safe-area-inset-bottom)',
+              marginBottom: 'env(safe-area-inset-bottom)'
             }}
           >
             {/* UPDATED: Header with draggable handle - NO X BUTTON */}
@@ -862,7 +872,7 @@ export default function ResultPage({
               )}
             </div>
             
-            {/* FIXED: Input Area with smooth transitions */}
+            {/* FIXED: Input Area with smooth transitions and safe area support */}
             <div className="flex-shrink-0 transition-all duration-200" style={{ borderTop: '1px solid #D9CFC3' }}>
               <div className="p-4">
                 <div className="relative">
@@ -914,7 +924,7 @@ export default function ResultPage({
         </div>
       )}
 
-      {/* Enhanced CSS for smooth animations */}
+      {/* Enhanced CSS for smooth animations and safe area support */}
       <style jsx>{`
         .line-clamp-2 {
           display: -webkit-box;
@@ -960,6 +970,13 @@ export default function ResultPage({
         .transition-all {
           transition-property: all;
           transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* CRITICAL: Safe area support for iOS devices */
+        @supports (padding: max(0px)) {
+          .safe-area-bottom {
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
+          }
         }
       `}</style>
     </div>
