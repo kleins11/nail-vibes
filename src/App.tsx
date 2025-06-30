@@ -4,6 +4,7 @@ import { extractTagsFromPrompt } from './services/extractTagsFromPrompt';
 import { generateTitle } from './services/titleGenerator';
 import LandingPage from './components/LandingPage';
 import ResultPage from './components/ResultPage';
+import LoadingPage from './components/LoadingPage';
 import TransitionPage from './components/TransitionPage';
 import ReverseTransitionPage from './components/ReverseTransitionPage';
 
@@ -14,7 +15,7 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-type AppState = 'landing' | 'result' | 'transitioning' | 'reverse-transitioning';
+type AppState = 'landing' | 'result' | 'loading' | 'transitioning' | 'reverse-transitioning';
 
 function App() {
   const [appState, setAppState] = useState<AppState>('landing');
@@ -141,99 +142,90 @@ function App() {
     }
   };
 
-  // 🌟 FIXED: Async search function that runs in background
-  const performVibeSearch = async (searchPrompt: string) => {
-    try {
-      console.log('🚀 Using RPC function to search for best match with prompt:', searchPrompt);
-      
-      // Extract tags from prompt
-      const tagExtraction = extractTagsFromPrompt(searchPrompt);
-      console.log('🏷️ Extracted tags:', tagExtraction.combinedTags);
-      
-      // Call the new RPC function
-      const result = await fetchBestMatchingDesign(tagExtraction.combinedTags);
-      
-      if (result.message) {
-        // Handle error case
-        console.error('❌ RPC function returned error:', result.message);
-        setError(result.message);
-        setAppState('landing');
-        return;
-      }
-      
-      if (result.data) {
-        console.log('✅ Found design via RPC:', result.data);
-        
-        // Generate dynamic title based on user prompt
-        const dynamicTitle = generateTitle(searchPrompt, tagExtraction.matchedConcept);
-        console.log('🏷️ Generated title:', dynamicTitle);
-        
-        // Create a mock vibe object that matches our interface
-        const mockVibe: VibeMatchData = {
-          id: result.data.id,
-          image_url: result.data.image_url,
-          title: dynamicTitle, // Use the generated title instead of database title
-          tags: result.data.tags || [],
-          description: result.data.description,
-          source_url: result.data.source_url,
-          match_score: result.data.match_score || 1,
-          primary_matches: result.data.primary_matches || 0,
-          modifier_matches: result.data.modifier_matches || 0,
-          match_type: 'all_primary' as const
-        };
-        
-        setCurrentVibe(mockVibe);
-        setMatchInfo({
-          primaryTags: tagExtraction.primaryTags,
-          modifierTags: tagExtraction.modifierTags,
-          matchedConcept: tagExtraction.matchedConcept,
-          searchStrategy: 'rpc_function'
-        });
-        
-        // Create chat messages
-        const userMessage: ChatMessage = {
-          id: Date.now().toString(),
-          type: 'user',
-          content: searchPrompt,
-          timestamp: new Date()
-        };
-        
-        const systemMessage: ChatMessage = {
-          id: (Date.now() + 1).toString(),
-          type: 'system',
-          content: result.data.description || "Here's a perfect nail design that matches your vibe! ✨",
-          timestamp: new Date()
-        };
-        
-        setChatMessages([userMessage, systemMessage]);
-        
-        // 🌟 DIRECT transition to result - NO loading state!
-        setAppState('result');
-      }
-    } catch (error) {
-      console.error('❌ Error in performVibeSearch:', error);
-      setError('An unexpected error occurred. Please try again.');
-      setAppState('landing');
-    }
-  };
-
-  // 🌟 FIXED: Start reverse transition and search in parallel
-  const handleInitialSubmit = async () => {
+  // Example usage of fetchBestMatchingDesign function
+  const handleInitialSubmitWithRPC = async () => {
     if (!prompt.trim()) return;
     
     setError(null);
     
-    // 🌟 START REVERSE TRANSITION immediately
+    // 🌟 START REVERSE TRANSITION - Float into sparkly mist!
     setAppState('reverse-transitioning');
     
-    // 🌟 START SEARCH in parallel (don't wait for transition)
-    performVibeSearch(prompt);
-    
-    // 🌟 After transition completes, we'll either have results or still be searching
-    setTimeout(() => {
-      // If we're still in reverse-transitioning state, it means search is still ongoing
-      // The search will update the state when it completes
-    }, 1200);
+    // Wait for reverse transition to complete before starting search
+    setTimeout(async () => {
+      setAppState('loading');
+      
+      try {
+        console.log('🚀 Using RPC function to search for best match with prompt:', prompt);
+        
+        // Extract tags from prompt
+        const tagExtraction = extractTagsFromPrompt(prompt);
+        console.log('🏷️ Extracted tags:', tagExtraction.combinedTags);
+        
+        // Call the new RPC function
+        const result = await fetchBestMatchingDesign(tagExtraction.combinedTags);
+        
+        if (result.message) {
+          // Handle error case
+          console.error('❌ RPC function returned error:', result.message);
+          setError(result.message);
+          setAppState('landing');
+          return;
+        }
+        
+        if (result.data) {
+          console.log('✅ Found design via RPC:', result.data);
+          
+          // Generate dynamic title based on user prompt
+          const dynamicTitle = generateTitle(prompt, tagExtraction.matchedConcept);
+          console.log('🏷️ Generated title:', dynamicTitle);
+          
+          // Create a mock vibe object that matches our interface
+          const mockVibe: VibeMatchData = {
+            id: result.data.id,
+            image_url: result.data.image_url,
+            title: dynamicTitle, // Use the generated title instead of database title
+            tags: result.data.tags || [],
+            description: result.data.description,
+            source_url: result.data.source_url,
+            match_score: result.data.match_score || 1,
+            primary_matches: result.data.primary_matches || 0,
+            modifier_matches: result.data.modifier_matches || 0,
+            match_type: 'all_primary' as const
+          };
+          
+          setCurrentVibe(mockVibe);
+          setMatchInfo({
+            primaryTags: tagExtraction.primaryTags,
+            modifierTags: tagExtraction.modifierTags,
+            matchedConcept: tagExtraction.matchedConcept,
+            searchStrategy: 'rpc_function'
+          });
+          
+          // Create chat messages
+          const userMessage: ChatMessage = {
+            id: Date.now().toString(),
+            type: 'user',
+            content: prompt,
+            timestamp: new Date()
+          };
+          
+          const systemMessage: ChatMessage = {
+            id: (Date.now() + 1).toString(),
+            type: 'system',
+            content: result.data.description || "Here's a perfect nail design that matches your vibe! ✨",
+            timestamp: new Date()
+          };
+          
+          setChatMessages([userMessage, systemMessage]);
+          setAppState('result');
+        }
+      } catch (error) {
+        console.error('❌ Error in handleInitialSubmitWithRPC:', error);
+        setError('An unexpected error occurred. Please try again.');
+        setAppState('landing');
+      }
+    }, 1200); // Wait for reverse transition to complete
   };
 
   const handleGenerateImageWithImage = async () => {
@@ -301,6 +293,100 @@ function App() {
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const handleInitialSubmit = async () => {
+    if (!prompt.trim()) return;
+    
+    setError(null);
+    
+    // 🌟 START REVERSE TRANSITION - Float into sparkly mist!
+    setAppState('reverse-transitioning');
+    
+    // Wait for reverse transition to complete before starting search
+    setTimeout(async () => {
+      setAppState('loading');
+      
+      try {
+        console.log('🚀 Searching for best vibe match with prompt:', prompt);
+        
+        // Call the enhanced backend service
+        const result: VibeMatchResult = await findBestVibeMatch(prompt);
+        
+        if (result.success && result.data) {
+          const { vibe, primaryTags, modifierTags, matchedConcept, searchStrategy } = result.data;
+          
+          console.log('✅ Found best matching vibe:', vibe);
+          console.log('🎯 Match details:', {
+            concept: matchedConcept,
+            primaryTags,
+            modifierTags,
+            strategy: searchStrategy,
+            matchType: vibe.match_type,
+            score: vibe.match_score
+          });
+          
+          // Generate dynamic title based on user prompt
+          const dynamicTitle = generateTitle(prompt, matchedConcept);
+          console.log('🏷️ Generated title:', dynamicTitle);
+          
+          // Update the vibe with the dynamic title
+          const updatedVibe = {
+            ...vibe,
+            title: dynamicTitle
+          };
+          
+          // Set the current vibe and match info for display
+          setCurrentVibe(updatedVibe);
+          setMatchInfo({
+            primaryTags,
+            modifierTags,
+            matchedConcept,
+            searchStrategy
+          });
+          
+          // Create chat messages with enhanced match information
+          const userMessage: ChatMessage = {
+            id: Date.now().toString(),
+            type: 'user',
+            content: prompt,
+            timestamp: new Date()
+          };
+          
+          // Create a more informative system message
+          let systemMessageContent = "Here's a perfect nail design that matches your vibe! ✨";
+          
+          if (matchedConcept) {
+            systemMessageContent = `Perfect! I found a ${matchedConcept} inspired design that matches your vibe! ✨`;
+          }
+          
+          if (vibe.match_type === 'all_primary') {
+            systemMessageContent += ` This design matches all your core style elements.`;
+          } else if (vibe.match_type === 'some_primary') {
+            systemMessageContent += ` This design captures the essence of your style.`;
+          }
+          
+          const systemMessage: ChatMessage = {
+            id: (Date.now() + 1).toString(),
+            type: 'system',
+            content: vibe.description || systemMessageContent,
+            timestamp: new Date()
+          };
+          
+          setChatMessages([userMessage, systemMessage]);
+          setAppState('result');
+        } else {
+          // Handle error case
+          console.error('❌ Failed to find best vibe match:', result.error);
+          setError(result.error || 'Failed to find a matching vibe');
+          setAppState('landing');
+        }
+      } catch (error) {
+        console.error('❌ Error in handleInitialSubmit:', error);
+        setError('An unexpected error occurred. Please try again.');
+        setAppState('landing');
+      }
+    }, 1200); // Wait for reverse transition to complete
   };
 
   // NIKO CREATED FUNCTION
@@ -464,6 +550,11 @@ function App() {
   // Transition Screen - ULTRA SMOOTH
   if (appState === 'transitioning') {
     return <TransitionPage currentVibe={currentVibe} />;
+  }
+
+  // Loading Screen
+  if (appState === 'loading') {
+    return <LoadingPage onLogoClick={handleLogoClick} />;
   }
 
   // Landing Screen
