@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { findBestVibeMatch, VibeMatchResult, VibeMatchData, fetchBestMatchingDesign } from './services/vibeService';
 import { extractTagsFromPrompt } from './services/extractTagsFromPrompt';
+import { generateTitle } from './services/titleGenerator';
 import LandingPage from './components/LandingPage';
 import ResultPage from './components/ResultPage';
 import LoadingPage from './components/LoadingPage';
+import TransitionPage from './components/TransitionPage';
 
 interface ChatMessage {
   id: string;
@@ -12,7 +14,7 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-type AppState = 'landing' | 'result' | 'loading';
+type AppState = 'landing' | 'result' | 'loading' | 'transitioning';
 
 function App() {
   const [appState, setAppState] = useState<AppState>('landing');
@@ -39,23 +41,39 @@ function App() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
 
+  // ULTRA SMOOTH transition state management
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
   const handleLogoClick = () => {
-    setAppState('landing');
-    setPrompt('');
-    setRefinePrompt('');
-    setRefinedImageUrl('');
-    setChatMessages([]);
-    setChatInput('');
-    setIsChatOpen(false);
-    setIsTyping(false);
-    setIsRefining(false);
-    setCurrentVibe(null);
-    setMatchInfo(null);
-    setError(null);
-    setGeneratePrompt('');
-    setGeneratedImageUrl('');
-    setIsGenerating(false);
-    setGenerateError(null);
+    // Prevent multiple clicks during transition
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
+    setAppState('transitioning');
+    
+    // SMOOTH reset after transition completes - NO HARD REFRESH
+    setTimeout(() => {
+      // Reset all state smoothly
+      setPrompt('');
+      setRefinePrompt('');
+      setRefinedImageUrl('');
+      setChatMessages([]);
+      setChatInput('');
+      setIsChatOpen(false);
+      setIsTyping(false);
+      setIsRefining(false);
+      setCurrentVibe(null);
+      setMatchInfo(null);
+      setError(null);
+      setGeneratePrompt('');
+      setGeneratedImageUrl('');
+      setIsGenerating(false);
+      setGenerateError(null);
+      
+      // Smoothly transition to landing
+      setAppState('landing');
+      setIsTransitioning(false);
+    }, 1200); // Match the transition duration exactly
   };
 
   // Image generation function with improved error handling
@@ -151,11 +169,15 @@ function App() {
       if (result.data) {
         console.log('✅ Found design via RPC:', result.data);
         
+        // Generate dynamic title based on user prompt
+        const dynamicTitle = generateTitle(prompt, tagExtraction.matchedConcept);
+        console.log('🏷️ Generated title:', dynamicTitle);
+        
         // Create a mock vibe object that matches our interface
         const mockVibe: VibeMatchData = {
           id: result.data.id,
           image_url: result.data.image_url,
-          title: result.data.title,
+          title: dynamicTitle, // Use the generated title instead of database title
           tags: result.data.tags || [],
           description: result.data.description,
           source_url: result.data.source_url,
@@ -290,8 +312,18 @@ function App() {
           score: vibe.match_score
         });
         
+        // Generate dynamic title based on user prompt
+        const dynamicTitle = generateTitle(prompt, matchedConcept);
+        console.log('🏷️ Generated title:', dynamicTitle);
+        
+        // Update the vibe with the dynamic title
+        const updatedVibe = {
+          ...vibe,
+          title: dynamicTitle
+        };
+        
         // Set the current vibe and match info for display
-        setCurrentVibe(vibe);
+        setCurrentVibe(updatedVibe);
         setMatchInfo({
           primaryTags,
           modifierTags,
@@ -390,6 +422,20 @@ function App() {
         // Set the refined image URL
         setRefinedImageUrl(result.image);
         
+        // Generate updated title that incorporates the refinement
+        const originalPrompt = prompt;
+        const refinementPrompt = refinePrompt;
+        const combinedPrompt = `${originalPrompt} ${refinementPrompt}`;
+        const updatedTitle = generateTitle(combinedPrompt, matchInfo?.matchedConcept);
+        
+        // Update the current vibe with the new title
+        if (currentVibe) {
+          setCurrentVibe({
+            ...currentVibe,
+            title: updatedTitle
+          });
+        }
+        
         // Add success message to chat
         const userMessage: ChatMessage = {
           id: Date.now().toString(),
@@ -480,6 +526,11 @@ function App() {
   const handleChatInputBlur = () => {
     setTimeout(() => setIsTyping(false), 100);
   };
+
+  // Transition Screen - ULTRA SMOOTH
+  if (appState === 'transitioning') {
+    return <TransitionPage currentVibe={currentVibe} />;
+  }
 
   // Loading Screen
   if (appState === 'loading') {

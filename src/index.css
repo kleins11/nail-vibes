@@ -143,30 +143,10 @@
     .m3-col-desktop-12 { grid-column: span 12; }
   }
   
-  /* Content area with M3 grid constraints - UPDATED with gradient background */
+  /* Content area with M3 grid constraints - Base styles only */
   .m3-content-area {
     width: 100%;
     position: relative;
-  }
-  
-  /* Add gradient background to the entire content area - positioned to cover title and textarea */
-  .m3-content-area::before {
-    content: '';
-    position: absolute;
-    /* Position to cover both title and textarea area */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 900px; /* Large width to match Figma */
-    height: 700px; /* Increased height to ensure it covers title area */
-    background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    z-index: 0; /* Behind all content */
-    pointer-events: none;
-    opacity: 1;
-    display: block;
   }
   
   /* Mobile: Full width (4 columns) */
@@ -174,24 +154,12 @@
     .m3-content-area {
       grid-column: span 4;
     }
-    
-    /* Larger gradient on mobile to ensure coverage */
-    .m3-content-area::before {
-      width: 800px;
-      height: 600px;
-    }
   }
   
   /* Tablet: 6 of 8 columns, centered */
   @media (min-width: 600px) and (max-width: 839px) {
     .m3-content-area {
       grid-column: 2 / span 6;
-    }
-    
-    /* Adjust gradient size for tablet */
-    .m3-content-area::before {
-      width: 750px;
-      height: 550px;
     }
   }
   
@@ -202,25 +170,66 @@
     }
   }
   
-  /* Ensure title and textarea are above the gradient */
-  .text-display {
-    position: relative;
-    z-index: 2;
+  /* 🎯 CRITICAL FIX: Gradient background - ALWAYS behind content with negative z-index */
+  .landing-page .m3-content-area::before {
+    content: '';
+    position: absolute;
+    /* Position gradient to match Figma - centered but lower to accommodate title above */
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1200px; /* Much larger width to match Figma's spread */
+    height: 600px; /* Taller height to match Figma proportions */
+    background-image: url('https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//hero-swirl.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    /* 🚨 CRITICAL: Negative z-index ensures gradient is ALWAYS behind content */
+    z-index: -10; /* NEGATIVE z-index puts it behind everything */
+    pointer-events: none;
+    opacity: 1;
+    display: block;
   }
   
-  /* Textarea Long Component - Updated to work with M3 grid */
+  /* Mobile: Adjust gradient for mobile to match Figma proportions */
+  @media (max-width: 599px) {
+    .landing-page .m3-content-area::before {
+      width: 900px;
+      height: 450px;
+      top: 55%;
+      /* Keep negative z-index on mobile too */
+      z-index: -10;
+    }
+  }
+  
+  /* Tablet: Adjust gradient for tablet to match Figma proportions */
+  @media (min-width: 600px) and (max-width: 839px) {
+    .landing-page .m3-content-area::before {
+      width: 1000px;
+      height: 500px;
+      top: 58%;
+      /* Keep negative z-index on tablet too */
+      z-index: -10;
+    }
+  }
+  
+  /* 🎯 CRITICAL: Ensure title is ALWAYS above the gradient with high positive z-index */
+  .text-display {
+    position: relative;
+    z-index: 100; /* Very high positive z-index ensures it's always above gradient */
+  }
+  
+  /* Textarea Long Component - Updated to work with M3 grid and match Figma spacing */
   .textarea-long-container {
     position: relative;
     width: 100%;
-    /* Apply the generous spacing above the textarea container */
-    margin-top: 120px;
-    /* Ensure this container can hold positioned elements */
-    z-index: 2; /* Above the gradient background */
+    /* Set exact 40px spacing as requested to match Figma */
+    margin-top: 40px;
+    /* 🎯 CRITICAL: High z-index to ensure container is ALWAYS above gradient */
+    z-index: 100; /* Very high positive z-index ensures it's always above gradient */
   }
   
-  /* Remove the old gradient background from textarea container since it's now on m3-content-area */
-  
-  /* Textarea Long Component Styling with Drop Shadow - Fixed to match Figma */
+  /* Textarea Long Component Styling with Drop Shadow and Enhanced Focus States */
   .textarea-long {
     width: 100%;
     height: 138px;
@@ -237,14 +246,36 @@
     /* Drop shadow matching Figma: X=0, Y=20px, Blur=20px, Spread=0px, Color=#9B9BA9 at 25% opacity */
     box-shadow: 0 20px 20px 0 rgba(155, 155, 169, 0.25);
     position: relative;
-    z-index: 3; /* Above the gradient background */
+    /* 🎯 CRITICAL: Very high z-index to ensure textarea is ALWAYS above gradient */
+    z-index: 110; /* Even higher z-index for the actual input */
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* ULTRA SMOOTH hardware acceleration */
+    will-change: transform, opacity, filter, box-shadow;
+    backface-visibility: hidden;
+    perspective: 1000px;
+    transform-style: preserve-3d;
   }
   
+  /* Enhanced Focus State for Long Textarea - ULTRA SMOOTH */
   .textarea-long:focus {
     outline: none;
-    border-color: #E6E6E6;
-    /* Maintain shadow on focus */
-    box-shadow: 0 20px 20px 0 rgba(155, 155, 169, 0.25);
+    border-color: #3B82F6; /* Blue-500 */
+    background-color: #FFFFFF;
+    /* Enhanced shadow with blue tint on focus */
+    box-shadow: 
+      0 20px 20px 0 rgba(155, 155, 169, 0.25),
+      0 0 0 3px rgba(59, 130, 246, 0.1),
+      0 4px 12px 0 rgba(59, 130, 246, 0.15);
+    transform: translateY(-1px) scale(1.01);
+  }
+  
+  /* Hover state for long textarea - ULTRA SMOOTH */
+  .textarea-long:hover:not(:focus) {
+    border-color: #D1D5DB; /* Gray-300 */
+    box-shadow: 
+      0 20px 20px 0 rgba(155, 155, 169, 0.3),
+      0 2px 8px 0 rgba(155, 155, 169, 0.1);
+    transform: scale(1.01);
   }
   
   /* Button positioning within textarea container */
@@ -258,8 +289,92 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s;
-    z-index: 4; /* Above everything */
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* 🎯 CRITICAL: Highest z-index for the button to be ALWAYS above everything */
+    z-index: 120; /* Highest z-index for the button */
+    /* ULTRA SMOOTH hardware acceleration */
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  /* Enhanced button states - ULTRA SMOOTH */
+  .textarea-long-button:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px 0 rgba(59, 130, 246, 0.3);
+  }
+  
+  .textarea-long-button:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+  
+  /* Short Form Input Styling - For chat and refine inputs */
+  .input-short {
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: 1px solid #E5E7EB; /* Gray-200 */
+    background-color: #F9FAFB; /* Gray-50 */
+    /* ULTRA SMOOTH hardware acceleration */
+    will-change: transform, opacity, filter, box-shadow;
+    backface-visibility: hidden;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+  
+  /* Enhanced Focus State for Short Inputs - ULTRA SMOOTH */
+  .input-short:focus {
+    outline: none;
+    border-color: #3B82F6; /* Blue-500 */
+    background-color: #FFFFFF;
+    /* Enhanced shadow with blue tint on focus */
+    box-shadow: 
+      0 4px 8px 0 rgba(155, 155, 169, 0.25),
+      0 0 0 3px rgba(59, 130, 246, 0.1),
+      0 2px 6px 0 rgba(59, 130, 246, 0.15);
+    transform: translateY(-1px) scale(1.01);
+  }
+  
+  /* Hover state for short inputs - ULTRA SMOOTH */
+  .input-short:hover:not(:focus):not(:disabled) {
+    border-color: #D1D5DB; /* Gray-300 */
+    background-color: #FFFFFF;
+    box-shadow: 
+      0 4px 8px 0 rgba(155, 155, 169, 0.25),
+      0 1px 3px 0 rgba(155, 155, 169, 0.1);
+    transform: scale(1.01);
+  }
+  
+  /* Disabled state for inputs */
+  .input-short:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #F3F4F6; /* Gray-100 */
+    border-color: #E5E7EB; /* Gray-200 */
+    transform: none; /* No hover effects when disabled */
+  }
+  
+  /* Input button styling for consistency - ULTRA SMOOTH */
+  .input-button {
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* ULTRA SMOOTH hardware acceleration */
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  .input-button:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px 0 rgba(59, 130, 246, 0.3);
+  }
+  
+  .input-button:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+  
+  .input-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
   
   /* Gradient Shapes Auto-Scroll Component - Seamless infinite scroll */
@@ -335,24 +450,30 @@
       font-size: 2.5rem;
     }
     
-    /* FIXED: Reduce spacing between title and textarea on mobile to match Figma */
+    /* Keep 40px spacing on mobile as well for consistency with Figma */
     .textarea-long-container {
-      margin-top: 60px; /* Reduced from 100px to match Figma spacing */
+      margin-top: 40px;
     }
   }
   
-  /* Very small screens - ensure gradient still covers everything */
+  /* Very small screens - ensure gradient still covers everything but stays behind */
   @media (max-width: 400px) {
-    .m3-content-area::before {
-      width: 700px; /* Still large enough */
-      height: 500px;
+    .landing-page .m3-content-area::before {
+      width: 800px; /* Smaller for very small screens */
+      height: 400px;
+      top: 52%;
+      /* Keep negative z-index */
+      z-index: -10;
     }
   }
   
-  /* Extra small height screens - adjust gradient positioning */
+  /* Extra small height screens - adjust gradient positioning but keep behind */
   @media (max-height: 600px) {
-    .m3-content-area::before {
-      height: 450px; /* Slightly smaller height for very short screens */
+    .landing-page .m3-content-area::before {
+      height: 400px; /* Slightly smaller height for very short screens */
+      top: 55%;
+      /* Keep negative z-index */
+      z-index: -10;
     }
   }
 }
@@ -381,5 +502,35 @@
   /* Custom background color for input page */
   .bg-input-background {
     background-color: #F5F1EC;
+  }
+  
+  /* Focus ring utilities for accessibility */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  }
+  
+  .focus-ring-inset {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset;
+  }
+
+  /* ULTRA SMOOTH transition utilities */
+  .transition-elegant {
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .transition-smooth {
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .transition-bounce {
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  /* Hardware acceleration for all smooth elements */
+  .smooth-element {
+    will-change: transform, opacity, filter;
+    backface-visibility: hidden;
+    perspective: 1000px;
+    transform-style: preserve-3d;
   }
 }

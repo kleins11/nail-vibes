@@ -6,13 +6,13 @@ interface LoadingPageProps {
 
 export default function LoadingPage({ onLogoClick }: LoadingPageProps) {
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen flex flex-col relative" style={{ backgroundColor: '#F5F1EC' }}>
       {/* Header */}
       <div className="w-full px-4 md:px-8 lg:px-12">
         <div className="flex justify-center md:justify-start pt-8 pb-4">
           <button 
             onClick={onLogoClick}
-            className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
+            className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors focus-ring"
           >
             nv
           </button>
@@ -24,8 +24,15 @@ export default function LoadingPage({ onLogoClick }: LoadingPageProps) {
         <div className="m3-grid-container">
           <div className="m3-grid">
             <div className="m3-content-area text-center">
-              <div className="animate-spin w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-              <p className="text-gray-600">Finding your perfect vibe...</p>
+              
+              {/* Simple elegant spinner */}
+              <div className="mb-6 flex justify-center">
+                <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+
+              {/* Clean loading text */}
+              <p className="text-gray-600 font-calling-code">Finding your perfect vibe...</p>
+              
             </div>
           </div>
         </div>

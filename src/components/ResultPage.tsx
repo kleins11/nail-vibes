@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import { X, Minus, ArrowUp, Maximize2, RotateCcw } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { X, Minus, ArrowUp, RefreshCw } from 'lucide-react';
 import { VibeMatchData } from '../services/vibeService';
+import MagicalLoadingOverlay from './MagicalLoadingOverlay';
 
 interface ChatMessage {
   id: string;
@@ -52,6 +53,20 @@ const CHAT_BUBBLE_STYLES = [
   }
 ];
 
+// Gradient shapes from Supabase bucket
+const GRADIENT_SHAPES = [
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-11-Col2%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-12-Col4%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-1-Col3%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-2-Col5%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-4-Col8%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-5-Col10%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-5-Col1%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-6-Col4%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-7-Col9%201.png",
+  "https://ihmazbkomtatnvtweaun.supabase.co/storage/v1/object/public/gradient-shapes//Hey_Scamp_Gradient_Shape-8-Col2%201.png"
+];
+
 export default function ResultPage({
   currentVibe,
   matchInfo,
@@ -74,6 +89,13 @@ export default function ResultPage({
   const imageUrl = currentVibe?.image_url || SAMPLE_NAIL_IMAGE;
   const displayImageUrl = refinedImageUrl || imageUrl;
 
+  // State to track the most recently used gradient shape
+  const [lastUsedGradientShape, setLastUsedGradientShape] = useState<string>(GRADIENT_SHAPES[0]);
+  
+  // State to track when new images have loaded
+  const [imageLoadStates, setImageLoadStates] = useState<Record<string, boolean>>({});
+  const [pendingGradientUpdates, setPendingGradientUpdates] = useState<Record<string, string>>({});
+
   // Refs for auto-scrolling
   const desktopChatMessagesRef = useRef<HTMLDivElement>(null);
   const mobileChatMessagesRef = useRef<HTMLDivElement>(null);
@@ -91,6 +113,65 @@ export default function ResultPage({
     }
   }, [chatMessages, isRefining]); // Trigger on message changes and refining state
 
+  // Handle gradient shape updates when images load
+  useEffect(() => {
+    const systemMessages = chatMessages.filter(message => message.type === 'system');
+    if (systemMessages.length > 0) {
+      const lastSystemMessage = systemMessages[systemMessages.length - 1];
+      const newShape = getRandomGradientShape(lastSystemMessage.id);
+      
+      // Check if this is a refinement completion (when isRefining becomes false and we have a refined image)
+      const isRefinementComplete = !isRefining && refinedImageUrl;
+      
+      if (isRefinementComplete) {
+        // Store the pending gradient update for this message
+        setPendingGradientUpdates(prev => ({
+          ...prev,
+          [lastSystemMessage.id]: newShape
+        }));
+        
+        // Check if the refined image has already loaded
+        if (imageLoadStates[refinedImageUrl]) {
+          // Image is already loaded, update immediately
+          setLastUsedGradientShape(newShape);
+          setPendingGradientUpdates(prev => {
+            const updated = { ...prev };
+            delete updated[lastSystemMessage.id];
+            return updated;
+          });
+        }
+      } else if (!refinedImageUrl) {
+        // No refinement, update immediately (initial load)
+        setLastUsedGradientShape(newShape);
+      }
+    }
+  }, [chatMessages, isRefining, refinedImageUrl, imageLoadStates]);
+
+  // Handle image load events
+  const handleImageLoad = (imageUrl: string) => {
+    setImageLoadStates(prev => ({
+      ...prev,
+      [imageUrl]: true
+    }));
+
+    // Check if there are any pending gradient updates that can now be applied
+    const systemMessages = chatMessages.filter(message => message.type === 'system');
+    if (systemMessages.length > 0) {
+      const lastSystemMessage = systemMessages[systemMessages.length - 1];
+      const pendingShape = pendingGradientUpdates[lastSystemMessage.id];
+      
+      if (pendingShape && imageUrl === refinedImageUrl) {
+        // Apply the pending gradient update now that the image has loaded
+        setLastUsedGradientShape(pendingShape);
+        setPendingGradientUpdates(prev => {
+          const updated = { ...prev };
+          delete updated[lastSystemMessage.id];
+          return updated;
+        });
+      }
+    }
+  };
+
   // Function to get chat bubble style based on user message index
   const getChatBubbleStyle = (messageIndex: number) => {
     return CHAT_BUBBLE_STYLES[messageIndex % CHAT_BUBBLE_STYLES.length];
@@ -105,19 +186,53 @@ export default function ResultPage({
     return 'lg:max-w-[400px]'; // Very long messages
   };
 
+  // Function to get a random gradient shape for system messages
+  const getRandomGradientShape = (messageId: string) => {
+    // Use message ID to ensure consistent shape for each message
+    const hash = messageId.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    const index = Math.abs(hash) % GRADIENT_SHAPES.length;
+    return GRADIENT_SHAPES[index];
+  };
+
+  // Function to get the appropriate gradient shape for a message
+  const getGradientShapeForMessage = (message: ChatMessage) => {
+    // Check if there's a pending update for this message
+    const pendingShape = pendingGradientUpdates[message.id];
+    if (pendingShape && refinedImageUrl && !imageLoadStates[refinedImageUrl]) {
+      return lastUsedGradientShape; // Keep showing the previous shape until image loads
+    }
+    
+    // Otherwise, show the shape for this message
+    return getRandomGradientShape(message.id);
+  };
+
   // Get only user messages to determine the correct index for styling
   const userMessages = chatMessages.filter(message => message.type === 'user');
 
   return (
     <div className="h-screen flex flex-col overflow-hidden" style={{ backgroundColor: '#FFFAF4' }}>
-      {/* Header - Only for mobile/tablet */}
-      <div className="w-full px-4 md:px-8 lg:hidden flex-shrink-0">
-        <div className="flex justify-start pt-8 pb-4">
+      {/* Mobile/Tablet Header - Aligned like a proper header */}
+      <div className="w-full px-6 lg:hidden flex-shrink-0">
+        <div className="flex justify-between items-center pt-6 pb-4">
           <button 
             onClick={onLogoClick}
-            className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
+            className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors focus-ring"
           >
             nv
+          </button>
+          
+          {/* Mobile/Tablet New Vibe Button */}
+          <button
+            onClick={onLogoClick}
+            className="flex items-center space-x-3 px-4 py-2 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all duration-200 hover:scale-105 group focus-ring"
+          >
+            <div className="w-8 h-8 border-2 border-blue-600 rounded-full flex items-center justify-center group-hover:border-blue-700 transition-colors">
+              <RefreshCw className="w-4 h-4 text-blue-600 group-hover:text-blue-700 transition-colors" />
+            </div>
+            <span className="text-blue-600 font-calling-code font-medium group-hover:text-blue-700 transition-colors">New vibe</span>
           </button>
         </div>
       </div>
@@ -126,13 +241,13 @@ export default function ResultPage({
       <div className="flex-1 flex overflow-hidden">
         {/* Desktop Layout: Two Columns */}
         <div className="hidden lg:flex w-full h-full">
-          {/* Left Column: Chat - 1/3 width */}
-          <div className="w-1/3 flex flex-col border-r border-gray-200 h-full" style={{ backgroundColor: '#F5F1EC' }}>
+          {/* Left Column: Chat - Narrower width */}
+          <div className="w-1/4 flex flex-col border-r border-gray-200 h-full" style={{ backgroundColor: '#F5F1EC' }}>
             {/* Logo in Chat Section - Desktop Only with bottom border */}
             <div className="p-6 flex-shrink-0" style={{ borderBottom: '1px solid #D9CFC3' }}>
               <button 
                 onClick={onLogoClick}
-                className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors focus-ring"
               >
                 nv
               </button>
@@ -171,8 +286,13 @@ export default function ResultPage({
                       </div>
                     ) : (
                       <div className="flex items-start space-x-2">
-                        <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                          <span className="text-white text-xs">🤖</span>
+                        <div className="flex items-center justify-center flex-shrink-0 mt-1" style={{ width: '44px', height: '44px' }}>
+                          <img 
+                            src={getGradientShapeForMessage(message)}
+                            alt="Gradient shape"
+                            className="object-contain"
+                            style={{ width: '44px', height: '44px' }}
+                          />
                         </div>
                         <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words flex-1">{message.content}</p>
                       </div>
@@ -181,90 +301,110 @@ export default function ResultPage({
                 );
               })}
               
-              {/* Typing Indicator */}
+              {/* Clean Loading State - ONLY bouncing dots + text, NO gradient shape */}
               {isRefining && (
-                <div className="flex items-start space-x-2">
-                  <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-xs">🤖</span>
+                <div className="flex items-center space-x-3 justify-center py-4">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                   </div>
-                  <div className="flex items-center space-x-2 flex-1">
-                    <div className="animate-spin w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full"></div>
-                    <span className="text-sm text-gray-500 italic">Refining your design...</span>
-                  </div>
+                  <span className="text-sm text-gray-500 italic animate-pulse">Crafting your perfect design...</span>
                 </div>
               )}
             </div>
             
             {/* Chat Input - Fixed at bottom */}
             <div className="p-6 border-t border-gray-200 flex-shrink-0">
-              <div className="flex items-center space-x-3">
+              <div className="relative flex items-center">
                 <input
                   type="text"
                   value={refinePrompt}
                   onChange={(e) => setRefinePrompt(e.target.value)}
                   onKeyDown={(e) => handleKeyPress(e, false, true)}
                   placeholder="Keep vibing"
-                  className="flex-1 px-4 py-3 bg-gray-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code"
+                  className="input-short flex-1 px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
+                  style={{
+                    boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
+                    color: '#3F3F3F'
+                  }}
                   disabled={isRefining}
                 />
                 <button
                   onClick={onRefineSubmit}
                   disabled={!refinePrompt.trim() || isRefining}
-                  className="px-4 py-3 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-300 text-white rounded-full transition-colors text-sm font-medium"
+                  className="input-button absolute right-1 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10"
                 >
-                  Send
+                  {isRefining ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <ArrowUp className="w-4 h-4" />
+                  )}
                 </button>
               </div>
             </div>
           </div>
           
-          {/* Right Column: Image - 2/3 width */}
-          <div className="w-2/3 flex flex-col h-full">
-            {/* Image Header */}
-            <div className="p-6 border-b border-gray-200 flex-shrink-0">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs">💅</span>
-                  </div>
-                  <h1 className="font-calling-code font-bold text-[#3F3F3F] text-lg">
-                    {currentVibe?.title || "Black French tips on short natural nails"}
-                  </h1>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                    <Maximize2 className="w-4 h-4 text-gray-500" />
-                  </button>
-                  <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                    <RotateCcw className="w-4 h-4 text-gray-500" />
-                  </button>
-                </div>
+          {/* Right Column: Image - 3/4 width */}
+          <div className="w-3/4 flex flex-col h-full relative">
+            {/* Desktop Header - Aligned like mobile header */}
+            <div className="absolute top-6 left-6 right-6 z-10 flex justify-between items-center">
+              <div className="opacity-0 pointer-events-none">
+                {/* Invisible spacer to center the button */}
+                <span className="text-2xl font-pilar font-bold">nv</span>
               </div>
+              
+              {/* Desktop New Vibe Button - Aligned to match mobile */}
+              <button
+                onClick={onLogoClick}
+                className="flex items-center space-x-3 px-5 py-3 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all duration-200 hover:scale-105 group shadow-sm focus-ring"
+              >
+                <div className="w-8 h-8 border-2 border-blue-600 rounded-full flex items-center justify-center group-hover:border-blue-700 transition-colors">
+                  <RefreshCw className="w-4 h-4 text-blue-600 group-hover:text-blue-700 transition-colors" />
+                </div>
+                <span className="text-blue-600 font-calling-code font-medium group-hover:text-blue-700 transition-colors">New vibe</span>
+              </button>
             </div>
-            
-            {/* Image Display - Fixed, no scroll */}
-            <div className="flex-1 p-6 flex items-center justify-center overflow-hidden">
-              <div className="relative max-w-md w-full">
-                <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
+
+            {/* Image Display - Centered vertically with title */}
+            <div className="flex-1 flex flex-col justify-center items-center px-8 py-16">
+              <div className="w-full max-w-lg">
+                {/* Title positioned above image with proper spacing - LEFT ALIGNED */}
+                <div className="mb-6">
+                  <div className="flex items-center space-x-4 mb-2">
+                    <div className="flex items-center justify-center" style={{ width: '48px', height: '48px' }}>
+                      <img 
+                        src={lastUsedGradientShape}
+                        alt="Gradient shape"
+                        className="object-contain"
+                        style={{ width: '48px', height: '48px' }}
+                      />
+                    </div>
+                    <h1 className="font-calling-code font-bold text-[#3F3F3F] text-xl leading-tight">
+                      {currentVibe?.title || "Black French tips on short natural nails"}
+                    </h1>
+                  </div>
+                </div>
+                
+                {/* Image - Smaller to prevent scrolling */}
+                <div className="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg max-h-[60vh]">
                   <img 
                     src={displayImageUrl} 
                     alt="Generated nail design" 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-all duration-300"
+                    onLoad={() => handleImageLoad(displayImageUrl)}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = SAMPLE_NAIL_IMAGE;
+                      handleImageLoad(SAMPLE_NAIL_IMAGE);
                     }}
                   />
                   
-                  {/* Refining indicator */}
-                  {isRefining && (
-                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <div className="animate-spin w-8 h-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-2"></div>
-                        <p className="text-sm">Refining design...</p>
-                      </div>
-                    </div>
-                  )}
+                  {/* Magical Loading Overlay */}
+                  <MagicalLoadingOverlay 
+                    isVisible={isRefining} 
+                    message="Refining your design"
+                  />
                 </div>
               </div>
             </div>
@@ -272,100 +412,96 @@ export default function ResultPage({
         </div>
         
         {/* Mobile/Tablet Layout: Single Column with Modal Chat */}
-        <div className="lg:hidden w-full flex flex-col justify-center">
-          <div className="m3-grid-container">
-            <div className="m3-grid">
-              <div className="m3-content-area">
-                <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6 relative">
-                  <img 
-                    src={displayImageUrl} 
-                    alt="Generated nail design" 
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = SAMPLE_NAIL_IMAGE;
-                    }}
-                  />
-                  
-                  {/* Refining indicator */}
-                  {isRefining && (
-                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <div className="animate-spin w-8 h-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-2"></div>
-                        <p className="text-sm">Refining design...</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Enhanced Vibe Info */}
-                {currentVibe && (
-                  <div className="mb-4 text-center">
-                    {currentVibe.title && (
-                      <h1 className="font-calling-code font-bold text-[#3F3F3F] mb-2 text-lg">
-                        {currentVibe.title}
-                      </h1>
-                    )}
-                    
-                    {/* Match Type and Score Display */}
-                    <div className="mb-3 space-y-2">
-                      {matchInfo?.matchedConcept && (
-                        <div className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
-                          ✨ {matchInfo.matchedConcept} inspired
-                        </div>
-                      )}
-                      
-                      {currentVibe.match_type === 'all_primary' && (
-                        <div className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full ml-2">
-                          🎯 Perfect match
-                        </div>
-                      )}
-                      
-                      {currentVibe.match_type === 'some_primary' && (
-                        <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full ml-2">
-                          ✅ Great match
-                        </div>
-                      )}
-                      
-                      {currentVibe.primary_matches > 0 && (
-                        <div className="text-xs text-gray-600 mt-1">
-                          {currentVibe.primary_matches} core match{currentVibe.primary_matches > 1 ? 'es' : ''}
-                          {currentVibe.modifier_matches > 0 && ` + ${currentVibe.modifier_matches} style match${currentVibe.modifier_matches > 1 ? 'es' : ''}`}
-                        </div>
-                      )}
-                    </div>
-                    
-                    {/* Tags Display */}
-                    {currentVibe.tags && currentVibe.tags.length > 0 && (
-                      <div className="flex flex-wrap justify-center gap-2 mb-2">
-                        {currentVibe.tags.slice(0, 6).map((tag, index) => (
-                          <span 
-                            key={index}
-                            className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                        {currentVibe.tags.length > 6 && (
-                          <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                            +{currentVibe.tags.length - 6} more
-                          </span>
-                        )}
-                      </div>
-                    )}
+        <div className="lg:hidden w-full flex flex-col justify-center px-6">
+          <div className="max-w-md mx-auto w-full">
+            {/* Image - Smaller to prevent scrolling */}
+            <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6 max-h-[50vh]">
+              <img 
+                src={displayImageUrl} 
+                alt="Generated nail design" 
+                className="w-full h-full object-cover transition-all duration-300"
+                onLoad={() => handleImageLoad(displayImageUrl)}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = SAMPLE_NAIL_IMAGE;
+                  handleImageLoad(SAMPLE_NAIL_IMAGE);
+                }}
+              />
+              
+              {/* Magical Loading Overlay for mobile */}
+              <MagicalLoadingOverlay 
+                isVisible={isRefining} 
+                message="Refining your design"
+              />
+            </div>
+            
+            {/* Title positioned below image - LEFT ALIGNED */}
+            <div className="mb-6">
+              {currentVibe?.title && (
+                <h1 className="font-calling-code font-bold text-[#3F3F3F] mb-4 text-lg text-left">
+                  {currentVibe.title}
+                </h1>
+              )}
+              
+              {/* Match Type and Score Display - LEFT ALIGNED */}
+              <div className="mb-3 space-y-2 text-left">
+                {matchInfo?.matchedConcept && (
+                  <div className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
+                    ✨ {matchInfo.matchedConcept} inspired
                   </div>
                 )}
                 
-                {/* Chat Trigger */}
-                <div className="text-center">
-                  <button
-                    onClick={onOpenChat}
-                    className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                  >
-                    <span className="text-sm font-medium">Keep vibing</span>
-                  </button>
-                </div>
+                {currentVibe?.match_type === 'all_primary' && (
+                  <div className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full ml-2">
+                    🎯 Perfect match
+                  </div>
+                )}
+                
+                {currentVibe?.match_type === 'some_primary' && (
+                  <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full ml-2">
+                    ✅ Great match
+                  </div>
+                )}
+                
+                {currentVibe && currentVibe.primary_matches > 0 && (
+                  <div className="text-xs text-gray-600 mt-1 text-left">
+                    {currentVibe.primary_matches} core match{currentVibe.primary_matches > 1 ? 'es' : ''}
+                    {currentVibe.modifier_matches > 0 && ` + ${currentVibe.modifier_matches} style match${currentVibe.modifier_matches > 1 ? 'es' : ''}`}
+                  </div>
+                )}
               </div>
+              
+              {/* Tags Display - LEFT ALIGNED */}
+              {currentVibe?.tags && currentVibe.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {currentVibe.tags.slice(0, 6).map((tag, index) => (
+                    <span 
+                      key={index}
+                      className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                  {currentVibe.tags.length > 6 && (
+                    <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                      +{currentVibe.tags.length - 6} more
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            {/* Chat Trigger */}
+            <div className="text-center">
+              <button
+                onClick={onOpenChat}
+                className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg focus-ring"
+                disabled={isRefining}
+              >
+                <span className="text-sm font-medium">
+                  {isRefining ? 'Refining...' : 'Keep vibing'}
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -376,7 +512,8 @@ export default function ResultPage({
         <div className="fixed inset-0 z-50 lg:hidden">
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black bg-opacity-50"
+            className="absolute inset-0 backdrop-blur-sm"
+            style={{ backgroundColor: 'rgba(63, 63, 63, 0.5)' }}
             onClick={onCloseChat}
           />
           
@@ -386,13 +523,13 @@ export default function ResultPage({
             <div className="flex items-center justify-between p-4 border-b">
               <button
                 onClick={onCloseChat}
-                className="w-8 h-8 flex items-center justify-center"
+                className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors focus-ring"
               >
                 <Minus className="w-6 h-6 text-gray-400" />
               </button>
               <button
                 onClick={onCloseChat}
-                className="w-8 h-8 flex items-center justify-center"
+                className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors focus-ring"
               >
                 <X className="w-5 h-5 text-gray-400" />
               </button>
@@ -431,8 +568,13 @@ export default function ResultPage({
                       </div>
                     ) : (
                       <div className="flex items-start space-x-2">
-                        <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                          <span className="text-white text-xs">🤖</span>
+                        <div className="flex items-center justify-center flex-shrink-0 mt-1" style={{ width: '44px', height: '44px' }}>
+                          <img 
+                            src={getGradientShapeForMessage(message)}
+                            alt="Gradient shape"
+                            className="object-contain"
+                            style={{ width: '44px', height: '44px' }}
+                          />
                         </div>
                         <p className="font-calling-code text-sm text-[#3F3F3F] break-words flex-1">{message.content}</p>
                       </div>
@@ -440,11 +582,23 @@ export default function ResultPage({
                   </div>
                 );
               })}
+              
+              {/* Clean Loading State for Mobile - ONLY bouncing dots + text, NO gradient shape */}
+              {isRefining && (
+                <div className="flex items-center space-x-3 justify-center py-4">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  </div>
+                  <span className="text-sm text-gray-500 italic animate-pulse">Crafting your perfect design...</span>
+                </div>
+              )}
             </div>
             
             {/* Input Area */}
             <div className="p-4 border-t">
-              <div className="flex space-x-2">
+              <div className="relative flex items-center">
                 <input
                   type="text"
                   value={refinePrompt}
@@ -453,18 +607,22 @@ export default function ResultPage({
                   onFocus={onChatInputFocus}
                   onBlur={onChatInputBlur}
                   placeholder="make it chrome, add glitter, more pink..."
-                  className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code"
+                  className="input-short flex-1 px-4 py-3 pr-12 rounded-lg text-sm placeholder-calling-code textarea-calling-code"
+                  style={{
+                    boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
+                    color: '#3F3F3F'
+                  }}
                   disabled={isRefining}
                 />
                 <button
                   onClick={onRefineSubmit}
                   disabled={!refinePrompt.trim() || isRefining}
-                  className="w-12 h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 rounded-lg flex items-center justify-center transition-colors"
+                  className="input-button absolute right-1 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10"
                 >
                   {isRefining ? (
-                    <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   ) : (
-                    <ArrowUp className="w-5 h-5 text-white" />
+                    <ArrowUp className="w-4 h-4" />
                   )}
                 </button>
               </div>
@@ -473,7 +631,7 @@ export default function ResultPage({
             {/* Typing Indicator */}
             {isTyping && !isRefining && (
               <div className="p-4 pt-0">
-                <div className="text-xs text-gray-500 italic">
+                <div className="text-xs text-gray-500 italic animate-pulse">
                   Typing...
                 </div>
               </div>
