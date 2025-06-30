@@ -97,7 +97,9 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
             className="w-full px-4 md:px-8 lg:px-12 animate-ultra-smooth-appear" 
             style={{ 
               animationDelay: '0ms',
-              animationFillMode: 'both'
+              animationFillMode: 'both',
+              /* 🎯 CRITICAL: Very high z-index to ensure header is ALWAYS above gradient */
+              zIndex: 200
             }}
           >
             <div className="flex justify-center md:justify-start pt-8 pb-4">
@@ -117,7 +119,9 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
                     className="animate-ultra-smooth-appear" 
                     style={{ 
                       animationDelay: '100ms',
-                      animationFillMode: 'both'
+                      animationFillMode: 'both',
+                      /* 🎯 CRITICAL: Very high z-index to ensure title is ALWAYS above gradient */
+                      zIndex: 250
                     }}
                   >
                     <h1 className="text-display font-stratos-extrabold text-blue-600 mb-8 leading-tight text-center transition-all duration-300">
@@ -130,7 +134,9 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
                     className="animate-ultra-smooth-appear" 
                     style={{ 
                       animationDelay: '200ms',
-                      animationFillMode: 'both'
+                      animationFillMode: 'both',
+                      /* 🎯 CRITICAL: Very high z-index to ensure textarea container is ALWAYS above gradient */
+                      zIndex: 250
                     }}
                   >
                     <div className="textarea-long-container">
@@ -162,14 +168,16 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
             className="animate-ultra-smooth-appear" 
             style={{ 
               animationDelay: '300ms',
-              animationFillMode: 'both'
+              animationFillMode: 'both',
+              /* 🎯 CRITICAL: High z-index to ensure gradient shapes are above background gradient but below content */
+              zIndex: 50
             }}
           >
             <GradientShapesScroll />
           </div>
 
           {/* Subtle floating sparkles that continue after landing - SMOOTH CONTINUATION */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 5 }}>
             {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
@@ -282,7 +290,7 @@ export default function TransitionPage({ currentVibe }: TransitionPageProps) {
           }
         }
 
-        /* CRITICAL: Ensure all elements are hardware accelerated for smoothness */
+        /* CRITICAL: Hardware acceleration for all elements */
         .animate-fade-out-smooth,
         .animate-sparkle-float-smooth,
         .animate-gentle-pulse-smooth,

@@ -170,7 +170,7 @@
     }
   }
   
-  /* Gradient background - ONLY for landing page with specific class */
+  /* 🎯 CRITICAL FIX: Gradient background - ALWAYS behind content with negative z-index */
   .landing-page .m3-content-area::before {
     content: '';
     position: absolute;
@@ -184,7 +184,8 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    z-index: 1; /* Behind content but above page background */
+    /* 🚨 CRITICAL: Negative z-index ensures gradient is ALWAYS behind content */
+    z-index: -10; /* NEGATIVE z-index puts it behind everything */
     pointer-events: none;
     opacity: 1;
     display: block;
@@ -196,6 +197,8 @@
       width: 900px;
       height: 450px;
       top: 55%;
+      /* Keep negative z-index on mobile too */
+      z-index: -10;
     }
   }
   
@@ -205,13 +208,15 @@
       width: 1000px;
       height: 500px;
       top: 58%;
+      /* Keep negative z-index on tablet too */
+      z-index: -10;
     }
   }
   
-  /* Ensure title and textarea are above the gradient */
+  /* 🎯 CRITICAL: Ensure title is ALWAYS above the gradient with high positive z-index */
   .text-display {
     position: relative;
-    z-index: 3; /* Above gradient background */
+    z-index: 100; /* Very high positive z-index ensures it's always above gradient */
   }
   
   /* Textarea Long Component - Updated to work with M3 grid and match Figma spacing */
@@ -220,8 +225,8 @@
     width: 100%;
     /* Set exact 40px spacing as requested to match Figma */
     margin-top: 40px;
-    /* Ensure this container can hold positioned elements */
-    z-index: 3; /* Above the gradient background */
+    /* 🎯 CRITICAL: High z-index to ensure container is ALWAYS above gradient */
+    z-index: 100; /* Very high positive z-index ensures it's always above gradient */
   }
   
   /* Textarea Long Component Styling with Drop Shadow and Enhanced Focus States */
@@ -241,7 +246,8 @@
     /* Drop shadow matching Figma: X=0, Y=20px, Blur=20px, Spread=0px, Color=#9B9BA9 at 25% opacity */
     box-shadow: 0 20px 20px 0 rgba(155, 155, 169, 0.25);
     position: relative;
-    z-index: 4; /* Above everything */
+    /* 🎯 CRITICAL: Very high z-index to ensure textarea is ALWAYS above gradient */
+    z-index: 110; /* Even higher z-index for the actual input */
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     /* ULTRA SMOOTH hardware acceleration */
     will-change: transform, opacity, filter, box-shadow;
@@ -284,7 +290,8 @@
     align-items: center;
     justify-content: center;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    z-index: 5; /* Above everything */
+    /* 🎯 CRITICAL: Highest z-index for the button to be ALWAYS above everything */
+    z-index: 120; /* Highest z-index for the button */
     /* ULTRA SMOOTH hardware acceleration */
     will-change: transform, box-shadow;
     backface-visibility: hidden;
@@ -449,20 +456,24 @@
     }
   }
   
-  /* Very small screens - ensure gradient still covers everything */
+  /* Very small screens - ensure gradient still covers everything but stays behind */
   @media (max-width: 400px) {
     .landing-page .m3-content-area::before {
       width: 800px; /* Smaller for very small screens */
       height: 400px;
       top: 52%;
+      /* Keep negative z-index */
+      z-index: -10;
     }
   }
   
-  /* Extra small height screens - adjust gradient positioning */
+  /* Extra small height screens - adjust gradient positioning but keep behind */
   @media (max-height: 600px) {
     .landing-page .m3-content-area::before {
       height: 400px; /* Slightly smaller height for very short screens */
       top: 55%;
+      /* Keep negative z-index */
+      z-index: -10;
     }
   }
 }
