@@ -212,8 +212,8 @@
   .textarea-long-container {
     position: relative;
     width: 100%;
-    /* Reduced spacing to fix the gap issue */
-    margin-top: 80px;
+    /* No margin-top needed since error message now handles spacing */
+    margin-top: 0;
     /* Ensure this container can hold positioned elements */
     z-index: 3; /* Above the gradient background */
   }
@@ -331,11 +331,6 @@
   @media (max-width: 640px) {
     .text-display {
       font-size: 2.5rem;
-    }
-    
-    /* FIXED: Reduce spacing between title and textarea on mobile to match Figma */
-    .textarea-long-container {
-      margin-top: 40px; /* Further reduced for mobile */
     }
   }
   

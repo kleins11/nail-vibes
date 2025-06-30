@@ -52,13 +52,13 @@ export default function LandingPage({
         <div className="m3-grid-container">
           <div className="m3-grid">
             <div className="m3-content-area">
-              <h1 className="text-display font-stratos-extrabold text-blue-600 mb-8 leading-tight text-center">
+              <h1 className="text-display font-stratos-extrabold text-blue-600 leading-tight text-center">
                 What's your nail vibe?
               </h1>
               
-              {/* Error Message - Fixed z-index and spacing */}
+              {/* Error Message - Consistent spacing with title */}
               {error && (
-                <div className="relative z-10 mb-6 p-4 bg-red-50 border border-red-200 rounded-lg shadow-sm">
+                <div className="relative z-10 mt-8 mb-8 p-4 bg-red-50 border border-red-200 rounded-lg shadow-sm">
                   <p className="text-sm text-red-600 font-calling-code">{error}</p>
                 </div>
               )}
