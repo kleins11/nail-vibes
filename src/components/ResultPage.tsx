@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { X, Minus, ArrowUp } from 'lucide-react';
+import { X, Minus, ArrowUp, Home } from 'lucide-react';
 import { VibeMatchData } from '../services/vibeService';
 import MagicalLoadingOverlay from './MagicalLoadingOverlay';
 
@@ -151,12 +151,21 @@ export default function ResultPage({
     <div className="h-screen flex flex-col overflow-hidden" style={{ backgroundColor: '#FFFAF4' }}>
       {/* Header - Only for mobile/tablet */}
       <div className="w-full px-4 md:px-8 lg:hidden flex-shrink-0">
-        <div className="flex justify-start pt-8 pb-4">
+        <div className="flex justify-between items-center pt-8 pb-4">
           <button 
             onClick={onLogoClick}
             className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors"
           >
             nv
+          </button>
+          
+          {/* Mobile/Tablet Home Button */}
+          <button
+            onClick={onLogoClick}
+            className="flex items-center space-x-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full text-sm font-calling-code text-[#3F3F3F] hover:bg-white hover:shadow-md transition-all duration-200 hover:scale-105"
+          >
+            <Home className="w-4 h-4" />
+            <span>New vibe</span>
           </button>
         </div>
       </div>
@@ -287,6 +296,17 @@ export default function ResultPage({
           
           {/* Right Column: Image - 3/4 width to match the narrower chat */}
           <div className="w-3/4 flex flex-col h-full relative">
+            {/* Desktop Home Button - Positioned elegantly in top right */}
+            <div className="absolute top-8 right-8 z-10">
+              <button
+                onClick={onLogoClick}
+                className="flex items-center space-x-3 px-5 py-3 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-full text-sm font-calling-code text-[#3F3F3F] hover:bg-white hover:shadow-lg transition-all duration-200 hover:scale-105 group"
+              >
+                <Home className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
+                <span>New vibe</span>
+              </button>
+            </div>
+
             {/* Image Display - Takes up most of the space with title positioned around the image */}
             <div className="flex-1 p-8 flex flex-col justify-center overflow-hidden">
               <div className="relative w-full max-w-2xl mx-auto">
