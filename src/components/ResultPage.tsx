@@ -244,17 +244,7 @@ export default function ResultPage({
         <div className="hidden lg:flex w-full h-full">
           {/* Left Column: Chat - Narrower width */}
           <div className="w-1/4 flex flex-col h-full" style={{ backgroundColor: '#F5F1EC', borderRight: '1px solid #D9CFC3' }}>
-            {/* Logo in Chat Section - Desktop Only with bottom border */}
-            <div className="p-6 flex-shrink-0" style={{ borderBottom: '1px solid #D9CFC3' }}>
-              <button 
-                onClick={onLogoClick}
-                className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors focus-ring"
-              >
-                nv
-              </button>
-            </div>
-            
-            {/* Chat Messages - Scrollable */}
+            {/* Chat Messages - Scrollable - NO HEADER */}
             <div 
               ref={desktopChatMessagesRef}
               className="flex-1 overflow-y-auto p-6 space-y-4"
@@ -351,14 +341,17 @@ export default function ResultPage({
           
           {/* Right Column: Image - 3/4 width */}
           <div className="w-3/4 flex flex-col h-full relative">
-            {/* Desktop Header - Aligned like mobile header */}
+            {/* Desktop Header with Logo and New Vibe Button */}
             <div className="absolute top-6 left-6 right-6 z-10 flex justify-between items-center">
-              <div className="opacity-0 pointer-events-none">
-                {/* Invisible spacer to center the button */}
-                <span className="text-2xl font-pilar font-bold">nv</span>
-              </div>
+              {/* Logo - Left aligned */}
+              <button 
+                onClick={onLogoClick}
+                className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors focus-ring"
+              >
+                nv
+              </button>
               
-              {/* Desktop New Vibe Button - Aligned to match mobile */}
+              {/* Desktop New Vibe Button - Right aligned */}
               <button
                 onClick={onLogoClick}
                 className="flex items-center space-x-3 px-5 py-3 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all duration-200 hover:scale-105 group shadow-sm focus-ring"
