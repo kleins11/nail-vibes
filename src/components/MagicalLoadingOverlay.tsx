@@ -40,7 +40,12 @@ export default function MagicalLoadingOverlay({
   if (!isVisible) return null;
 
   return (
-    <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-black/60 backdrop-blur-sm flex items-center justify-center z-50 rounded-2xl overflow-hidden">
+    <div 
+      className="absolute inset-0 backdrop-blur-sm flex items-center justify-center z-50 rounded-2xl overflow-hidden"
+      style={{ 
+        background: 'linear-gradient(135deg, rgba(63, 63, 63, 0.6) 0%, rgba(63, 63, 63, 0.5) 50%, rgba(63, 63, 63, 0.6) 100%)'
+      }}
+    >
       {/* Animated background particles */}
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(12)].map((_, i) => (

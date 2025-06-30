@@ -265,7 +265,8 @@ export default function ResultPage({
                   placeholder="Keep vibing"
                   className="w-full px-4 py-3 pr-12 bg-gray-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code transition-all duration-200"
                   style={{
-                    boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)'
+                    boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
+                    color: '#3F3F3F'
                   }}
                   disabled={isRefining}
                 />
@@ -433,7 +434,8 @@ export default function ResultPage({
         <div className="fixed inset-0 z-50 lg:hidden">
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"
+            className="absolute inset-0 backdrop-blur-sm"
+            style={{ backgroundColor: 'rgba(63, 63, 63, 0.5)' }}
             onClick={onCloseChat}
           />
           
@@ -517,7 +519,8 @@ export default function ResultPage({
                   placeholder="make it chrome, add glitter, more pink..."
                   className="w-full px-4 py-3 pr-12 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-calling-code textarea-calling-code transition-all duration-200"
                   style={{
-                    boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)'
+                    boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
+                    color: '#3F3F3F'
                   }}
                   disabled={isRefining}
                 />
