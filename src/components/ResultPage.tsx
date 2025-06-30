@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { X, Minus, ArrowUp, Home } from 'lucide-react';
+import { X, Minus, ArrowUp, RefreshCw } from 'lucide-react';
 import { VibeMatchData } from '../services/vibeService';
 import MagicalLoadingOverlay from './MagicalLoadingOverlay';
 
@@ -159,13 +159,15 @@ export default function ResultPage({
             nv
           </button>
           
-          {/* Mobile/Tablet Home Button */}
+          {/* Mobile/Tablet New Vibe Button - Styled like attachment */}
           <button
             onClick={onLogoClick}
-            className="flex items-center space-x-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full text-sm font-calling-code text-[#3F3F3F] hover:bg-white hover:shadow-md transition-all duration-200 hover:scale-105"
+            className="flex items-center space-x-3 px-4 py-2 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all duration-200 hover:scale-105 group"
           >
-            <Home className="w-4 h-4" />
-            <span>New vibe</span>
+            <div className="w-8 h-8 border-2 border-blue-600 rounded-full flex items-center justify-center group-hover:border-blue-700 transition-colors">
+              <RefreshCw className="w-4 h-4 text-blue-600 group-hover:text-blue-700 transition-colors" />
+            </div>
+            <span className="text-blue-600 font-medium group-hover:text-blue-700 transition-colors">New vibe</span>
           </button>
         </div>
       </div>
@@ -296,14 +298,16 @@ export default function ResultPage({
           
           {/* Right Column: Image - 3/4 width to match the narrower chat */}
           <div className="w-3/4 flex flex-col h-full relative">
-            {/* Desktop Home Button - Positioned elegantly in top right */}
+            {/* Desktop New Vibe Button - Styled exactly like attachment */}
             <div className="absolute top-8 right-8 z-10">
               <button
                 onClick={onLogoClick}
-                className="flex items-center space-x-3 px-5 py-3 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-full text-sm font-calling-code text-[#3F3F3F] hover:bg-white hover:shadow-lg transition-all duration-200 hover:scale-105 group"
+                className="flex items-center space-x-3 px-5 py-3 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all duration-200 hover:scale-105 group shadow-sm"
               >
-                <Home className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
-                <span>New vibe</span>
+                <div className="w-8 h-8 border-2 border-blue-600 rounded-full flex items-center justify-center group-hover:border-blue-700 transition-colors">
+                  <RefreshCw className="w-4 h-4 text-blue-600 group-hover:text-blue-700 transition-colors" />
+                </div>
+                <span className="text-blue-600 font-medium group-hover:text-blue-700 transition-colors">New vibe</span>
               </button>
             </div>
 
