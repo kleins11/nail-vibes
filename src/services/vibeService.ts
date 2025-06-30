@@ -1,4 +1,4 @@
-import { supabase, VibeIdea, UserPrompt } from '../lib/supabase';
+import { supabase, VibeIdea } from '../lib/supabase';
 import { extractTagsFromPrompt } from './extractTagsFromPrompt';
 import { findPrioritizedVibeMatch, PrioritizedVibeResult } from './prioritizedVibeSearch';
 

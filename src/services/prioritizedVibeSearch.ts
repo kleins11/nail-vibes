@@ -297,14 +297,11 @@ function selectRandomWeightedResult(results: PrioritizedVibeResult[]): Prioritiz
 
   // Sort by match score (highest first) and take top results
   const sortedResults = results.sort((a, b) => b.match_score - a.match_score);
-  const topScore = sortedResults[0].match_score;
   
-  // Get all results with the top score
-  const topResults = sortedResults.filter(result => result.match_score === topScore);
   
   // Return random result from the top-scoring group
-  const randomIndex = Math.floor(Math.random() * topResults.length);
-  return topResults[randomIndex];
+  const randomIndex = Math.floor(Math.random() * sortedResults.length);
+  return sortedResults[randomIndex];
 }
 
 /**
