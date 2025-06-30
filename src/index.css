@@ -143,14 +143,35 @@
     .m3-col-desktop-12 { grid-column: span 12; }
   }
   
-  /* Content area with M3 grid constraints - ONLY for landing page */
+  /* Content area with M3 grid constraints - Base styles only */
   .m3-content-area {
     width: 100%;
     position: relative;
   }
   
-  /* Gradient background positioned exactly like Figma - ONLY for landing page */
-  .m3-content-area::before {
+  /* Mobile: Full width (4 columns) */
+  @media (max-width: 599px) {
+    .m3-content-area {
+      grid-column: span 4;
+    }
+  }
+  
+  /* Tablet: 6 of 8 columns, centered */
+  @media (min-width: 600px) and (max-width: 839px) {
+    .m3-content-area {
+      grid-column: 2 / span 6;
+    }
+  }
+  
+  /* Desktop: 8 of 12 columns, centered */
+  @media (min-width: 840px) {
+    .m3-content-area {
+      grid-column: 3 / span 8;
+    }
+  }
+  
+  /* Gradient background - ONLY for landing page with specific class */
+  .landing-page .m3-content-area::before {
     content: '';
     position: absolute;
     /* Position gradient to match Figma - centered but lower to accommodate title above */
@@ -169,38 +190,21 @@
     display: block;
   }
   
-  /* Mobile: Full width (4 columns) */
+  /* Mobile: Adjust gradient for mobile to match Figma proportions */
   @media (max-width: 599px) {
-    .m3-content-area {
-      grid-column: span 4;
-    }
-    
-    /* Adjust gradient for mobile to match Figma proportions */
-    .m3-content-area::before {
+    .landing-page .m3-content-area::before {
       width: 900px;
       height: 450px;
       top: 55%;
     }
   }
   
-  /* Tablet: 6 of 8 columns, centered */
+  /* Tablet: Adjust gradient for tablet to match Figma proportions */
   @media (min-width: 600px) and (max-width: 839px) {
-    .m3-content-area {
-      grid-column: 2 / span 6;
-    }
-    
-    /* Adjust gradient for tablet to match Figma proportions */
-    .m3-content-area::before {
+    .landing-page .m3-content-area::before {
       width: 1000px;
       height: 500px;
       top: 58%;
-    }
-  }
-  
-  /* Desktop: 8 of 12 columns, centered */
-  @media (min-width: 840px) {
-    .m3-content-area {
-      grid-column: 3 / span 8;
     }
   }
   
@@ -343,7 +347,7 @@
   
   /* Very small screens - ensure gradient still covers everything */
   @media (max-width: 400px) {
-    .m3-content-area::before {
+    .landing-page .m3-content-area::before {
       width: 800px; /* Smaller for very small screens */
       height: 400px;
       top: 52%;
@@ -352,7 +356,7 @@
   
   /* Extra small height screens - adjust gradient positioning */
   @media (max-height: 600px) {
-    .m3-content-area::before {
+    .landing-page .m3-content-area::before {
       height: 400px; /* Slightly smaller height for very short screens */
       top: 55%;
     }

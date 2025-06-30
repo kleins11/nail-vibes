@@ -34,7 +34,7 @@ export default function LandingPage({
   handleKeyPress
 }: LandingPageProps) {
   return (
-    <div className="min-h-screen bg-input-background flex flex-col relative">
+    <div className="min-h-screen bg-input-background flex flex-col relative landing-page">
       {/* Header */}
       <div className="w-full px-4 md:px-8 lg:px-12">
         <div className="flex justify-center md:justify-start pt-8 pb-4">
