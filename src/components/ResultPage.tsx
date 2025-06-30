@@ -213,6 +213,9 @@ export default function ResultPage({
   // Get only user messages to determine the correct index for styling
   const userMessages = chatMessages.filter(message => message.type === 'user');
 
+  // Get the last system message for the collapsed chat drawer
+  const lastSystemMessage = chatMessages.filter(message => message.type === 'system').pop();
+
   return (
     <div className="h-screen flex flex-col overflow-hidden" style={{ backgroundColor: '#FFFAF4' }}>
       {/* Mobile/Tablet Header - Aligned like a proper header */}
@@ -415,9 +418,9 @@ export default function ResultPage({
           </div>
         </div>
         
-        {/* Mobile/Tablet Layout: Single Column with Modal Chat */}
-        <div className="lg:hidden w-full flex flex-col">
-          <div className="flex-1 flex flex-col justify-center px-6">
+        {/* Mobile/Tablet Layout: Single Column with Bottom Chat Drawer */}
+        <div className="lg:hidden w-full flex flex-col relative">
+          <div className="flex-1 flex flex-col justify-center px-6 pb-32">
             <div className="max-w-md mx-auto w-full">
               {/* Image - Smaller to prevent scrolling */}
               <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6 max-h-[50vh]">
@@ -448,28 +451,77 @@ export default function ResultPage({
                   </h1>
                 )}
               </div>
-              
-              {/* Chat Trigger */}
-              <div className="text-center">
-                <button
-                  onClick={onOpenChat}
-                  className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg focus-ring"
-                  disabled={isRefining}
-                >
-                  <span className="text-sm font-medium">
-                    {isRefining ? 'Refining...' : 'Keep vibing'}
-                  </span>
-                </button>
-              </div>
             </div>
           </div>
 
-          {/* Footer for Mobile/Tablet - Keep default styling */}
-          <Footer />
+          {/* Bottom Chat Drawer - Collapsed State */}
+          {!isChatOpen && (
+            <div className="fixed bottom-0 left-0 right-0 z-40">
+              {/* Chat Drawer Container */}
+              <div 
+                className="bg-white border-t border-gray-200 px-4 py-3 cursor-pointer"
+                onClick={onOpenChat}
+                style={{ backgroundColor: '#F5F1EC', borderTop: '1px solid #D9CFC3' }}
+              >
+                {/* Last System Message Preview */}
+                {lastSystemMessage && (
+                  <div className="flex space-x-2 mb-3">
+                    <div className="flex-shrink-0 flex items-start" style={{ width: '32px', paddingTop: '1px' }}>
+                      <img 
+                        src={getGradientShapeForMessage(lastSystemMessage)}
+                        alt="Gradient shape"
+                        className="object-contain"
+                        style={{ width: '32px', height: '32px' }}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-calling-code text-sm text-[#3F3F3F] leading-relaxed break-words line-clamp-2">
+                        {lastSystemMessage.content}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Input Field Preview */}
+                <div className="relative flex items-center">
+                  <input
+                    type="text"
+                    value={refinePrompt}
+                    onChange={(e) => setRefinePrompt(e.target.value)}
+                    onFocus={onOpenChat}
+                    placeholder="Keep vibing"
+                    className="input-short flex-1 px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
+                    style={{
+                      boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
+                      color: '#3F3F3F'
+                    }}
+                    disabled={isRefining}
+                  />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRefineSubmit();
+                    }}
+                    disabled={!refinePrompt.trim() || isRefining}
+                    className="input-button absolute right-1 mr-1 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10"
+                  >
+                    {isRefining ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    ) : (
+                      <ArrowUp className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Footer for Mobile/Tablet - Keep default styling */}
+              <Footer />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Mobile Chat Drawer */}
+      {/* Mobile Chat Drawer - Expanded State */}
       {isChatOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           {/* Backdrop */}
@@ -604,6 +656,16 @@ export default function ResultPage({
           </div>
         </div>
       )}
+
+      {/* Add line-clamp utility for text truncation */}
+      <style jsx>{`
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      `}</style>
     </div>
   );
 }
