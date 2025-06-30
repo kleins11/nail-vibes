@@ -220,30 +220,20 @@ export default function ResultPage({
           
           {/* Right Column: Image - 3/4 width to match the narrower chat */}
           <div className="w-3/4 flex flex-col h-full">
-            {/* Image Header - Reduced padding */}
-            <div className="p-4 border-b border-gray-200 flex-shrink-0">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs">💅</span>
-                  </div>
-                  <h1 className="font-calling-code font-bold text-[#3F3F3F] text-lg">
-                    {currentVibe?.title || "Black French tips on short natural nails"}
-                  </h1>
+            {/* Title positioned at the very top - matching Figma */}
+            <div className="pt-8 pb-4 px-8 flex-shrink-0">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm">💅</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                    <Maximize2 className="w-4 h-4 text-gray-500" />
-                  </button>
-                  <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                    <RotateCcw className="w-4 h-4 text-gray-500" />
-                  </button>
-                </div>
+                <h1 className="font-calling-code font-bold text-[#3F3F3F] text-xl">
+                  {currentVibe?.title || "Black French tips on short natural nails"}
+                </h1>
               </div>
             </div>
             
-            {/* Image Display - Much larger, reduced padding */}
-            <div className="flex-1 p-4 flex items-center justify-center overflow-hidden">
+            {/* Image Display - Takes up most of the remaining space */}
+            <div className="flex-1 px-8 pb-8 flex items-center justify-center overflow-hidden">
               <div className="relative w-full max-w-2xl">
                 <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
                   <img 
@@ -267,6 +257,16 @@ export default function ResultPage({
                   )}
                 </div>
               </div>
+            </div>
+            
+            {/* Action buttons at bottom right - subtle positioning */}
+            <div className="absolute bottom-8 right-8 flex items-center space-x-2">
+              <button className="p-3 hover:bg-gray-100 rounded-full transition-colors bg-white shadow-sm">
+                <Maximize2 className="w-5 h-5 text-gray-500" />
+              </button>
+              <button className="p-3 hover:bg-gray-100 rounded-full transition-colors bg-white shadow-sm">
+                <RotateCcw className="w-5 h-5 text-gray-500" />
+              </button>
             </div>
           </div>
         </div>
