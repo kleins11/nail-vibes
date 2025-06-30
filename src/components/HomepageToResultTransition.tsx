@@ -35,6 +35,11 @@ export default function HomepageToResultTransition({ prompt }: HomepageToResultT
       {/* Phase 1: Gentle fade out of homepage elements */}
       {phase === 'fadeOut' && (
         <div className="absolute inset-0 flex flex-col">
+          {/* SEAMLESS SPARKLE CONTINUATION: Keep sparkles running during transition */}
+          <div className="absolute inset-0 animate-fade-out-smooth" style={{ zIndex: 0 }}>
+            <MagicalSparkles />
+          </div>
+
           {/* Header fading out */}
           <div 
             className="w-full px-4 md:px-8 lg:px-12 animate-fade-out-smooth"
@@ -72,11 +77,6 @@ export default function HomepageToResultTransition({ prompt }: HomepageToResultT
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Magical sparkles fading out */}
-          <div className="animate-fade-out-smooth">
-            <MagicalSparkles />
           </div>
         </div>
       )}

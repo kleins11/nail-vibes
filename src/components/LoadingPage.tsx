@@ -1,5 +1,4 @@
 import React from 'react';
-import Footer from './Footer';
 
 interface LoadingPageProps {
   onLogoClick: () => void;
@@ -8,19 +7,9 @@ interface LoadingPageProps {
 export default function LoadingPage({ onLogoClick }: LoadingPageProps) {
   return (
     <div className="min-h-screen flex flex-col relative" style={{ backgroundColor: '#F5F1EC' }}>
-      {/* Header */}
-      <div className="w-full px-4 md:px-8 lg:px-12">
-        <div className="flex justify-center md:justify-start pt-8 pb-4">
-          <button 
-            onClick={onLogoClick}
-            className="text-2xl font-pilar font-bold text-blue-600 hover:text-blue-700 transition-colors focus-ring"
-          >
-            nv
-          </button>
-        </div>
-      </div>
+      {/* CLEAN LOADING STATE - NO HEADER, NO LOGO, NO PREMATURE ELEMENTS */}
       
-      {/* Loading Content */}
+      {/* Loading Content - Centered and minimal */}
       <div className="flex-1 flex flex-col justify-center">
         <div className="m3-grid-container">
           <div className="m3-grid">
@@ -39,8 +28,7 @@ export default function LoadingPage({ onLogoClick }: LoadingPageProps) {
         </div>
       </div>
 
-      {/* Footer */}
-      <Footer />
+      {/* NO FOOTER - Keep it completely clean */}
     </div>
   );
 }

@@ -1,8 +1,14 @@
 import React from 'react';
 
-export default function Footer() {
+interface FooterProps {
+  variant?: 'default' | 'minimal';
+}
+
+export default function Footer({ variant = 'default' }: FooterProps) {
+  const isMinimal = variant === 'minimal';
+  
   return (
-    <footer className="w-full py-6 px-4 md:px-8 lg:px-12 border-t border-gray-100 bg-white/50 backdrop-blur-sm">
+    <footer className={`w-full py-6 px-4 md:px-8 lg:px-12 ${isMinimal ? '' : 'border-t border-gray-100 bg-white/50 backdrop-blur-sm'}`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Left side - Small logo image */}
         <div className="flex-shrink-0">
