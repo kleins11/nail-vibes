@@ -282,12 +282,12 @@ export default function ResultPage({
                 {/* Title positioned to align with left edge of image - matching Figma */}
                 <div className="mb-6">
                   <div className="flex items-center space-x-3">
-                    <div className="flex items-center justify-center" style={{ width: '32px', height: '32px' }}>
+                    <div className="flex items-center justify-center" style={{ width: '44px', height: '44px' }}>
                       <img 
                         src={lastUsedGradientShape}
                         alt="Gradient shape"
                         className="object-contain"
-                        style={{ width: '32px', height: '32px' }}
+                        style={{ width: '44px', height: '44px' }}
                       />
                     </div>
                     <h1 className="font-calling-code font-bold text-[#3F3F3F] text-xl">
