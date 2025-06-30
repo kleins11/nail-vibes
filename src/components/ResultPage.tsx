@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { X, Minus, ArrowUp, RefreshCw } from 'lucide-react';
+import { ArrowUp, RefreshCw } from 'lucide-react';
 import { VibeMatchData } from '../services/vibeService';
 import MagicalLoadingOverlay from './MagicalLoadingOverlay';
 import Footer from './Footer';
@@ -103,10 +103,16 @@ export default function ResultPage({
   // NEW: State to track if device is mobile (has touch capability)
   const [isMobileDevice, setIsMobileDevice] = useState(false);
 
+  // NEW: State for drag handling
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartY, setDragStartY] = useState(0);
+  const [dragCurrentY, setDragCurrentY] = useState(0);
+
   // Refs for auto-scrolling and input focus
   const desktopChatMessagesRef = useRef<HTMLDivElement>(null);
   const mobileChatMessagesRef = useRef<HTMLDivElement>(null);
-  const mobileExpandedInputRef = useRef<HTMLTextAreaElement>(null); // CHANGED: Now textarea ref
+  const mobileExpandedInputRef = useRef<HTMLTextAreaElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   // NEW: Detect if device is mobile (has touch capability)
   useEffect(() => {
@@ -273,6 +279,83 @@ export default function ResultPage({
     }
     // On desktop/non-mobile, just focus normally (handled by onOpenChat)
   };
+
+  // NEW: Drag handlers for drawer handle
+  const handleDragStart = (clientY: number) => {
+    setIsDragging(true);
+    setDragStartY(clientY);
+    setDragCurrentY(clientY);
+  };
+
+  const handleDragMove = (clientY: number) => {
+    if (!isDragging) return;
+    setDragCurrentY(clientY);
+  };
+
+  const handleDragEnd = () => {
+    if (!isDragging) return;
+    
+    const dragDistance = dragCurrentY - dragStartY;
+    const threshold = 50; // Minimum drag distance to close
+    
+    // If dragged down more than threshold, close the drawer
+    if (dragDistance > threshold) {
+      onCloseChat();
+    }
+    
+    setIsDragging(false);
+    setDragStartY(0);
+    setDragCurrentY(0);
+  };
+
+  // NEW: Mouse event handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    handleDragStart(e.clientY);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    handleDragMove(e.clientY);
+  };
+
+  const handleMouseUp = () => {
+    handleDragEnd();
+  };
+
+  // NEW: Touch event handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    handleDragStart(touch.clientY);
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    if (e.touches.length > 0) {
+      const touch = e.touches[0];
+      handleDragMove(touch.clientY);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    handleDragEnd();
+  };
+
+  // NEW: Add global event listeners for drag
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('touchmove', handleTouchMove);
+      document.addEventListener('touchend', handleTouchEnd);
+      
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleTouchEnd);
+      };
+    }
+  }, [isDragging, dragStartY, dragCurrentY]);
 
   // Function to get chat bubble style based on user message index
   const getChatBubbleStyle = (messageIndex: number) => {
@@ -565,12 +648,12 @@ export default function ResultPage({
             <div className="fixed bottom-0 left-0 right-0 z-40">
               {/* Chat Drawer Container with rounded top corners and 25% viewport height */}
               <div 
-                className="cursor-pointer relative"
-                onClick={handleMobileChatOpen} // UPDATED: Use enhanced mobile chat opening
+                className="cursor-pointer relative transition-transform duration-300 ease-out"
+                onClick={handleMobileChatOpen}
                 style={{ 
                   backgroundColor: '#F5F1EC', 
                   borderRadius: '32px 32px 0px 0px',
-                  height: '25vh', // Changed from 230px to 25% of viewport height
+                  height: '25vh',
                   border: '1px solid #D9CFC3',
                   borderBottom: 'none'
                 }}
@@ -633,7 +716,7 @@ export default function ResultPage({
                           type="text"
                           value={refinePrompt}
                           onChange={(e) => setRefinePrompt(e.target.value)}
-                          onFocus={handleClosedDrawerInputFocus} // UPDATED: Use enhanced input focus handler
+                          onFocus={handleClosedDrawerInputFocus}
                           placeholder="Keep vibing"
                           className="input-short flex-1 px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
                           style={{
@@ -661,59 +744,57 @@ export default function ResultPage({
                   )}
                 </div>
               </div>
-
-              {/* NO FOOTER ON MOBILE - Completely hidden */}
             </div>
           )}
         </div>
       </div>
 
-      {/* Mobile Chat Drawer - Expanded State */}
+      {/* Mobile Chat Drawer - Expanded State with SMOOTH ANIMATIONS */}
       {isChatOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          {/* Backdrop */}
+          {/* Backdrop with smooth fade */}
           <div 
-            className="absolute inset-0 backdrop-blur-sm"
+            className="absolute inset-0 backdrop-blur-sm transition-opacity duration-300 ease-out"
             style={{ backgroundColor: 'rgba(63, 63, 63, 0.5)' }}
             onClick={onCloseChat}
           />
           
-          {/* Chat Panel - DYNAMIC HEIGHT: 80vh when keyboard is active, 80vh default */}
+          {/* Chat Panel with ENHANCED SMOOTH MOTION */}
           <div 
-            className="absolute bottom-0 left-0 right-0 rounded-t-2xl flex flex-col animate-slide-up" 
+            ref={drawerRef}
+            className="absolute bottom-0 left-0 right-0 rounded-t-2xl flex flex-col transition-all duration-300 ease-out" 
             style={{ 
               backgroundColor: '#F5F1EC',
-              // CRITICAL: Use 80vh when keyboard is active for optimal mobile experience
               maxHeight: isKeyboardActive ? '80vh' : '80vh',
-              height: isKeyboardActive ? '80vh' : '80vh'
+              height: isKeyboardActive ? '80vh' : '80vh',
+              // NEW: Apply drag transform for smooth dragging
+              transform: isDragging ? `translateY(${Math.max(0, dragCurrentY - dragStartY)}px)` : 'translateY(0)',
+              // NEW: Smooth animation when not dragging
+              transition: isDragging ? 'none' : 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
             }}
           >
-            {/* UPDATED: Header - Match closed drawer design with drawer handle */}
-            <div className="flex items-center justify-center p-4 relative">
-              {/* Drawer Pull Handle - Centered like closed drawer */}
+            {/* UPDATED: Header with draggable handle - NO X BUTTON */}
+            <div 
+              className="flex items-center justify-center p-4 cursor-grab active:cursor-grabbing"
+              onMouseDown={handleMouseDown}
+              onTouchStart={handleTouchStart}
+              onClick={onCloseChat} // Also allow click to close
+            >
+              {/* Drawer Pull Handle - Centered and draggable */}
               <div 
-                className="bg-gray-400 rounded-full"
+                className="bg-gray-400 rounded-full transition-all duration-200 hover:bg-gray-500"
                 style={{ 
                   width: '36px', 
                   height: '4px' 
                 }}
               />
-              
-              {/* Close button - Positioned absolutely in top right corner */}
-              <button
-                onClick={onCloseChat}
-                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-full transition-colors focus-ring"
-              >
-                <X className="w-5 h-5 text-gray-400" />
-              </button>
             </div>
             
-            {/* Messages - FLEXIBLE HEIGHT: Adjusts based on keyboard state */}
+            {/* Messages - FLEXIBLE HEIGHT with smooth scrolling */}
             <div 
               ref={mobileChatMessagesRef}
-              className="flex-1 overflow-y-auto p-4 space-y-4"
+              className="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth"
               style={{
-                // CRITICAL: Ensure messages area takes remaining space after header and input
                 minHeight: 0 // Allow flex-shrink
               }}
             >
@@ -729,7 +810,7 @@ export default function ResultPage({
                   <div key={message.id} className="space-y-2">
                     {message.type === 'user' ? (
                       <div 
-                        className="p-3 max-w-xs ml-auto border break-words overflow-wrap-anywhere"
+                        className="p-3 max-w-xs ml-auto border break-words overflow-wrap-anywhere transition-all duration-200 hover:shadow-sm"
                         style={{ 
                           borderRadius: '24px 24px 0px 24px',
                           borderWidth: '1px',
@@ -750,7 +831,7 @@ export default function ResultPage({
                           <img 
                             src={getGradientShapeForMessage(message)}
                             alt="Gradient shape"
-                            className="object-contain"
+                            className="object-contain transition-all duration-200"
                             style={{ 
                               width: '44px', 
                               height: '44px',
@@ -781,26 +862,26 @@ export default function ResultPage({
               )}
             </div>
             
-            {/* FIXED: Input Area - FLEXIBLE HEIGHT that grows with content */}
-            <div className="flex-shrink-0" style={{ borderTop: '1px solid #D9CFC3' }}>
+            {/* FIXED: Input Area with smooth transitions */}
+            <div className="flex-shrink-0 transition-all duration-200" style={{ borderTop: '1px solid #D9CFC3' }}>
               <div className="p-4">
                 <div className="relative">
                   {/* CHANGED: Using textarea instead of input for multi-line support */}
                   <textarea
-                    ref={mobileExpandedInputRef} // CRITICAL: Ref for auto-focus on mobile
+                    ref={mobileExpandedInputRef}
                     value={refinePrompt}
                     onChange={(e) => setRefinePrompt(e.target.value)}
                     onKeyDown={(e) => handleKeyPress(e, false, true)}
                     onFocus={onChatInputFocus}
                     onBlur={onChatInputBlur}
                     placeholder="Keep vibing"
-                    rows={1} // Start with single row
-                    className="input-short w-full px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code resize-none overflow-hidden"
+                    rows={1}
+                    className="input-short w-full px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code resize-none overflow-hidden transition-all duration-200 focus:shadow-lg"
                     style={{
                       boxShadow: '0 4px 8px 0 rgba(155, 155, 169, 0.25)',
                       color: '#3F3F3F',
-                      minHeight: '48px', // Minimum height to match button
-                      maxHeight: '120px', // Maximum height before scrolling
+                      minHeight: '48px',
+                      maxHeight: '120px',
                       lineHeight: '1.5'
                     }}
                     disabled={isRefining}
@@ -811,13 +892,12 @@ export default function ResultPage({
                       target.style.height = Math.min(target.scrollHeight, 120) + 'px';
                     }}
                   />
-                  {/* FIXED: Button positioned to stay with the textarea */}
+                  {/* FIXED: Button with smooth transitions */}
                   <button
                     onClick={onRefineSubmit}
                     disabled={!refinePrompt.trim() || isRefining}
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10 flex-shrink-0"
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center z-10 flex-shrink-0 transition-all duration-200 hover:scale-105 active:scale-95"
                     style={{
-                      // CRITICAL: Ensure button stays properly positioned
                       marginRight: '4px'
                     }}
                   >
@@ -834,7 +914,7 @@ export default function ResultPage({
         </div>
       )}
 
-      {/* Add line-clamp utility for text truncation */}
+      {/* Enhanced CSS for smooth animations */}
       <style jsx>{`
         .line-clamp-2 {
           display: -webkit-box;
@@ -847,6 +927,39 @@ export default function ResultPage({
           -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
           overflow: hidden;
+        }
+        
+        /* Enhanced slide-up animation for drawer */
+        @keyframes slideUp {
+          from {
+            transform: translateY(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        
+        .animate-slide-up {
+          animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        /* Smooth scroll behavior */
+        .scroll-smooth {
+          scroll-behavior: smooth;
+        }
+        
+        /* Enhanced focus states */
+        .focus-ring:focus {
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Smooth transitions for all interactive elements */
+        .transition-all {
+          transition-property: all;
+          transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
       `}</style>
     </div>
