@@ -97,14 +97,31 @@ export default function ResultPage({
   const [imageLoadStates, setImageLoadStates] = useState<Record<string, boolean>>({});
   const [pendingGradientUpdates, setPendingGradientUpdates] = useState<Record<string, string>>({});
 
-  // NEW: State to track if mobile keyboard is active
+  // State to track if mobile keyboard is active
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
-  // Refs for auto-scrolling
+  // NEW: State to track if device is mobile (has touch capability)
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
+
+  // Refs for auto-scrolling and input focus
   const desktopChatMessagesRef = useRef<HTMLDivElement>(null);
   const mobileChatMessagesRef = useRef<HTMLDivElement>(null);
+  const mobileExpandedInputRef = useRef<HTMLInputElement>(null);
 
-  // NEW: Detect mobile keyboard activation
+  // NEW: Detect if device is mobile (has touch capability)
+  useEffect(() => {
+    const checkMobileDevice = () => {
+      // Check for touch capability and mobile user agents
+      const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      setIsMobileDevice(hasTouchScreen || isMobileUserAgent);
+    };
+
+    checkMobileDevice();
+  }, []);
+
+  // Detect mobile keyboard activation
   useEffect(() => {
     const handleResize = () => {
       // Only apply keyboard detection on mobile devices
@@ -141,6 +158,18 @@ export default function ResultPage({
       }
     };
   }, []);
+
+  // NEW: Auto-focus input when chat opens on mobile
+  useEffect(() => {
+    if (isChatOpen && isMobileDevice && mobileExpandedInputRef.current) {
+      // Small delay to ensure the drawer animation completes
+      const timer = setTimeout(() => {
+        mobileExpandedInputRef.current?.focus();
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isChatOpen, isMobileDevice]);
 
   // Auto-scroll to bottom when new messages are added
   useEffect(() => {
@@ -212,6 +241,37 @@ export default function ResultPage({
         });
       }
     }
+  };
+
+  // NEW: Enhanced mobile chat opening with automatic keyboard activation
+  const handleMobileChatOpen = () => {
+    onOpenChat();
+    
+    // On mobile devices, automatically focus the input to trigger keyboard
+    if (isMobileDevice && window.innerWidth < 1024) {
+      // Small delay to ensure the drawer opens first
+      setTimeout(() => {
+        if (mobileExpandedInputRef.current) {
+          mobileExpandedInputRef.current.focus();
+        }
+      }, 350); // Slightly longer delay for smooth animation
+    }
+  };
+
+  // NEW: Handle closed drawer input focus with mobile keyboard activation
+  const handleClosedDrawerInputFocus = () => {
+    // Always open the chat first
+    onOpenChat();
+    
+    // On mobile devices, focus the expanded input to trigger keyboard
+    if (isMobileDevice && window.innerWidth < 1024) {
+      setTimeout(() => {
+        if (mobileExpandedInputRef.current) {
+          mobileExpandedInputRef.current.focus();
+        }
+      }, 350);
+    }
+    // On desktop/non-mobile, just focus normally (handled by onOpenChat)
   };
 
   // Function to get chat bubble style based on user message index
@@ -506,7 +566,7 @@ export default function ResultPage({
               {/* Chat Drawer Container with rounded top corners and 25% viewport height */}
               <div 
                 className="cursor-pointer relative"
-                onClick={onOpenChat}
+                onClick={handleMobileChatOpen} // UPDATED: Use enhanced mobile chat opening
                 style={{ 
                   backgroundColor: '#F5F1EC', 
                   borderRadius: '32px 32px 0px 0px',
@@ -559,7 +619,7 @@ export default function ResultPage({
                         type="text"
                         value={refinePrompt}
                         onChange={(e) => setRefinePrompt(e.target.value)}
-                        onFocus={onOpenChat}
+                        onFocus={handleClosedDrawerInputFocus} // UPDATED: Use enhanced input focus handler
                         placeholder="Keep vibing"
                         className="input-short flex-1 px-4 py-3 pr-12 rounded-full text-sm placeholder-calling-code textarea-calling-code"
                         style={{
@@ -706,6 +766,7 @@ export default function ResultPage({
             <div className="p-4 flex-shrink-0" style={{ borderTop: '1px solid #D9CFC3' }}>
               <div className="relative flex items-center">
                 <input
+                  ref={mobileExpandedInputRef} // CRITICAL: Ref for auto-focus on mobile
                   type="text"
                   value={refinePrompt}
                   onChange={(e) => setRefinePrompt(e.target.value)}
